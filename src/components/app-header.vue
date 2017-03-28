@@ -11,12 +11,12 @@
       <div class="link" @click="jump('/star')">
         <text :class="actClass(2)">关注</text>
       </div>
-      <div v-if="false" class="link" @click="jump('/')">
+      <div v-if="true" class="link" @click="jump('/myrom')">
         <text :class="actClass(3)">我的</text>
       </div>
     </div>
 
-    <div class="add-btn" @click="jump('/')">
+    <div class="add-btn" @click="jump('/aution')">
       <image class="image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
     </div>
   </div>

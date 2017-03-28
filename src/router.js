@@ -4,6 +4,8 @@ import Home from './pages/home.vue'
 import Flow from './pages/flow.vue'
 import Proc from './pages/proc.vue'
 import Star from './pages/star.vue'
+import Aution from './pages/authentication.vue'
+import MyRom from './pages/my-rom.vue'
 
 Vue.use(Router)
 
@@ -15,6 +17,8 @@ export default new Router({
     { path: '/flow',name: 'Flow', component: Flow },
     { path: '/proc',name: 'Proc', component: Proc },
     { path: '/star',name: 'Star', component: Star },
+    { path: '/aution',name: 'Aution', component: Aution },
+    { path: '/myrom',name: 'MyRom', component: MyRom },
     { path: '/', redirect: '/home' }
   ]
 })
