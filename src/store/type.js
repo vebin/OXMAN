@@ -1,9 +1,6 @@
-// 热门－全部－附近－状态
-export const TAB_ALL = 'TAB_ALL'
-// 最新－视频－关注－状态
-export const ALL_NAV = 'ALL_NAV'
-// 动态－卡友－状态
-export const TAB_NEA = 'TAB_NEA'
+// 文章－圈子－状态
+export const MY_NAV = 'MY_NAV'
+
 
 
 // 获取用户信息

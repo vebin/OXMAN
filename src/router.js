@@ -6,6 +6,7 @@ import Proc from './pages/proc.vue'
 import Star from './pages/star.vue'
 import Aution from './pages/authentication.vue'
 import MyRom from './pages/my-rom.vue'
+import Msgs from './pages/items.vue'
 
 Vue.use(Router)
 
@@ -19,6 +20,7 @@ export default new Router({
     { path: '/star',name: 'Star', component: Star },
     { path: '/aution',name: 'Aution', component: Aution },
     { path: '/myrom',name: 'MyRom', component: MyRom },
+    { path: '/msgs',name: 'Msgs', component: Msgs },
     { path: '/', redirect: '/home' }
   ]
 })

@@ -1,28 +1,72 @@
 <template>
   <div>
     <div class="head-box">
-      <text class="ffm backs" @click="back()">&#xe6d6;</text>
-      <div class="head-item">
-        <div class="msg">
-          <text class="head-msg">关注</text><text class="head-msg">0</text>
+      <div class="top-ico-box">
+        <div class="logo" @click="jump('/proc')">
+          <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
         </div>
-        <div class="msg">
-          <image class="image" src="http://usr.im/55x55"></image>
-          <text class="name">某某某</text>
-        </div>
-        <div class="msg">
-          <text class="head-msg">粉丝</text><text class="head-msg">0</text>
+        <div class="add-btn" @click="jump('/aution')">
+          <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
         </div>
       </div>
-      <text class="ffm backs-r"></text>
+
+      <div class="top-use-box">
+        <div class="top-use-left">
+          <image class="top-use-pic" src="http://usr.im/60x60"></image>
+          <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+        </div>
+        <div class="top-use-right">
+          <text class="top-use-name">某某某</text>
+          <div class="top-right-box">
+
+            <div v-if="false" class="top-zan-box top-mr">
+              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
+              <text class="top-use-txt">点赞</text>
+            </div>
+
+            <div v-if="true" class="top-zan-box top-mr isok">
+              <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+              <text class="top-use-txt">已点赞</text>
+            </div>
+
+            <div v-if="false" class="top-zan-box">
+              <text class="top-use-txt">编辑资料</text>
+            </div>
+
+            <div v-if="false" class="top-zan-box">
+              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+              <text class="top-use-txt">关注</text>
+            </div>
+
+            <div v-if="true" class="top-zan-box isok">
+              <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+              <text class="top-use-txt">已关注</text>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="head-item">
+        <div class="msg">
+          <text class="head-msg-nb">12</text><text class="head-msg">粉丝</text>
+        </div>
+        <div class="msg border">
+          <text class="head-msg-nb">33</text><text class="head-msg">等级</text>
+        </div>
+        <div class="msg border">
+          <text class="head-msg-nb">231</text><text class="head-msg">活跃度</text>
+        </div>
+      </div>
+
     </div>
 
 
     <list class="pro-box">
       <cell
           append="tree"
-          class="row"
           keep-scroll-position="true">
+          <text class="pro-times">2017.03.02</text>
           <list-centent></list-centent>
       </cell>
     </list>
@@ -30,34 +74,27 @@
 
     <div class="pro-fot">
       <div v-if="false" class="pro-fot-nav">
-        <text class="ffm blu">&#xe6d4;</text>
         <text class="nav-txt blu">加关注</text>
       </div>
       <div v-if="false" class="pro-fot-nav">
-        <text class="ffm yel">&#xe6d5;</text>
         <text class="nav-txt yel">已关注</text>
       </div>
       <div v-if="true" class="pro-fot-nav">
-        <text class="nav-txt reds">互相关注</text>
+        <text class="nav-txt">牛人原创</text>
       </div>
       <div class="pro-fot-nav">
-        <text class="ffm">&#xe6d3;</text>
-        <text class="nav-txt">发消息</text>
+        <text class="nav-txt">圈子</text>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  const dom = weex.requireModule('dom')
   import ListCentent from '../components/list-centent.vue'
   export default {
     components: { ListCentent },
     created () {
-        dom.addRule('font-face', {
-          'font-family': "iconfont",
-          'src' : "url('http://at.alicdn.com/t/font_amfmr26e6l9jm7vi.ttf')"
-        })
+
     },
     methods: {
       back: function () {
@@ -68,37 +105,58 @@
 </script>
 
 <style scoped>
-.ffm{font-family: iconfont;}
 .backs{color: #fff; font-size: 32px;padding-left: 30px;padding-top: 30px;}
 .backs-r{color: #fff; font-size: 32px;padding-right: 30px;padding-top: 30px;}
-.image{width: 110px;height: 110px;border-radius: 110px;border-width: 4px;border-color: #fff;}
 .head-box{
-  height: 300px;
+  height: 340px;
   background-color: #2062A9;
   background-image: url(https://s.kcimg.cn/app/icon/oxman/bg.png);
-  flex-direction:row;
-  justify-content: space-between;
-  align-items: flex-start;
 }
-.head-item{
-  padding-top: 60px;
+.top-ico-box{flex-direction:row;justify-content: space-between;align-items: center;}
+.top-image{width: 38px;height: 38px;}
+.logo {
+  width: 72px;
+  height: 72px;
+  padding-left: 30px;
+  justify-content: center;
+  align-items: center;
+}
+.add-btn{
+  width: 72px;
+  height: 72px;
+  padding-right: 30px;
+  align-items:center;
+  justify-content:center;
+}
+.top-use-box{flex-direction:row; justify-content:flex-start; align-items:center;}
+.top-use-left{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative;}
+.top-use-pic{width: 120px; height: 120px; border-radius: 120px; border-width: 2px;border-color: #fff;border-style: solid;}
+.top-use-name{font-size: 36px; color: #fff;margin-bottom: 14px;}
+.top-right-box{flex-direction:row; justify-content:flex-start; align-items:center;}
+.top-zan-box{width: 132px; height: 50px; border-width: 2px; border-radius: 8px; border-color: #fff;border-style: solid; flex-direction:row; justify-content:center; align-items:center;}
+.top-use-image{width: 24px; height: 24px; margin-right: 20px;}
+.top-use-txt{font-size: 24px; color: #fff;}
+.top-mr{margin-right: 60px;}
+.top-use-isok{width: 24px;height: 16px; margin-right: 10px;}
 
+.head-msg-nb{font-size: 32px; color: #fff;}
+
+.top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
+.head-item{
+  padding-top: 30px;
   flex:1;
   flex-direction:row;
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: center;
 }
-.msg{justify-content: center;align-items: center;}
+.msg{flex:1;justify-content: center;align-items: center;}
 .head-msg{
   color: #fff;
-  font-size: 28px;
-  line-height: 44px;
+  font-size: 24px;
 }
-.name{color: #fff;
-  font-size: 32px; margin-top: 24px;}
-
-.pro-box{height: 936px;}
-
+.pro-times{font-size: 24px; color: #ccc; height: 48px; background-color: #F7F9FA; text-align: center; line-height: 48px;}
+.pro-box{height: 896px;}
+.border{border-left-style: solid; border-left-color: #fff;border-left-width: 2px;}
 .pro-fot{
   height: 98px;
   flex-direction:row;
@@ -106,13 +164,14 @@
   align-items: center;
   background-color: #FAFBFC;
 }
-.row{padding-bottom: 20px;background-color:#FAFBFC;}
 .pro-fot-nav{
   flex:1;
   flex-direction:row;
   justify-content: center;
   align-items: center;
 }
+
+.isok{background-color: rgba(0,0,0,.1); border-color: rgba(0,0,0,.1);}
 .nav-txt{color: #666;font-size: 34px; padding-left: 20px;}
 .blu{color: #2062A9;}
 .yel{color: #ff9800;}

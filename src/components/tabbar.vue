@@ -1,17 +1,17 @@
 <template>
   <div class="tabbar-box">
 
-    <div class="item">
+    <div class="item" @click="cgTab(2)">
       <image :src="tab2" class="tab-ico"></image>
       <text class="tab-txt">文章</text>
     </div>
 
-    <div class="item">
+    <div class="item" @click="cgTab(1)">
       <image :src="tab1" class="tab-ico"></image>
       <text class="tab-txt">圈子</text>
     </div>
 
-    <div class="item">
+    <div class="item" @click="jump('/msgs')">
       <image :src="tab3" class="tab-ico"></image>
       <text class="tab-txt">个人主页</text>
     </div>
@@ -21,6 +21,16 @@
 
 <script>
   export default {
+    computed: {
+      // 焦点菜单
+      actTab () {return this.$store.state.tabbar},
+    },
+    created () {
+      // console.log(this.tab1,11111)
+      // console.log(this.actTab,22222)
+      // this.changUrl()
+      // console.log(this.tab1,333)
+    },
     data () {
       return {
         tab1:'https://s.kcimg.cn/app/icon/oxman/qzx-ico.png',
@@ -38,14 +48,29 @@
         ]
       }
     },
+    watch:{
+      actTab: 'changUrl'
+    },
     methods: {
+      cgTab (nb) {
+        this.$store.dispatch('MY_NAV', nb)
+      },
+      changUrl(val,oldval){
+        if (val == '1') {
+          this.tab2 = this.pics[1][0]
+          this.tab1 = this.pics[0][1]
+        } else {
+          this.tab2 = this.pics[1][1]
+          this.tab1 = this.pics[0][0]
+        }
+      }
     }
   }
 </script>
 
 <style scoped>
-.tabbar-box{height: 96px;flex-direction:row; justify-content:space-around; align-items:center; background-color: #FAFBFC; border-top-style: solid;border-top-width: 2px;border-top-color: #ccc;}
+.tabbar-box{height: 98px;flex-direction:row; justify-content:space-around; align-items:center; background-color: #FAFBFC; border-top-style: solid;border-top-width: 2px;border-top-color: #ccc;}
 .item{flex:1; justify-content:center; align-items:center;}
 .tab-ico{ width: 40px; height: 40px;}
-.tab-txt{font-size: 28px; color: #999;}
+.tab-txt{font-size: 26px; color: #999;}
 </style>
