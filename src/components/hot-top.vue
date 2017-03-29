@@ -11,7 +11,7 @@
 
     <div class="msg-box">
       <text class="msg-ico">通知</text> 
-      <text class="msg">这个是通知的内容</text>
+      <text class="msg" @click="jump('/pages')">这个是通知的内容</text>
     </div>
   </div>
 </template>

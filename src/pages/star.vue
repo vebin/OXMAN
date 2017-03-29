@@ -32,6 +32,7 @@
 <script>
   import AppHeader from '../components/app-header.vue'
   import StrItem from '../components/str-item.vue'
+
   const modal = weex.requireModule('modal')
   export default {
     components: { AppHeader, StrItem },

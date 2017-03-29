@@ -37,7 +37,7 @@
 .new-tit{font-size: 32px; color: #333;}
 .new-pin{padding-top: 10px;flex-direction:row;justify-content:space-between; align-items:center;}
 .new-pic-box{flex-direction:row; align-items:center; padding-right: 20px;}
-.new-img{ width: 34px; height: 24px; background-color: #eee;}
+.new-img{ width: 34px; height: 24px;}
 .new-txt{font-size: 20px; color: #999;}
 .new-st{font-size:24px; color: #999; width: 100px;}
 .new-left{flex:1;flex-direction:row;justify-content:flex-start;}

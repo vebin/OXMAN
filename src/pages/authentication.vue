@@ -1,25 +1,15 @@
 <template>
   <div class="commont-view">
+    <w-header v-if="false" titles="牛人认证"></w-header>
 
-    <div class="header">
-      <div class="backs">
-        <image class="backImg" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
-      </div>
-
-      <div class="nav">
-        <text class="nav">牛人认证</text>
-      </div>
-
-      <div class="sub-btn">
-        <text class="blu"></text>
-      </div>
-    </div>
+    <app-header show="3"></app-header>
 
     <div class="pop-box">
 
       <div class="pop-item">
         <div class="pop-pic-box">
           <image class="pop-pic" src=""></image>
+          <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
         </div>
         <text class="pop-name">上传头像</text>
       </div>
@@ -58,9 +48,12 @@
 </template>
 
 <script>
+  import WHeader from '../components/w-header.vue'
+  import AppHeader from '../components/app-header.vue'
   const modal = weex.requireModule('modal')
   const picker = weex.requireModule('picker')
   export default {
+    components: { WHeader, AppHeader },
     data () {
       return {
         lists: [1],
@@ -100,33 +93,9 @@
 </script>
 <style scoped>
   .commont-view {background-color: #fff;}
-  .backImg{width: 38px; height: 38px;}
+  
   .mt60{margin-top: 120px;}
-  .header {
-    height: 88px;
-    background-color: #FAFBFC;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .blu{ font-size: 36px; color: #1571e5; line-height: 88px;}
-  .backs {
-    height: 72px;
-    padding-left: 30px;
-    align-items:center;
-    justify-content:center;
-  }
-  .sub-btn{
-    height: 72px;
-    padding-right: 30px;
-    align-items:center;
-    justify-content:center;
-  }
-  .nav {
-    height: 88px;
-    line-height: 88px;
-    font-size: 36px; color: #333;
-  }
+  
 .pop-box{
   height: 314px;
   margin-top: 20px;
@@ -143,8 +112,8 @@
 .pop-pic{width: 140px;height: 140px; border-radius: 140px;}
 .pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}
 
-.pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px;}
-
+.pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; position: relative;}
+.top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
 .blue{ background-color: #2c63ff;}
 .button{ background-image:linear-gradient(to top,#e5e5e5,#eee); width: 690px; height: 88px; border-radius: 16px; margin-left: 30px; }
 .buts{background-image:linear-gradient(to top,#2c63ff,#5296ff);}
