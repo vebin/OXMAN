@@ -1,7 +1,13 @@
 <template>
   <div class="main-list">
-      <list-share></list-share>
-      <list-pic></list-pic>
+      <list-share 
+      v-if="DATA.bu_mainimgjson.length === 1 ? true : false"
+      :DATA="DATA"
+      ></list-share>
+      <list-pic 
+      v-if="DATA.bu_mainimgjson.length === 1 ? false : true"
+      :DATA="DATA"
+      ></list-pic>
   </div>
 </template>
 
@@ -11,10 +17,8 @@
   export default {
     components: {listShare,listPic},
     props: {
-      lists: Object
-    },
-    data () {
-      return {
+      DATA: {
+        bu_mainimgjson:[]
       }
     },
     methods: {

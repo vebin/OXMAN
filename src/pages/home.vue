@@ -4,14 +4,14 @@
 
     <div class="scroller">
       <list class="hot-scroller">
-        <hot-top :lists="hot"></hot-top>
+        <hot-top :DATA="hot"></hot-top>
         <cell
-          v-for="(name, index) in hotTab.DATA"
+          v-for="(items, index) in indexDATA"
           append="tree"
           :ref="'item'+index"
           :index="index"
           keep-scroll-position="true">
-          <list-centent></list-centent>
+          <list-centent :DATA="items"></list-centent>
         </cell>
       </list>
     </div>
@@ -34,17 +34,55 @@
 
   export default {
     components: { AppHeader, ListCentent, HotTop },
-    computed: {
-      // 热门新闻
-      hotTab () {return this.$store.state.hotTab}
-    },
+    // computed: {
+    //   // 热门新闻
+    //   hotTab () {return this.$store.state.hotTab}
+    // },
     data () {
       return {
-        hot: ['大风刮大风大风', '2', '3','4','5'],
+        userid:'',
+        userName:'',
+
+        
+        hot: [],
+        page:'',
+        indexDATA:[]
       }
     },
-    methods: {
+    created () {
+      // const me = this
+      // const THAW = weex.requireModule('thaw')
+      // THAW.onGetData('1',function(ret) {  
+      //     me.userid = ret.userid
+      //     me.userName = ret.userName
+      // }
 
+      this.getEverHot()
+      this.getIndexAsy()
+    },
+    methods: {
+      getEverHot(){
+        let self = this
+        XHR.getEveryDay().then((res) => {
+          if( res.data.status == '1'){
+            self.hot = res.data.data
+          }
+        })
+      },
+      getIndexAsy(){
+        let self = this
+        let json = {}
+        if( this.page !== ''){
+          json.time = this.page
+        }
+        XHR.getIndexAsy(json).then((res) => {
+          if( res.data.status == '1'){
+            self.page = res.data.data[res.data.data.length -1].bu_pushdatetime
+            self.indexDATA.push(...res.data.data)
+          }
+        })
+
+      },
     }
   }
 </script>

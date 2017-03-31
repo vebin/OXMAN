@@ -31,9 +31,10 @@
       <input class="input" type="text" placeholder="请输入您的电话"/>
     </div>
 
-    <div class="input-box">
+    <div class="input-box post">
       <text class="input-txt">标签属性：</text>
-      <text onclick="pick" class="input">ddd</text>
+      <text @click="selectVal" class="input">{{typeVal}}</text>
+      <image class="input-picos" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
     </div>
 
     <a v-if="true" class="button mt60" href="">
@@ -44,21 +45,43 @@
       <text class="but-txt">提交</text>
     </a>
 
+    <select-ops 
+      v-if="selectOk" 
+      v-on:hideSlt="selectVal" 
+      :types="typeVal"
+      :DATA="select"></select-ops>
   </div>
 </template>
 
 <script>
   import WHeader from '../components/w-header.vue'
   import AppHeader from '../components/app-header.vue'
+  import SelectOps from '../components/select.vue'
   const modal = weex.requireModule('modal')
-  const picker = weex.requireModule('picker')
+  // const picker = weex.requireModule('picker')
+  import XHR from '../api'
   export default {
-    components: { WHeader, AppHeader },
+    components: { WHeader, AppHeader, SelectOps },
     data () {
       return {
-        lists: [1],
+        selectOk: false,
+
+        typeVal: '',
+        typeNum: 0,
+
+
         select: [],
+
+        logo:'',
+        name:'',
+        phone:'',
+        msg:'',
+        cateid:'',
+
       }
+    },
+    created () {
+      this.pick()
     },
     methods: {
       onchange (e) {
@@ -67,19 +90,34 @@
           duration: 0.8
         })
       },
+      selectVal (nb) {
+        if( nb !== -1 && typeof nb == 'number') {
+          this.typeVal = this.select[nb].bu_categoryname
+          this.typeNum = this.select[nb].bu_categoryid
+        }
+        this.selectOk = !this.selectOk
+      },
       pick () {
-        var items = new Array("法律援助","Volvo","BMW")
-        var self = this
-        picker.pick({
-            'items':items,
-            'index':self.index
-        },function (ret) {
-            var result = ret.result
-            if(result == 'success')
-            {
-                self.value = items[ret.data]
-                self.index = ret.data
-            }
+        // var items = new Array("法律援助","Volvo","BMW")
+        // var self = this
+        // picker.pick({
+        //     'items':items,
+        //     'index':self.index
+        // },function (ret) {
+        //     var result = ret.result
+        //     if(result == 'success')
+        //     {
+        //         self.value = items[ret.data]
+        //         self.index = ret.data
+        //     }
+        // })
+
+
+        let self = this
+        XHR.getNoteName().then((res) => {
+          if( res.data.status == '1'){
+            self.select = res.data.data
+          }
         })
       },
       onfocus (e) {
@@ -123,4 +161,7 @@
 .input-txt{width: 222px; font-size: 32px;color: #333; line-height: 80px;}
 .input{flex:1; background-color: #f5f5f5;height: 80px; padding-left: 20px; border-radius: 16px; line-height: 80px; font-size: 28px;border-width: 0;}
 .textarea{height: 124px;}
+
+.post{position: relative;}
+.input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-90deg); position: absolute;right: 60px; top: 56px;}
 </style>

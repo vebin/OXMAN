@@ -8,6 +8,11 @@ export const MY_NAV = ({ commit }, nb) => {
 }
 
 
+// select id－状态
+export const SE_ID = ({ commit }, nb) => {
+    commit(types.SE_ID, nb)
+}
+
 // 测试
 export const IS_CK = ({ commit }) => {
     XHR.isCK().then( function (res) {

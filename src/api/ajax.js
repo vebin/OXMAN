@@ -25,7 +25,7 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
               method: 'POST',
               url: setting.url,
               type: 'json',
-              headers: {'Content-Type':'application/json'},
+              headers: {'Content-Type':'application/x-www-form-urlencoded'},
               body: qs.stringify(setting.data)
             }, (response) => {
               if (response.status == 200) {

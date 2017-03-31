@@ -1,20 +1,21 @@
 <template>
   <div class="ymsg-box">
-      <image resize="cover" class="pic" src="http://usr.im/110x74"></image> 
+      <image resize="cover" class="pic" :src="DATA.bu_mainimgjson[0]"></image> 
       <div class="text-box">
-        <text class="text">狂野绅士依维柯全新Dai狂野绅士依维柯全新D狂</text>
+        <text class="text">{{DATA.bu_title}}</text>
         <div class="tim-box">
-          <text class="lable">法律救援</text>
-          <text class="user-name">某某人无限</text>
-          <text class="time">2小时前</text>
+          <text v-if="DATA.bu_categoryname" class="lable">{{DATA.bu_categoryname}}</text>
+          <text class="user-name">{{DATA.bu_author}}</text>
+          <text class="time">{{ DATA.bu_pushdatetime | timeAgo }}</text>
         </div> 
       </div>
   </div>
 </template>
 <script>
   export default {
-    data () {
-      return {
+    props: {
+      DATA: {
+        bu_mainimgjson:[]
       }
     },
     methods: {

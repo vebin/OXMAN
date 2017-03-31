@@ -13,6 +13,7 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
+    selectid: 0,
 
     tabbar: 1,
 

@@ -1,25 +1,26 @@
 <template>
     <div class="ymsg-box">
-      <text class="text">狂野绅士依维柯全新Dai狂野绅士依维柯全新D狂</text>
+      <text class="text">{{DATA.bu_title}}</text>
       
-      <div v-if="false" class="pic-wrap">
-        <image resize="cover" class="pic" src="http://usr.im/110x74"></image>
-        <image resize="cover" class="pic" src="http://usr.im/110x74"></image>
-        <image resize="cover" class="pic" src="http://usr.im/110x74"></image>
+      <div 
+      v-if="DATA.bu_mainimgjson.length > 1 ? true : false" 
+      class="pic-wrap">
+        <image v-for="item in DATA.bu_mainimgjson" :src="item" resize="cover" class="pic-wrap-pic" ></image>
       </div>
 
       <div class="tim-box">
-        <text class="lable yel">法律救援</text>
-        <text class="user-name">某某人无限</text>
-        <text class="time">2小时前</text>
-      </div> 
+        <text v-if="DATA.bu_categoryname" class="lable">{{DATA.bu_categoryname}}</text>
+        <text class="user-name">{{DATA.bu_author}}</text>
+        <text class="time">{{ DATA.bu_pushdatetime | timeAgo }}</text>
+      </div>
   </div>
-  <!-- <image :src="item" class="pic-wrap-pic" v-for="item in PicWrap"></image> -->
+  
 </template>
 <script>
   export default {
-    data () {
-      return {
+    props: {
+      DATA: {
+        bu_mainimgjson:[]
       }
     },
     methods: {

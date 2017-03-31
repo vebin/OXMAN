@@ -3,9 +3,9 @@
     <text class="day">每日推荐</text>
 
     <div class="top-list">
-      <div class="top-cell" v-for="(item, index) in lists">
-        <image class="image" src="http://usr.im/40x40"></image>
-        <text class="text">{{item}}</text>
+      <div class="top-cell" v-for="(item, index) in DATA">
+        <image class="image" :src="item.bu_imgsrc"></image>
+        <text class="text">{{item.bu_name}}</text>
       </div>
     </div>
 
@@ -19,7 +19,7 @@
 <script>
   export default {
     props: {
-      lists: Array
+      DATA: Array
     },
     methods: {
     }
