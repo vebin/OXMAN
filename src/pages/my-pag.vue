@@ -3,14 +3,14 @@
     <w-header v-if="true" titles="文章详情"></w-header>
     <scroller class="page-box">
       <div class="main-box">
-        <text class="min-title">一张真假人民币</text>
+        <text class="min-title">{{DATA.bu_title}}</text>
 
         <div class="min-btn-box">
-          <image class="min-pic" src="http://usr.im/36x36"></image>
+          <image class="min-pic" :src="DATA.bu_authorimgurl"></image>
 
           <div class="min-msg">
-            <text class="min-msg-name">某某某时尚</text>
-            <text class="min-msg-time">2017.03.04</text>
+            <text class="min-msg-name">{{DATA.bu_author}}</text>
+            <text class="min-msg-time">{{DATA.bu_publishdatetime | dataTimeFgo}}</text>
           </div>
 
           <div v-if="true" class="min-msg-btn">
@@ -30,9 +30,9 @@
           <div class="alt-san"></div>
         </div>
 
-        <text class="min-min-txt">点击右上方关注点击右上方关注点击右上方关注点击右上方关注点击右上方关注点击右上方关注</text>
+        <text class="min-min-txt">{{DATA.bu_content}}</text>
         <image resize="cover" class="min-min-img" src="http://usr.im/345x345"></image>
-        <text class="min-min-txt">点击右上方关注点击右上方关点击右上方关注点击右上方关注点击右上方关注注点击右上方关注</text>
+        <text class="min-min-txt"></text>
 
 
       </div>
@@ -71,9 +71,9 @@
 
 
     </scroller>
-    <bot-nav></bot-nav>
+    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm"></bot-nav>
 
-    <txt-frm v-if="false"></txt-frm>
+    <txt-frm v-if="showForm" @hides="hideForm"></txt-frm>
   </div>
 </template>
 
@@ -81,6 +81,9 @@
   import WHeader from '../components/w-header.vue'
   import BotNav from '../components/bottom-nav.vue'
   import TxtFrm from '../components/txt.vue'
+
+  import XHR from '../api'
+  var modal = weex.requireModule('modal')
   export default {
     components: { WHeader, BotNav, TxtFrm },
     data () {
@@ -89,11 +92,60 @@
         zans: [
           'https://s.kcimg.cn/app/icon/oxman/t-zan.png',
           'https://s.kcimg.cn/app/icon/oxman/t-zanok.png',
-        ]
+        ],
+        showForm: false,        // 回复弹窗
+        page:1,               // 当前页码
+        pageSize: 10,        // 每页显示记录数
+        cmtSum:0,           // 评论总数
+        outerCS:0,      // 一级评论记录总数
+        COMDATA:[],         // 评论列表
+
+        DATA:{},            // 文章详情
+
+
       }
     },
+    created () {
+      this.getNewsMsg()
+      this.getNewsComList()
+    },
     methods: {
-
+      hideForm () { this.showForm = !this.showForm},
+      getNewsMsg(){
+        let self = this
+        let json = {}
+        json.id = this.$route.query.id
+        XHR.getNewsMsg(json).then((res) => {
+          if( res.data.status == '1'){
+            self.DATA = res.data.data
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
+        
+      },
+      getNewsComList(){
+        let self = this
+        let json = {}
+        json.topicid = this.$route.query.id
+        json.CurrentPage = this.page
+        json.pagesize = this.pageSize
+        XHR.getNewsComList(json).then((res) => {
+          if( res.data.status == '1'){
+            self.COMDATA.push(...res.data.comments)
+            self.cmtSum = res.data.cmt_sum
+            self.outerCS = res.data.outer_cmt_sum
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
+      },
     }
   }
 </script>
