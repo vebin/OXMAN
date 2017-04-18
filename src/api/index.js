@@ -1,14 +1,22 @@
 import fetch from './ajax'
 
-// const HTTP_DEV = 'http://k.dev.360che.com'  // 开发
 const HTTP_DEV = 'http://192.168.0.247:8087'  // 开发
-
 const HTTP_PRO = 'http://qa.k.360che.com'   // 预发布
-const HTTPS = 'https://k.360che.com'        // 正式
 
 const DEBUG = true                         // 是否开发模式
+const URLS = DEBUG ? HTTP_DEV : HTTP_PRO
 
-const URLS = DEBUG ? HTTP_DEV : HTTP_PRO;
+/*
+//  评论系统地址说明
+//  测试域名  http://cmt_test.360che.com/
+//  示例：http://cmt_test.360che.com/comlist/CommentList.aspx
+//  host：120.132.50.35   cmt_test.360che.com
+//  正式域名：https://cmt.360che.com/
+*/
+const C_HTTP_DEV = 'http://cmt_test.360che.com'
+const C_HTTP = 'https://cmt.360che.com'
+
+const C_URLS = DEBUG ? C_HTTP_DEV : C_HTTP
 
 class XHR {
 // 获取用户信息
@@ -51,13 +59,27 @@ class XHR {
             body: json
         })
     }
-
+    // 牛人个人信息接口
+    getManInfo(json){
+      return fetch({
+                  url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
+                  body: json
+               })
+    }
     // 测试
     isCK(json) {
         return fetch({
             url: `${URLS}WeiXin/WXJSsignature.aspx`
         })
     }
+
+    // 文章详情
+      getNewsMsg (json) {
+        return fetch({
+                  url: `${URLS}/api/nr/pcedit/GetA`,
+                  body: json
+               })
+      }
 
     //推荐关注九宫格接口
     getRecommendAttention(json) {
@@ -96,6 +118,21 @@ class XHR {
         })
     }
 
+/*---------------C_URLS---评论相关---------------------*/
+// 文章详情－评论列表
+  getNewsComList (json) {
+    return fetch({
+              url: `${C_URLS}/api/CommentsList.ashx`,
+              body: json
+           })
+  }
+
+
+
+
+
+
+
     ////上传图片
     //PostHeadPortrait(json){
     //    return fetch({
@@ -104,6 +141,7 @@ class XHR {
     //        type:'POST'
     //    })
     //}
+
 }
 
 
