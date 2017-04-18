@@ -1,10 +1,10 @@
 <template>
   <div class="one-alert">
     <div class="one-box">
-      <textarea class="textarea" placeholder="5-20个字以内" autofocus="true"></textarea>
+      <textarea class="textarea" placeholder="5-20个字以内"></textarea>
     </div>
     <div class="mo-box">
-      <text class="mo-le-btn" @click="$emit('hides')">取消</text>
+      <text class="mo-le-btn">取消</text>
       <text class="mo-ri-btn">发表</text>
     </div>
   </div>
@@ -13,9 +13,6 @@
 <script>
   
   export default {
-    mounted (){
-
-    },
     methods: {
       
     }

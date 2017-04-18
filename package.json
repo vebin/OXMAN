@@ -14,7 +14,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --watch",
-    "serve": "node build/init.js && serve -p 1777",
+    "serve": "node build/init.js && serve -p 8088",
     "copy:a": "cp dist/index.weex.js android/app/src/main/assets/index.js",
     "copy:ios": "cp dist/index.weex.js ios/assets/index.js",
     "copy": "npm run copy:android && npm run copy:ios",

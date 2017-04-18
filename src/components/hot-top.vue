@@ -11,9 +11,7 @@
 
     <div class="msg-box">
       <text class="msg-ico">通知</text> 
-      <a class="msg" href="">
-        <text class="msg">牛人平台开放啦！</text>
-      </a>
+      <text class="msg" @click="jump('/pages')">这个是通知的内容</text>
     </div>
   </div>
 </template>
@@ -54,6 +52,6 @@
 }
 .image{width: 80px;height: 80px; border-radius: 80px;}
 .text{font-size: 24px;color: #666; height: 60px; line-height: 60px;
-overflow:hidden; text-align: center;
+overflow:hidden;
 }
 </style>

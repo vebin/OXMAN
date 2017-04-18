@@ -4,19 +4,18 @@
 
     <div class="star-box">
       <div class="star-lef">
-        <text class="lefTxt lefAct">已关注</text>
-        <text class="lefTxt">卡车测评</text>
-        <text class="lefTxt">养车</text>
-        <text class="lefTxt">段子</text>
+        <text :class="['lefTxt',categorySelected==0?'lefAct':'']" @click="switchList(0)">已关注</text>
+        <text v-for="ele in categoryList" :class="['lefTxt',categorySelected == ele.bu_categoryid ? 'lefAct' : '']" @click="switchList(ele.bu_categoryid)">{{ele.bu_categoryname}}</text>
       </div>
+
       <div class="star-rit">
-        <text v-if="false" class="ritBtn">您还未登录 马上登录</text>
+        <text v-if="!isLogin" class="ritBtn" @click="goLogin">您还未登录 马上登录</text>
+        <div v-if="emptyList">
+          <text class="ritWelx">您还未订阅任何牛人，快去订阅一波</text>
+          <text class="ritTit">推荐关注</text>
+        </div>
 
-        <text class="ritWelx">您还未订阅任何牛人，快去订阅一波</text>
-        <text class="ritTit">推荐关注</text>
-
-        <str-item></str-item>
-
+        <str-item v-if="isLogin" :followedList="followedList"></str-item>
       </div>
     </div>
     
@@ -26,20 +25,63 @@
         <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       </div>
     </div>
+    <flow></flow>
   </div>
 </template>
 
-<script>
+<script type="text/babel">
   import AppHeader from '../components/app-header.vue'
   import StrItem from '../components/str-item.vue'
+  import flow from '../components/flow.vue'
+  import XHR from '../api'
 
-  const modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal');
+  const storage = weex.requireModule('storage');
+
   export default {
-    components: { AppHeader, StrItem },
+    components: { AppHeader, StrItem,flow},
     data () {
       return {
         text: '',
+
+        //用户是否登陆
+        isLogin:true,
+        //分表标签列表
+        categoryList:[],
+        //显示的分类标签
+        categorySelected:0,
+        //没有关注任何牛人
+        emptyList:false,
+        //已关注列表
+        followedList:[]
       }
+    },
+    created(){
+
+      //如果用户未登录
+      if(this.$getConfig().userId != 0){
+        this.isLogin = false
+      }else{
+        //请求分类标签接口
+        XHR.getCategoryList().then((res) => {
+          if(res.ok && res.data.status == 1){
+            this.categoryList = res.data.data;
+          }
+        });
+
+        //请求已关注列表
+        XHR.getFollowed({'currentPage':1}).then((res) => {
+          if(res.ok && res.data.status == 1){
+            this.followedList = res.data.data;
+            if(res.data.msg == "推荐列表"){
+              this.emptyList = true;
+            }else{
+              this.emptyList = false;
+            }
+          }
+        });
+      }
+
     },
     methods: {
       onchange (e) {
@@ -48,11 +90,35 @@
           duration: 0.8
         })
       },
-      onfocus (e) {
+      //去登陆
+      goLogin(){
 
       },
-      onblur (e) {
+      //点击切换关注列表
+      switchList(id){
+        this.categorySelected = id;
 
+        let ajaxName = 'getFollowed';
+        let o = {};
+        o.currentPage = 1;
+
+        if(id != 0){
+          ajaxName = 'getFollowedCategoryList';
+          o.categoryid = id;
+          this.emptyList = false;
+        }
+
+        //请求已关注列表
+        XHR[ajaxName](o).then((res) => {
+          if (res.ok && res.data.status == 1) {
+            this.followedList = res.data.data;
+            if(res.data.msg == "推荐列表"){
+              this.emptyList = true;
+            }else{
+              this.emptyList = false;
+            }
+          }
+        });
       }
     }
   }

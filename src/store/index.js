@@ -17,6 +17,9 @@ const store = new Vuex.Store({
 
     tabbar: 1,
 
+      //认证头
+    attestation:1, // 1：认证 2：修改资料
+
     hotTab: {
         top: 0,
         DATA:[

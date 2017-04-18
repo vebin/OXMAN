@@ -11,7 +11,7 @@
       <div class="link" @click="jump('/star')">
         <text :class="actClass(2)">关注</text>
       </div>
-      <div v-if="true" class="link" @click="jump('/myrom')">
+      <div v-if="userInfoShow" class="link" @click="jump('/myrom')">
         <text :class="actClass(3)">我的</text>
       </div>
     </div>
@@ -21,14 +21,23 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/babel">
   const modal = weex.requireModule('modal')
   const dom = weex.requireModule('dom')
   export default {
     props: {
       show: {
         type: String,
-        default: '1'
+        default: '1',
+
+        //如果未登录 隐藏我的信息
+        userInfoShow:false
+      }
+    },
+    created(){
+      //如果用户未登录
+      if(this.$getConfig().userId != 0){
+        this.userInfoShow = true
       }
     },
     methods: {

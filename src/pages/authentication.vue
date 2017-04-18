@@ -1,12 +1,11 @@
 <template>
   <div class="commont-view">
-    <w-header v-if="false" titles="牛人认证"></w-header>
-
-    <app-header show="3"></app-header>
+    <w-header v-if="headerType==1" titles="牛人认证"></w-header>
+    <app-header v-else show="3"></app-header>
 
     <div class="pop-box">
 
-      <div class="pop-item">
+      <div class="pop-item" @click="loadHeadPortrait">
         <div class="pop-pic-box">
           <image class="pop-pic" src=""></image>
           <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
@@ -45,15 +44,11 @@
       <text class="but-txt">提交</text>
     </a>
 
-    <select-ops 
-      v-if="selectOk" 
-      v-on:hideSlt="selectVal" 
-      :types="typeVal"
-      :DATA="select"></select-ops>
+    <select-ops v-if="selectOk" v-on:hideSlt="selectVal" :types="typeVal" :DATA="select"></select-ops>
   </div>
 </template>
 
-<script>
+<script type="text/babel">
   import WHeader from '../components/w-header.vue'
   import AppHeader from '../components/app-header.vue'
   import SelectOps from '../components/select.vue'
@@ -65,6 +60,8 @@
     data () {
       return {
         selectOk: false,
+        //1：认证  2：修改资料
+        headerType:1,
 
         typeVal: '',
         typeNum: 0,
@@ -81,7 +78,7 @@
       }
     },
     created () {
-      this.pick()
+//      if(this.$store.state.attestation == 1 ?
     },
     methods: {
       onchange (e) {
@@ -120,11 +117,9 @@
           }
         })
       },
-      onfocus (e) {
-
-      },
-      onblur (e) {
-
+//      上传图片
+      loadHeadPortrait(){
+       
       }
     }
   }

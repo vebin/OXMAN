@@ -7,15 +7,15 @@
     </div>
     <div class="btm-nav">
       <image class="btm-ico" :src="icos"></image>
-      <text class="btm-txt">{{DATA.bu_like}}</text>
+      <text class="btm-txt">23</text>
     </div>
-    <div class="btm-nav" @click="$emit('hides')">
+    <div class="btm-nav">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
-      <text class="btm-txt">{{SUM}}</text>
+      <text class="btm-txt">23</text>
     </div>
     <div class="btm-nav">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/shee.png"></image>
-      <text class="btm-txt">{{DATA.bu_share}}</text>
+      <text class="btm-txt">434</text>
     </div>
   </div>
 </template>
@@ -23,10 +23,6 @@
 <script>
   
   export default {
-    props:{
-      DATA: Object,
-      SUM: Number
-    },
     data () {
       return {
         icos: 'https://s.kcimg.cn/app/icon/oxman/t-zans.png',

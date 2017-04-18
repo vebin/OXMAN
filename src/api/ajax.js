@@ -15,10 +15,10 @@ function filter (str) {  // 特殊字符转义
 }
 
 const fetch = ({ url, body = null, type = 'GET'}) => {
-    var setting = { url: url, type: type, data: body}
-    var aData = []
-    var sData = ''
-    setting.type = setting.type.toUpperCase()
+    var setting = { url: url, type: type, data: body};
+    var aData = [];
+    var sData = '';
+    setting.type = setting.type.toUpperCase();
     return new Promise((resolve, reject) => {
         if (setting.type == 'POST') {
             stream.fetch({
@@ -61,6 +61,6 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
             }, () => {})
         }
     })
-}
+};
 
 export default fetch

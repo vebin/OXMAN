@@ -3,7 +3,7 @@
     <app-header show="1"></app-header>
 
     <div class="scroller">
-      <list class="hot-scroller" @loadmore="getIndexAsy" loadmoreoffset="30">
+      <list class="hot-scroller">
         <hot-top :DATA="hot"></hot-top>
         <cell
           v-for="(items, index) in indexDATA"
@@ -13,12 +13,10 @@
           keep-scroll-position="true">
           <list-centent :DATA="items"></list-centent>
         </cell>
-        <text class="indicator" v-if="showLoading">Loading ...</text>
-        <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
       </list>
     </div>
 
-    <div class="flow-btn" @click="jump('/flow')">
+    <div v-if="attestation" class="flow-btn" @click="jump('/aution')">
       <image class="flow-pic" src="https://s.kcimg.cn/app/icon/oxman/rzs.png"></image>
       <text class="flow-txt">认证</text>
     </div>
@@ -27,13 +25,12 @@
 </template>
 
 
-<script>
+<script type="text/babel">
   import AppHeader from '../components/app-header.vue'
   import ListCentent from '../components/list-centent.vue'
   import HotTop from '../components/hot-top.vue'
 
   import XHR from '../api'
-  var modal = weex.requireModule('modal')
 
   export default {
     components: { AppHeader, ListCentent, HotTop },
@@ -43,17 +40,14 @@
     // },
     data () {
       return {
-        showLoading: false,
-        noLoading: false,
-
-
         userid:'',
         userName:'',
-
-
+        
         hot: [],
         page:'',
-        indexDATA:[]
+        indexDATA:[],
+        //是否显示认证
+        attestation:false,
       }
     },
     created () {
@@ -64,12 +58,20 @@
       //     me.userName = ret.userName
       // }
 
-      this.getEverHot()
-      this.getIndexAsy()
+      this.getEverHot();
+      this.getIndexAsy();
+
+      //如果用户未登录
+      if(this.$getConfig().userId == 0){
+
+      }else{
+        this.attestation = true;
+      }
+
     },
     methods: {
       getEverHot(){
-        let self = this
+        let self = this;
         XHR.getEveryDay().then((res) => {
           if( res.data.status == '1'){
             self.hot = res.data.data
@@ -77,37 +79,19 @@
         })
       },
       getIndexAsy(){
-        let self = this
-        let json = {}
+        let self = this;
+        let json = {};
         if( this.page !== ''){
           json.time = this.page
         }
-        if(!this.noLoading && !this.showLoading){
-          self.showLoading = true
-          XHR.getIndexAsy(json).then((res) => {
-            if( res.data.status == '1'){
-              self.showLoading = false
-              self.page = res.data.data[res.data.data.length -1].bu_pushdatetime
-              if(res.data.data.length == 0){
-                self.noLoading = true
-              }
-              if(res.data.data.length < 10 && res.data.data.length !== 0){
-                self.indexDATA.push(...res.data.data)
-                self.noLoading = true
-              } else {
-                self.indexDATA.push(...res.data.data)
-              }
-            }else{
-              self.showLoading = false
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
-            }
-          })
-        }
-      },
+        XHR.getIndexAsy(json).then((res) => {
+          if( res.data.status == '1'){
+            self.page = res.data.data[res.data.data.length -1].bu_pushdatetime;
+            self.indexDATA.push(...res.data.data)
+          }
+        })
 
+      },
     }
   }
 </script>
@@ -135,14 +119,4 @@
 .scroller {width: 750px; height: 1246px; background-color: #FAFBFC;}
 .row{padding-bottom: 20px;background-color:#FAFBFC;}
 
-
-
-.indicator {
-    height: 94px;
-    color: #888888;
-    font-size: 32px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    text-align: center;
-  }
 </style>

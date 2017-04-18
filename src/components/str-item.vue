@@ -1,29 +1,42 @@
 <template>
-<div class="ritItem">
-  <image class="ritPic" src="http://usr.im/40x40"></image>
-  <div class="ritCenBox">
-    <text class="ritCenName">卡车司机</text>
-    <text class="ritCenNmb">123人关注</text>
-  </div>
+<div>
+  <div v-for="(ele,index) in followedList" class="ritItem">
+    <image class="ritPic" :src="ele.bu_imgsrc"></image>
+    <div class="ritCenBox">
+      <text class="ritCenName">{{ele.bu_name}}</text>
+      <text class="ritCenNmb">{{ele.followercount}}人关注</text>
+    </div>
 
-  <div v-if="false" class="ritStrBtn">
-    <image class="ritSico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
-    <text class="ritButTxt">关注</text>
-    <text class="ritButTxt">已关注</text>
-  </div>
+    <div v-if="ele.bu_isfollower" class="ritStrBtn isok" @click="followed(2,ele.bu_id,index)">
+      <text class="ritButTxt isokTxt">已关注</text>
+    </div>
 
-  <div v-if="true" class="ritStrBtn isok">
-    <text class="ritButTxt isokTxt">已关注</text>
+    <div v-else class="ritStrBtn" @click="followed(1,ele.bu_id,index)">
+      <image class="ritSico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+      <text class="ritButTxt">关注</text>
+      <!--<text class="ritButTxt">已关注</text>-->
+    </div>
+
   </div>
 </div>
 </template>
-<script>
+<script type="text/babel">
+  import XHR from '../api'
   export default {
+    props:['followedList'],
     data () {
       return {
       }
     },
     methods: {
+      followed(type,id,index){
+        let nbbsid = [id];
+        XHR.postAttention({type:type,watchtype:1,nbbsid:JSON.stringify(nbbsid),UA:"MbjbUs1_N3z6k0ycXhzeE0OTEwMTQ0Mjhf"}).then((ele) => {
+          if(ele.ok && ele.data.status == 1){
+            this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower
+          }
+        })
+      }
     }
   }
 </script>
