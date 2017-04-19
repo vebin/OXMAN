@@ -7,7 +7,7 @@
 
       <div class="pop-item" @click="loadHeadPortrait">
         <div class="pop-pic-box">
-          <image class="pop-pic" src=""></image>
+          <image class="pop-pic" :src="Data.bu_facelogo"></image>
           <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
         </div>
         <text class="pop-name">上传头像</text>
@@ -17,32 +17,28 @@
 
     <div class="input-box">
       <text class="input-txt">牛人名称：</text>
-      <input class="input" type="text" placeholder="2-8个字"/>
+      <input class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="addInfo('name')"/>
     </div>
 
     <div class="input-box">
       <text class="input-txt">个人简介：</text>
-      <textarea class="input textarea" placeholder="5-20个字以内"></textarea>
+      <textarea class="input textarea" placeholder="5-20个字以内" :value="Data.bu_manintroduction" @input="addInfo('intro')"></textarea>
     </div>
 
     <div class="input-box">
       <text class="input-txt">联系电话：</text>
-      <input class="input" type="text" placeholder="请输入您的电话"/>
+      <input class="input" type="text" placeholder="请输入您的电话" :value="Data.bu_manphone" @input="addInfo('phone')"/>
     </div>
 
     <div class="input-box post">
       <text class="input-txt">标签属性：</text>
-      <text @click="selectVal" class="input">{{typeVal}}</text>
+      <text @click="selectVal('fold')" class="input">{{typeVal}}</text>
       <image class="input-picos" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
     </div>
 
-    <a v-if="true" class="button mt60" href="">
+    <div  :class="['button','mt60',submitDisabled?'':'buts']" @click="submitData">
       <text class="but-txt">提交</text>
-    </a>
-
-    <a v-if="false" class="button buts mt60" href="">
-      <text class="but-txt">提交</text>
-    </a>
+    </div>
 
     <select-ops v-if="selectOk" v-on:hideSlt="selectVal" :types="typeVal" :DATA="select"></select-ops>
   </div>
@@ -52,6 +48,7 @@
   import WHeader from '../components/w-header.vue'
   import AppHeader from '../components/app-header.vue'
   import SelectOps from '../components/select.vue'
+  import router from '../router'
   const modal = weex.requireModule('modal')
   // const picker = weex.requireModule('picker')
   import XHR from '../api'
@@ -61,14 +58,30 @@
       return {
         selectOk: false,
         //1：认证  2：修改资料
-        headerType:1,
+        headerType:2,
+        //提交资料
+        Data:{
+          UA:'',
+          //头像
+          bu_facelogo:'https://avatars0.githubusercontent.com/u/25260977?v=3&s=460',
+          //姓名
+          bu_manname:'',
+          //电话
+          bu_manphone:'',
+          //简介
+          bu_manintroduction:'',
+          //属性分类
+          bu_categoryid:'',
+        },
 
-        typeVal: '',
+        typeVal:'',
         typeNum: 0,
 
 
         select: [],
 
+        //提交按钮状态
+        submitDisabled:true,
         logo:'',
         name:'',
         phone:'',
@@ -78,21 +91,91 @@
       }
     },
     created () {
-//      if(this.$store.state.attestation == 1 ?
+//      getNbInfo
+//      this.headerType = this.$store.state.attestation;
+      this.Data.UA = this.$getConfig().UA;
+
+//      如果是修改个人资料，请求个人资料数据
+      if(this.headerType == 2){
+        XHR.getNbInfo({'nbuid':255792}).then((ele) => {
+          if(ele.ok && ele.data.status == 1){
+            let NbInfo = ele.data.data[0];
+
+            this.Data.bu_facelogo = NbInfo.bu_imgsrc;
+            this.Data.bu_manname = NbInfo.bu_name;
+            this.Data.bu_manphone = NbInfo.bu_manphone;
+            this.Data.bu_manintroduction = NbInfo.bu_manintroduction;
+            this.Data.bu_categoryid = NbInfo.bu_categoryid;
+            this.typeVal = NbInfo.bu_categoryname;
+            this.buttonState()
+          }
+        })
+      }
     },
     methods: {
-      onchange (e) {
+      alert (text) {
         modal.toast({
-          message: 'oninput',
+          message: text,
           duration: 0.8
         })
       },
-      selectVal (nb) {
-        if( nb !== -1 && typeof nb == 'number') {
-          this.typeVal = this.select[nb].bu_categoryname
-          this.typeNum = this.select[nb].bu_categoryid
+      selectVal (nb,content) {
+        console.log(nb)
+        if(nb == 'fold'){
+          XHR.getTagAttributes().then((ele) => {
+            if(ele.ok && ele.data.status == 1){
+              console.log(ele.data)
+              this.select = ele.data.data;
+            }
+          })
+        }else if(nb != -1){
+          this.typeVal = content;
+          this.Data.bu_categoryid = nb;
         }
+//        if( nb !== -1 && typeof nb == 'number') {
+//          this.typeVal = this.select[nb].bu_categoryname
+//          this.typeNum = this.select[nb].bu_categoryid
+//        }
         this.selectOk = !this.selectOk
+        this.buttonState()
+      },
+      //编辑资料
+      addInfo(type){
+        console.log(event.value)
+        if(type == 'name'){
+          this.Data.bu_manname = event.value;
+        }else if(type == 'intro'){
+          this.Data.bu_manintroduction = event.value;
+        }else if(type == 'phone'){
+          this.Data.bu_manphone = event.value;
+        }
+        this.buttonState()
+      },
+      buttonState(){
+        if(this.Data.bu_manname != '' && this.Data.bu_manphone != '' && this.Data.bu_categoryid !== ''){
+          this.submitDisabled = false
+        }else{
+          this.submitDisabled = true
+        }
+      },
+      submitData(){
+        if(this.submitDisabled){
+          return
+        }
+        let type = 'postNbAuthentication';
+        //如果是修改个人资料，提交修改个人资料数据
+        if(this.headerType ==2){
+          type = 'getEditNBMan';
+        }
+        XHR[type](this.Data).then((ele) => {
+          if (ele.ok) {
+            this.alert('修改成功');
+            this.$nextTick(function(){
+              router.go(-1)
+            })
+          }
+        })
+
       },
       pick () {
         // var items = new Array("法律援助","Volvo","BMW")

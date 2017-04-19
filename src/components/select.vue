@@ -7,7 +7,7 @@
         :index="i"
         class="row">
 
-        <text :class="selt(types,v.bu_categoryname)" @click="opect(i)">{{v.bu_categoryname}}</text>
+        <text :class="selt(types,v.bu_categoryname)" @click="opect(i,v.bu_categoryname)">{{v.bu_categoryname}}</text>
 
       </cell>
     </list>
@@ -22,8 +22,8 @@
       types: String
     },
     methods: {
-      opect (nb) {
-        this.$emit('hideSlt',nb)
+      opect (nb,content) {
+        this.$emit('hideSlt',nb,content)
       },
       selt(typs,ids){
         return typs == ids ? 'item-title bule' : 'item-title'

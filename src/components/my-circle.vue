@@ -1,6 +1,6 @@
 <template>
   <div class="new-box">
-    <text class="new-tit">风餐露宿计算机的肌肤试</text>
+    <text class="new-tit">{{items.bu_title}}</text>
     <div class="new-pin">
 
       <div class="new-left">
@@ -12,7 +12,7 @@
           <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/msg-ico.png"></image>
           <text class="new-txt">123</text>
         </div>
-        <text class="new-txt">2017年03年2日</text>
+        <text class="new-txt">{{items.bu_pushdatetime | dataTimeFgo}}</text>
       </div>
 
       <text v-if="false" class="new-but">已推送</text>

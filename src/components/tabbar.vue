@@ -69,7 +69,7 @@
 </script>
 
 <style scoped>
-.tabbar-box{height: 98px;flex-direction:row; justify-content:space-around; align-items:center; background-color: #FAFBFC; border-top-style: solid;border-top-width: 2px;border-top-color: #ccc;}
+.tabbar-box{position:fixed;left:0;bottom:0;right:0;height: 98px;flex-direction:row; justify-content:space-around; align-items:center; background-color: #FAFBFC; border-top-style: solid;border-top-width: 2px;border-top-color: #ccc;}
 .item{flex:1; justify-content:center; align-items:center;}
 .tab-ico{ width: 40px; height: 40px;}
 .tab-txt{font-size: 26px; color: #999;}

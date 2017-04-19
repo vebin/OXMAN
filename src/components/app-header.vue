@@ -36,7 +36,9 @@
     },
     created(){
       //如果用户未登录
-      if(this.$getConfig().userId != 0){
+      if(this.$getConfig().userId == 0){
+        this.userInfoShow = false
+      }else{
         this.userInfoShow = true
       }
     },

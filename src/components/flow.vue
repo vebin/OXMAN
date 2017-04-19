@@ -1,5 +1,5 @@
 <template>
-  <div class="commont-view" v-if="RecommendAttentionShow">
+  <div class="commont-view">
 
     <div class="header">
       <div class="backs">
@@ -30,17 +30,13 @@
           <image class="pop-abs-pic" src="https://s.kcimg.cn/app/icon/oxman/yest.png"></image>
         </div>
       </div>
-      
     </div>
-    <a v-if="false" class="button" href="">
-      <text class="but-txt">关注</text>
-    </a>
 
-    <div v-if="true" class="button buts" @click="followed">
+    <div v-if="true" :class="['button',submitDisabled?'':'buts']" @click="batchFollowed">
       <text class="but-txt">关注</text>
     </div>
 
-    <text class="jum-txt" @click="skip">随便看看，点击跳过 》</text>
+    <text class="jum-txt" @click="skipBatchFollowed">随便看看，点击跳过 》</text>
   </div>
 </template>
 
@@ -51,36 +47,39 @@
   import router from '../router'
   import XHR from '../api'
   export default {
+    props:['RecommendAttentionList'],
     data () {
       return {
-        //是否显示推荐关注列表
-        RecommendAttentionShow:false,
-        //推荐关注列表
-        RecommendAttentionList:[],
-        nbbsid:[]
+        nbbsid:[],
+        submitDisabled:false,
       }
     },
     created(){
+      if(this.$getConfig().userId != 0){
 
-      //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
-      storage.getItem('RecommendAttention', ele => {
-        if(ele.result != 'success'){
-          this.RecommendAttentionShow = true;
-          //请求分类标签接口
-          XHR.getRecommendAttention().then((res) => {
-            if(res.ok && res.data.status == 1){
-              this.RecommendAttentionList = res.data.data;
-            }
-          });
-        }
-      });
-
+      }
     },
     methods: {
       onchange (id,index) {
+        let _this = this;
         this.RecommendAttentionList[index].bu_isfollower = !this.RecommendAttentionList[index].bu_isfollower;
+
+        this.submitDisabled = false;
+        let has = true;
+
+        this.RecommendAttentionList.forEach(function(ele,index){
+          if(has){
+            if(ele.bu_isfollower) {
+              _this.submitDisabled = true;
+            }else{
+              has = false;
+              _this.submitDisabled = false;
+            }
+          }
+        })
       },
-      followed(){
+      batchFollowed(){
+        if(this.submitDisabled) return;
         let _this = this;
         this.nbbsid = [];
 
@@ -90,18 +89,11 @@
           }
         });
 
-        XHR.postAttention({type:1,watchtype:1,nbbsid:JSON.stringify(this.nbbsid),UA:"MbjbUs1_N3z6k0ycXhzeE0OTEwMTQ0Mjhf"}).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
-            this.RecommendAttentionShow = false;
-          }
-        })
-
-        storage.setItem('RecommendAttention',true)
+        this.$emit('batchFollowed',JSON.stringify(this.nbbsid))
       },
-      skip(){
-        this.RecommendAttentionShow = false;
-
-        storage.setItem('RecommendAttention',true)
+      //跳过一键关注
+      skipBatchFollowed(){
+        this.$emit('skipBatchFollowed')
       }
     }
   }

@@ -18,14 +18,15 @@
         <str-item v-if="isLogin" :followedList="followedList"></str-item>
       </div>
     </div>
-    
-    <div v-if="false" class="oneAlert">
+
+    <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
-      <div class="altClsBox">
+      <div class="altClsBox" @click="closeFollowedSuccess">
         <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       </div>
     </div>
-    <flow></flow>
+
+    <flow v-if="RecommendAttentionShow" :RecommendAttentionList="RecommendAttentionList" @batchFollowed="batchFollowed" @skipBatchFollowed="skipBatchFollowed"></flow>
   </div>
 </template>
 
@@ -53,31 +54,48 @@
         //没有关注任何牛人
         emptyList:false,
         //已关注列表
-        followedList:[]
+        followedList:[],
+        //推荐关注列表
+        RecommendAttentionList:[],
+        //是否显示推荐关注列表
+        RecommendAttentionShow:false,
+//        关注成功弹层
+        followedSuccessShow:false,
       }
     },
     created(){
 
+//      //判断是否第一次进入关注页面
+//      storage.getItem('RecommendAttention',(ele) => {
+//        if(ele.result != 'success'){
+//          router.push('/flow')
+//        }
+//      });
+
       //如果用户未登录
-      if(this.$getConfig().userId != 0){
+      if(this.$getConfig().userId == 0){
         this.isLogin = false
       }else{
+        //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
+        storage.getItem('RecommendAttention', ele => {
+          if(ele.result != 'success'){
+            this.RecommendAttentionShow = true;
+            //请求分类标签接口
+            XHR.getRecommendAttention().then((res) => {
+              if(res.ok && res.data.status == 1){
+                this.RecommendAttentionList = res.data.data;
+              }
+            });
+          }else{
+            //请求接口列表
+            this.getFollowed();
+          }
+        });
+
         //请求分类标签接口
         XHR.getCategoryList().then((res) => {
           if(res.ok && res.data.status == 1){
             this.categoryList = res.data.data;
-          }
-        });
-
-        //请求已关注列表
-        XHR.getFollowed({'currentPage':1}).then((res) => {
-          if(res.ok && res.data.status == 1){
-            this.followedList = res.data.data;
-            if(res.data.msg == "推荐列表"){
-              this.emptyList = true;
-            }else{
-              this.emptyList = false;
-            }
           }
         });
       }
@@ -94,6 +112,20 @@
       goLogin(){
 
       },
+      //请求接口列表
+      getFollowed(){
+        //请求已关注列表
+        XHR.getFollowed({UA:this.$getConfig().UA,'currentPage':1}).then((res) => {
+          if(res.ok && res.data.status == 1){
+            this.followedList = res.data.data;
+            if(res.data.msg == "推荐列表"){
+              this.emptyList = true;
+            }else{
+              this.emptyList = false;
+            }
+          }
+        });
+      },
       //点击切换关注列表
       switchList(id){
         this.categorySelected = id;
@@ -101,6 +133,7 @@
         let ajaxName = 'getFollowed';
         let o = {};
         o.currentPage = 1;
+        o.UA = this.$getConfig().UA;
 
         if(id != 0){
           ajaxName = 'getFollowedCategoryList';
@@ -119,7 +152,40 @@
             }
           }
         });
-      }
+      },
+      //九宫格批量关注
+      batchFollowed(nbbsid){
+        XHR.postAttention({
+          type: 1,
+          watchtype: 1,
+          nbbsid: nbbsid,
+          UA: this.$getConfig().UA
+        }).then((ele) => {
+          if (ele.ok && ele.data.status == 1) {
+            this.RecommendAttentionShow = false;
+            //请求关注列表
+            this.getFollowed();
+            storage.setItem('RecommendAttention',true);
+            storage.getItem('followedSuccess', (ele) => {
+              if (ele.result != 'success') {
+                this.followedSuccessShow = true;
+              }
+            })
+          }
+        });
+      },
+      //跳过一键关注
+      skipBatchFollowed(){
+          //请求关注列表
+          this.getFollowed();
+          storage.setItem('RecommendAttention',true)
+          this.RecommendAttentionShow = false;
+      },
+      //关闭关注成功弹层
+      closeFollowedSuccess(){
+        this.followedSuccessShow = false;
+        storage.setItem('followedSuccess',true)
+      },
     }
   }
 </script>

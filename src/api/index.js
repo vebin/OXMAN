@@ -18,6 +18,11 @@ const C_HTTP = 'https://cmt.360che.com'
 
 const C_URLS = DEBUG ? C_HTTP_DEV : C_HTTP
 
+const B_HTTP_DEV = 'https://circle-api-yufabu.360che.com/'
+const B_HTTP = 'https://circle-api.360che.com/'
+
+const B_URLS = DEBUG ? B_HTTP_DEV : B_HTTP
+
 class XHR {
 // 获取用户信息
     getHis(json) {
@@ -118,6 +123,53 @@ class XHR {
         })
     }
 
+    //获取标签属性
+    getTagAttributes(json){
+        return fetch({
+            url: `${URLS}/api/nr/Index/GetNBCategoryAsync`,
+            body:json
+        })
+    }
+    //牛人认证接口
+    postNbAuthentication(json){
+        return fetch({
+            url: `${URLS}/api/nr/Index/PostAddNBManAsync`,
+            body:json,
+            type:'POST'
+        })
+    }
+    //牛人个人信息接口
+    getNbInfo(json){
+        return fetch({
+            url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
+            body:json
+        })
+    }
+    //修改牛人信息接口
+    getEditNBMan(json){
+        return fetch({
+            url: `${URLS}/api/nr/NBMan/EditNBMan`,
+            body:json,
+            type:'POST'
+        })
+    }
+    //牛人"我的"选项卡文章列表接口
+    getNbArticleList(json){
+        return fetch({
+            url: `${URLS}/api/nr/NBMan/GetArticleList`,
+            body:json,
+        })
+    }
+    //文章发布 || 取消接口
+    getArticleAttention(json){
+        return fetch({
+            url: `${URLS}/api/nr/pcedit/PostB`,
+            body:json,
+            type:'POST'
+        })
+    }
+
+
 /*---------------C_URLS---评论相关---------------------*/
 // 文章详情－评论列表
   getNewsComList (json) {
@@ -126,6 +178,22 @@ class XHR {
               body: json
            })
   }
+/*----------------B_URLS---论坛相关--------------------------*/
+    //获取论坛个人信息接口
+    getBbsUserInfo(json){
+        return fetch({
+            url: `${B_URLS}?c=user&m=userInfo`,
+            body: json,
+            type:'POST'
+        })
+    }
+    getBbsNbCircleList(json){
+        return fetch({
+            url: `${B_URLS}?c=subForum&m=threadsBySubFid&sub_fid=5`,
+            body: json,
+            type:'POST'
+        })
+    }
 
 
 

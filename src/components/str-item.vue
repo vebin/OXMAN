@@ -7,36 +7,59 @@
       <text class="ritCenNmb">{{ele.followercount}}人关注</text>
     </div>
 
-    <div v-if="ele.bu_isfollower" class="ritStrBtn isok" @click="followed(2,ele.bu_id,index)">
+    <div v-if="ele.bu_isfollower" class="ritStrBtn isok" @click="singleFollowed(2,ele.bu_id,index)">
       <text class="ritButTxt isokTxt">已关注</text>
     </div>
 
-    <div v-else class="ritStrBtn" @click="followed(1,ele.bu_id,index)">
+    <div v-else class="ritStrBtn" @click="singleFollowed(1,ele.bu_id,index)">
       <image class="ritSico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       <text class="ritButTxt">关注</text>
       <!--<text class="ritButTxt">已关注</text>-->
     </div>
 
   </div>
+  <div v-if="followedSuccessShow" class="oneAlert">
+    <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
+    <div class="altClsBox" @click="closeFollowedSuccess">
+      <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+    </div>
+  </div>
 </div>
 </template>
 <script type="text/babel">
   import XHR from '../api'
+  const storage = weex.requireModule('storage');
   export default {
     props:['followedList'],
     data () {
       return {
+        followedSuccessShow:false
       }
     },
     methods: {
-      followed(type,id,index){
+      //单个关注
+      singleFollowed(type,id,index){
         let nbbsid = [id];
-        XHR.postAttention({type:type,watchtype:1,nbbsid:JSON.stringify(nbbsid),UA:"MbjbUs1_N3z6k0ycXhzeE0OTEwMTQ0Mjhf"}).then((ele) => {
+        XHR.postAttention({type:type,watchtype:1,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
-            this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower
+            this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower;
+            //查看是否是关注
+            if(type == 1){
+              //查看是否已经弹出过弹层，
+              storage.getItem('followedSuccess', (ele) => {
+                if (ele.result != 'success') {
+                  this.followedSuccessShow = true;
+                }
+              });
+            }
           }
-        })
-      }
+        });
+      },
+      //关闭关注成功弹层
+      closeFollowedSuccess(){
+        this.followedSuccessShow = false;
+        storage.setItem('followedSuccess',true)
+      },
     }
   }
 </script>
@@ -53,5 +76,10 @@
   .ritCenNmb{font-size: 24px; color: #999;}
   .isok{ border-color: #e5e5e5; background-color: #fff;}
   .isokTxt{ color: #555;}
+  .oneAlert{width:750px; height: 1246px; position: absolute;top: 88px; left: 0; background-color: rgba(0,0,0,.6); justify-content: center;
+    align-items:center;}
+  .alertImg{ width: 534px; height: 612px;}
+  .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}
+  .alertClox{ width: 30px; height:30px; -webkit-transform:rotate(45deg);}
 </style>
 
