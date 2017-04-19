@@ -1,17 +1,19 @@
 <template>
   <div class="commont-view">
-    <msg-header titles="某某某新闻条例"></msg-header>
+    <msg-header :titles="getTitles"></msg-header>
 
     <div class="scroller">
-      <list class="hot-scroller">
+      <list class="hot-scroller" @loadmore="loadList" loadmoreoffset="30">
         <cell
-          v-for="(name, index) in hotTab.DATA"
+          v-for="(items, index) in DATA"
           append="tree"
           :ref="'item'+index"
           :index="index"
           keep-scroll-position="true">
-          <list-centent></list-centent>
+          <list-centent :DATA="items"></list-centent>
         </cell>
+        <text class="indicator" v-if="showLoading">Loading ...</text>
+        <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
       </list>
     </div>
 
@@ -22,20 +24,85 @@
 <script>
   import MsgHeader from '../components/msg-header.vue'
   import ListCentent from '../components/list-centent.vue'
+  var modal = weex.requireModule('modal')
   import XHR from '../api'
   export default {
     components: { MsgHeader, ListCentent },
     computed: {
-      // 热门新闻
-      hotTab () {return this.$store.state.hotTab}
+      // 获取头部信息
+      getTitles(){ return this.$store.state.blueTxt}
     },
-    data () {
+    data (){
       return {
-        hot: ['大风刮大风大风', '2', '3','4','5'],
+        showLoading: false,
+        noLoading: false,
+        page: 1,
+
+        DATA: []
       }
     },
+    created () {
+      this.loadList()
+    },
     methods: {
-
+      loadList(){
+        
+        let json = {}
+        json.nbuid = this.$route.query.id
+        json.currentPage = this.page
+        if(!this.noLoading && !this.showLoading){
+          this.showLoading = true
+          this.isMC(json)
+        }
+      },
+      isMC (json){
+        let self = this
+        if(this.$route.query.tp == '1'){
+          XHR.getNbAsync(json).then((res) => {
+            if( res.data.status == '1'){
+              self.showLoading = false
+              if(res.data.data.length == 0){
+                self.noLoading = true
+              }
+              if(res.data.data.length < 10 && res.data.data.length !== 0){
+                self.DATA.push(...res.data.data)
+                self.noLoading = true
+              } else {
+                self.page++
+                self.DATA.push(...res.data.data)
+              }
+            } else {
+              self.showLoading = false
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        } else {
+          XHR.getNbCircle(json).then((res) => {
+            if( res.data.status == '1'){
+              self.showLoading = false
+              if(res.data.data.length == 0){
+                self.noLoading = true
+              }
+              if(res.data.data.length < 10 && res.data.data.length !== 0){
+                self.DATA.push(...res.data.data)
+                self.noLoading = true
+              } else {
+                self.page++
+                self.DATA.push(...res.data.data)
+              }
+            } else {
+              self.showLoading = false
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      }
     }
   }
 </script>
@@ -45,6 +112,13 @@
 .commont-view {
     background-color: #FAFBFC;
 }
-
-
+.scroller {width: 750px; height: 1246px; background-color: #FAFBFC;}
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

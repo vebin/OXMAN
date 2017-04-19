@@ -6,7 +6,9 @@
         <text class="min-title">{{DATA.bu_title}}</text>
 
         <div class="min-btn-box">
-          <image class="min-pic" :src="DATA.bu_authorimgurl"></image>
+          <image class="min-pic" 
+            :src="DATA.bu_authorimgurl"
+            @click="jump({path:'/proc',query:{id: DATA.bu_authorid}})"></image>
 
           <div class="min-msg">
             <text class="min-msg-name">{{DATA.bu_author}}</text>

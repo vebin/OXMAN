@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo" @click="jump('/proc')">
+    <div class="logo" @click="back">
       <image class="image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
     </div>
 
@@ -71,6 +71,9 @@
     font-size: 36px;
     color: #fff;
     padding-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
   }
   .active{
     border-bottom: 3px solid #fff;

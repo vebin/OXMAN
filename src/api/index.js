@@ -71,6 +71,27 @@ class XHR {
                   body: json
                })
     }
+    // 牛人主页推荐---文章列表接口
+    getNbTindex(json){
+      return fetch({
+          url: `${URLS}/api/nr/NBMan/GetNBIndexArticleAsync`,
+          body: json
+       })
+    }
+    // 牛人主页原创---文章列表接口
+    getNbAsync(json){
+      return fetch({
+          url: `${URLS}/api/nr/NBMan/GetNBArticleAsync`,
+          body: json
+       })
+    }
+    // 牛人主页圈子---文章列表接口
+    getNbCircle(json){
+      return fetch({
+          url: `${URLS}/api/nr/NBMan/GetNBCircleArticleAsync`,
+          body: json
+       })
+    }
     // 测试
     isCK(json) {
         return fetch({

@@ -12,78 +12,86 @@
 
       <div class="top-use-box">
         <div class="top-use-left">
-          <image class="top-use-pic" src="http://usr.im/60x60"></image>
+          <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
           <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
         </div>
         <div class="top-use-right">
-          <text class="top-use-name">某某某</text>
-          <div class="top-right-box">
+          <text class="top-use-name">{{DATA.bu_name}}</text>
+          <div v-if="DATA.wactchtype == '0'" class="top-right-box">
 
-            <div v-if="false" class="top-zan-box top-mr">
+            <div v-if="true" class="top-zan-box top-mr">
               <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
               <text class="top-use-txt">点赞</text>
             </div>
 
-            <div v-if="true" class="top-zan-box top-mr isok">
+            <div v-if="false" class="top-zan-box top-mr isok">
               <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
               <text class="top-use-txt">已点赞</text>
             </div>
 
-            <div v-if="false" class="top-zan-box">
-              <text class="top-use-txt">编辑资料</text>
-            </div>
-
-            <div v-if="false" class="top-zan-box">
-              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+            <div v-if="!DATA.bu_isfollower" class="top-zan-box">
+              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/pogz.png"></image>
               <text class="top-use-txt">关注</text>
             </div>
 
-            <div v-if="true" class="top-zan-box isok">
+            <div v-if="DATA.bu_isfollower" class="top-zan-box isok">
               <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
               <text class="top-use-txt">已关注</text>
             </div>
 
           </div>
+
+          <div v-if="DATA.wactchtype == '1'" class="top-right-box">
+            <div class="top-zan-box">
+              <text class="top-use-txt">编辑资料</text>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <div class="head-item">
         <div class="msg">
-          <text class="head-msg-nb">12</text><text class="head-msg">粉丝</text>
+          <text class="head-msg-nb">{{DATA.bu_fanscount}}</text><text class="head-msg">粉丝</text>
         </div>
         <div class="msg border">
-          <text class="head-msg-nb">33</text><text class="head-msg">等级</text>
+          <text class="head-msg-nb">0</text><text class="head-msg">等级</text>
         </div>
         <div class="msg border">
-          <text class="head-msg-nb">231</text><text class="head-msg">活跃度</text>
+          <text class="head-msg-nb">{{DATA.bu_clickcount}}</text><text class="head-msg">活跃度</text>
         </div>
       </div>
 
     </div>
 
 
-    <list class="pro-box">
+    <list class="pro-box" @loadmore="loadList" loadmoreoffset="30">
       <cell
+          v-for="(items, index) in LISTN"
           append="tree"
+          :ref="'item'+index"
+          :index="index"
           keep-scroll-position="true">
-          <text class="pro-times">2017.03.02</text>
-          <list-centent></list-centent>
+          <!-- <text class="pro-times">2017.03.02</text> -->
+          <list-centent :DATA="items"></list-centent>
       </cell>
+      <text class="indicator" v-if="showLoading">Loading ...</text>
+      <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
     </list>
 
 
     <div class="pro-fot">
-      <div v-if="false" class="pro-fot-nav">
+      <!-- <div v-if="false" class="pro-fot-nav">
         <text class="nav-txt blu">加关注</text>
       </div>
       <div v-if="false" class="pro-fot-nav">
         <text class="nav-txt yel">已关注</text>
-      </div>
+      </div> -->
       <div v-if="true" class="pro-fot-nav">
-        <text class="nav-txt">牛人原创</text>
+        <text class="nav-txt" @click="myMsg(1)">牛人原创</text>
       </div>
       <div class="pro-fot-nav">
-        <text class="nav-txt">圈子</text>
+        <text class="nav-txt" @click="myMsg(0)">圈子</text>
       </div>
     </div>
   </div>
@@ -91,15 +99,89 @@
 
 <script>
   import ListCentent from '../components/list-centent.vue'
+  import XHR from '../api'
+  var modal = weex.requireModule('modal')
   export default {
     components: { ListCentent },
-    created () {
+    data (){
+      return {
+        showLoading: false,
+        noLoading: false,
+        pageN: '',
+        LISTN:[],
 
+        DATA: {}
+      }
+    },
+    created () {
+      this.initMsg()
+      this.loadList()
     },
     methods: {
-      back: function () {
-        this.$router.back()
-      }
+      myMsg(txt){
+        if(this.DATA.wactchtype == '1'){
+          if(txt == '1'){
+            this.$store.commit("setBlueTxt", '我的文章')
+          } else {
+            this.$store.commit("setBlueTxt", '我的圈子')
+          }
+        } else {
+          if(txt == '1'){
+            this.$store.commit("setBlueTxt", `${this.DATA.bu_name}的文章`)
+          } else {
+            this.$store.commit("setBlueTxt", `${this.DATA.bu_name}的圈子`)
+          }
+        }
+        this.jump({path:'/msgs',query:{id: this.$route.query.id,tp: txt}})
+      },
+      initMsg (){
+        let self = this
+        let json = {}
+        json.nbuid = this.$route.query.id
+        XHR.getManInfo(json).then((res) => {
+          if( res.data.status == '1'){
+            self.DATA = res.data.data[0]
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
+      },
+
+      loadList(){
+        let self = this
+        let json = {}
+        json.nbuid = this.$route.query.id
+        if( this.pageN !== ''){
+          json.time = this.pageN
+        }
+        if(!this.noLoading && !this.showLoading){
+          self.showLoading = true
+          XHR.getNbTindex(json).then((res) => {
+            if( res.data.status == '1'){
+              self.showLoading = false
+              self.pageN = res.data.data[res.data.data.length -1].bu_pushdatetime
+              if(res.data.data.length == 0){
+                self.noLoading = true
+              }
+              if(res.data.data.length < 10 && res.data.data.length !== 0){
+                self.LISTN.push(...res.data.data)
+                self.noLoading = true
+              } else {
+                self.LISTN.push(...res.data.data)
+              }
+            } else {
+              self.showLoading = false
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      },
     }
   }
 </script>
@@ -176,4 +258,14 @@
 .blu{color: #2062A9;}
 .yel{color: #ff9800;}
 .reds{color: #ff5722;}
+
+
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

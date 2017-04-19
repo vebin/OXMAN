@@ -13,6 +13,7 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
+    blueTxt:'',  // 蓝底白字标题
     selectid: 0,
 
     tabbar: 1,

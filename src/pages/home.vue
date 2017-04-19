@@ -142,7 +142,7 @@
 .row{padding-bottom: 20px;background-color:#FAFBFC;}
 .indicator {
     height: 94px;
-    color: #888888;
+    color: #999;
     font-size: 32px;
     padding-top: 20px;
     padding-bottom: 20px;

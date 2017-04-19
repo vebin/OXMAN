@@ -23,3 +23,4 @@ Vue.mixin(mixins)
 new Vue(Vue.util.extend({ el: '#root', router, store }, App))
 
 router.push('/home');
+

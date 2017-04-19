@@ -1,6 +1,9 @@
 import * as types from './type'
 
 export default {
+    setBlueTxt (state, txt) {
+        state.blueTxt = txt
+    },
 
     [types.MY_NAV] (state, messages) {
         state.tabbar = messages
