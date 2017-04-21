@@ -15,7 +15,7 @@
     </list>
 
     <list class="con-box"
-      v-if="actTab == '1' && hotTab.DATA.length ? true : false">
+      v-if="actTab == '1' && CircleList.length > 0 ? true : false">
        <cell
         v-for="(items, index) in CircleList"
         append="tree"
@@ -31,6 +31,10 @@
       <text class="null-txt">您还没有发布任何文章</text>
     </div>
 
+    <div v-if="actTab == '1' && CircleList.length === 0 ? true : false" class="null-box">
+      <image class="null-img" src="https://s.kcimg.cn/app/icon/oxman/null.png"></image>
+      <text class="null-txt">圈子为空</text>
+    </div>
     <tabbar></tabbar>
   </div>
 </template>
@@ -56,16 +60,14 @@
     components: { AppHeader, Tabbar, MyNew, MyCircle },
     computed: {
       // 焦点菜单
-      actTab () {return this.$store.state.tabbar},
-      hotTab () {return this.$store.state.hotTab},
-      newTab () {return this.$store.state.newTab},
+      actTab () {return this.$store.state.tabbar}
     },
     created(){
 
       //获取个人信息
       XHR.getBbsUserInfo({uid:this.$getConfig().userId}).then((ele) => {
         if(ele.ok){
-          console.log(ele.data);
+          console.log(ele);
           //如果创建过圈子
           if(ele.data.data.subForum){
               this.circleId = ele.data.data.subForum.id;
@@ -99,6 +101,7 @@
 .con-box{
   flex:1;
   padding-bottom:98px;
+  height: 1246px;
 }
 .null-box{flex:1; justify-content:center; align-items:center;}
 .null-img{width: 400px; height: 300px;}

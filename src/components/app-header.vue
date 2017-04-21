@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo" @click="jump('/proc')">
+    <div class="logo" @click="back">
       <image class="image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
     </div>
 

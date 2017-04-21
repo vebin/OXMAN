@@ -57,51 +57,33 @@
       },
       isMC (json){
         let self = this
+        let ACT
         if(this.$route.query.tp == '1'){
-          XHR.getNbAsync(json).then((res) => {
-            if( res.data.status == '1'){
-              self.showLoading = false
-              if(res.data.data.length == 0){
-                self.noLoading = true
-              }
-              if(res.data.data.length < 10 && res.data.data.length !== 0){
-                self.DATA.push(...res.data.data)
-                self.noLoading = true
-              } else {
-                self.page++
-                self.DATA.push(...res.data.data)
-              }
-            } else {
-              self.showLoading = false
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
-            }
-          })
+          ACT = 'getNbAsync'
         } else {
-          XHR.getNbCircle(json).then((res) => {
-            if( res.data.status == '1'){
-              self.showLoading = false
-              if(res.data.data.length == 0){
-                self.noLoading = true
-              }
-              if(res.data.data.length < 10 && res.data.data.length !== 0){
-                self.DATA.push(...res.data.data)
-                self.noLoading = true
-              } else {
-                self.page++
-                self.DATA.push(...res.data.data)
-              }
-            } else {
-              self.showLoading = false
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
-            }
-          })
+          ACT = 'getNbCircle'
         }
+        XHR[ACT](json).then((res) => {
+          if( res.data.status == '1'){
+            self.showLoading = false
+            if(res.data.data.length == 0){
+              self.noLoading = true
+            }
+            if(res.data.data.length < 10 && res.data.data.length !== 0){
+              self.DATA.push(...res.data.data)
+              self.noLoading = true
+            } else {
+              self.page++
+              self.DATA.push(...res.data.data)
+            }
+          } else {
+            self.showLoading = false
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="btm-box">
 
-    <div class="btm-nav">
+    <div class="btm-nav" @click="jump('/home')">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/home-ico.png"></image>
       <text class="btm-txt">首页</text>
     </div>

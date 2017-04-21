@@ -120,7 +120,7 @@
         })
       },
       selectVal (nb,content) {
-        console.log(nb)
+        // console.log(nb)
         if(nb == 'fold'){
           XHR.getTagAttributes().then((ele) => {
             if(ele.ok && ele.data.status == 1){

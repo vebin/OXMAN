@@ -1,5 +1,5 @@
 <template>
-  <div class="main-list" @click="jump({path:'/pages',query:{id: DATA.bu_articleid}})">
+  <div class="main-list" @click="jump({path:'/pages',query:{id: DATA.bu_articleid,tp: types}})">
       <list-share 
       v-if="DATA.bu_mainimgjson.length === 1 ? true : false"
       :DATA="DATA"
@@ -17,6 +17,10 @@
   export default {
     components: {listShare,listPic},
     props: {
+      types: {
+        type: Number,
+        default: 1
+      },
       DATA: {
         bu_mainimgjson:[]
       }

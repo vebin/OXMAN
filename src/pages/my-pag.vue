@@ -44,27 +44,27 @@
         <text class="commit-m">评论</text>
       </div>
       
-      <div class="com-item-box">
-        <image class="com-item-pic" src="http://usr.im/32x32"></image>
+      <div class="com-item-box" v-for="(items, index) in COMDATA">
+        <image class="com-item-pic" :src="items.headpic"></image>
         <div class="com-item-right">
           <div class="com-box-s">
-            <text class="com-s-name">某某的的</text>
+            <text class="com-s-name">{{items.nikename}}</text>
             <div class="com-z-box">
               <image class="com-z-ico" :src="icos"></image>
-              <text v-if="false" class="com-z-txt">23</text>
-              <text v-if="true" class="com-z-txt blu">23</text>
+              <text v-if="false" class="com-z-txt">{{items.praisecount}}</text>
+              <text v-if="true" class="com-z-txt blu">{{items.praisecount}}</text>
             </div>
           </div>
 
-          <text class="com-b-msg">某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的某某的的</text>
+          <text class="com-b-msg">{{items.content}}</text>
 
           <div class="com-r-box">
-            <text class="com-r-time">1分钟</text>
+            <text class="com-r-time">{{items.viewtime}}</text>
             <text class="com-r-cal">回复</text>
           </div>
 
           <div class="com-mi-box">
-            <text class="com-mi-txt" @click="jump('/comment')">共5条回复……</text>
+            <text class="com-mi-txt" @click="jump('/comment')">共{{items.comments}}条回复……</text>
             <div class="com-mi-san"></div>
           </div>
 
@@ -75,7 +75,7 @@
     </scroller>
     <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm"></bot-nav>
 
-    <txt-frm v-if="showForm" @hides="hideForm"></txt-frm>
+    <txt-frm v-if="showForm" @hides="hideForm" @save="saveForm"></txt-frm>
   </div>
 </template>
 
@@ -148,6 +148,30 @@
           }
         })
       },
+      saveForm(txt){
+        let self = this
+        let json = {}
+        let ACT
+        json.topicid = this.$route.query.id
+        json.content = txt
+        json.parentid = 0
+        json.replyid = 0
+        json.touserid = 0
+        json.UA = this.$getConfig().UA
+        if(this.$route.query.tp == '1'){
+          ACT = 'postComSub'
+        }
+        XHR.postComSub(json).then((res) => {
+          if( res.data.status == '1'){
+            self.getNewsComList()
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
+      }
     }
   }
 </script>

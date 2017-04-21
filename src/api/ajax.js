@@ -41,6 +41,7 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
                 aData.push(attr + '=' + filter(setting.data[attr]))
               }
             }
+            aData.push(Math.random())
             sData = aData.join('&')
             if (setting.url.indexOf('?') > 0) {
                 sData = setting.url + '&' + sData

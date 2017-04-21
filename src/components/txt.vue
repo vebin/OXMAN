@@ -1,23 +1,50 @@
 <template>
   <div class="one-alert">
     <div class="one-box">
-      <textarea class="textarea" placeholder="5-20个字以内" autofocus="true"></textarea>
+      <textarea class="textarea" placeholder="5-20个字以内" autofocus="true" v-model="txt"></textarea>
     </div>
     <div class="mo-box">
       <text class="mo-le-btn" @click="$emit('hides')">取消</text>
-      <text class="mo-ri-btn">发表</text>
+      <text class="mo-ri-btn" @click="saveForm">发表</text>
     </div>
   </div>
 </template>
 
 <script>
-  
+  var modal = weex.requireModule('modal')
   export default {
-    mounted (){
-
+    data(){
+      return {
+        isok: true,
+        txt:''
+      }
+    },
+    watch:{
+      txt: 'checkForm'
     },
     methods: {
-      
+      checkForm(curVal,oldVal){
+        if(curVal.length > '20'){
+          this.isok = false
+          modal.toast({
+            message: '文字长度超出...',
+            duration: 2
+          })
+        } else {
+          this.isok = true
+        }
+      },
+      saveForm(){
+        if (this.isok) {
+          this.$emit('save',this.txt)
+          this.$emit('hides')
+        }else{
+          modal.toast({
+            message: '不能为空或文字超出',
+            duration: 2
+          })
+        }
+      }
     }
   }
 </script>

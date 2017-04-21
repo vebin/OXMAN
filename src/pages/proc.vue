@@ -2,7 +2,7 @@
   <div>
     <div class="head-box">
       <div class="top-ico-box">
-        <div class="logo" @click="jump('/proc')">
+        <div class="logo" @click="back">
           <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
         </div>
         <div class="add-btn" @click="jump('/aution')">
@@ -19,22 +19,24 @@
           <text class="top-use-name">{{DATA.bu_name}}</text>
           <div v-if="DATA.wactchtype == '0'" class="top-right-box">
 
-            <div v-if="true" class="top-zan-box top-mr">
+            <div v-if="!DATA.bu_isupvote" 
+            @click="zanAsy"
+            class="top-zan-box top-mr">
               <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
               <text class="top-use-txt">点赞</text>
             </div>
 
-            <div v-if="false" class="top-zan-box top-mr isok">
+            <div v-if="DATA.bu_isupvote" class="top-zan-box top-mr isok">
               <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
               <text class="top-use-txt">已点赞</text>
             </div>
 
-            <div v-if="!DATA.bu_isfollower" class="top-zan-box">
+            <div v-if="!DATA.bu_isfollower" @click="singleFollowed(1)" class="top-zan-box">
               <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/pogz.png"></image>
               <text class="top-use-txt">关注</text>
             </div>
 
-            <div v-if="DATA.bu_isfollower" class="top-zan-box isok">
+            <div v-if="DATA.bu_isfollower" @click="singleFollowed(2)" class="top-zan-box isok">
               <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
               <text class="top-use-txt">已关注</text>
             </div>
@@ -42,7 +44,7 @@
           </div>
 
           <div v-if="DATA.wactchtype == '1'" class="top-right-box">
-            <div class="top-zan-box">
+            <div class="top-zan-box" @click="jump('/aution')">
               <text class="top-use-txt">编辑资料</text>
             </div>
           </div>
@@ -138,6 +140,12 @@
         let self = this
         let json = {}
         json.nbuid = this.$route.query.id
+        if(this.$route.query.u == '1'){
+          json.UA = this.$getConfig().UA
+        }
+        if(this.$getConfig().UA !== 0){
+          json.UA = this.$getConfig().UA
+        }
         XHR.getManInfo(json).then((res) => {
           if( res.data.status == '1'){
             self.DATA = res.data.data[0]
@@ -182,6 +190,33 @@
           })
         }
       },
+      singleFollowed(type){
+        let self = this
+        let nbbsid = [`${this.DATA.bu_id}`];
+        XHR.postAttention({type:type,watchtype:2,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
+          if(ele.ok && ele.data.status == 1){
+            self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+          }
+        });
+      },
+      zanAsy(){
+        let self = this
+        let json = {}
+        json.nbuid = this.DATA.bu_id
+        json.UA = this.$getConfig().UA
+        if(!this.DATA.bu_isupvote){
+          XHR.postUpvoteAsync(json).then((res) => {
+            if( res.data.status == '1'){
+              self.DATA.bu_isupvote = true
+            } else {
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      }
     }
   }
 </script>

@@ -11,7 +11,7 @@
           :ref="'item'+index"
           :index="index"
           keep-scroll-position="true">
-          <list-centent :DATA="items"></list-centent>
+          <list-centent :DATA="items" :types="items.bu_authortype ? 1 : 0"></list-centent>
         </cell>
         <text class="indicator" v-if="showLoading">Loading ...</text>
         <text class="indicator" v-if="noLoading">～我是有底线滴～</text>

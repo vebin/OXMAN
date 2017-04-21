@@ -1,8 +1,9 @@
 <template>
 <div>
   <div v-for="(ele,index) in followedList" class="ritItem">
-    <image class="ritPic" :src="ele.bu_imgsrc"></image>
-    <div class="ritCenBox">
+    <image class="ritPic" :src="ele.bu_imgsrc"
+      @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
+    <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
       <text class="ritCenName">{{ele.bu_name}}</text>
       <text class="ritCenNmb">{{ele.followercount}}人关注</text>
     </div>
@@ -39,7 +40,7 @@
     methods: {
       //单个关注
       singleFollowed(type,id,index){
-        let nbbsid = [id];
+        let nbbsid = [`${id}`];
         XHR.postAttention({type:type,watchtype:1,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower;

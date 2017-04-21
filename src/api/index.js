@@ -107,14 +107,14 @@ class XHR {
                })
       }
 
-    //推荐关注九宫格接口
+    // 推荐关注九宫格接口
     getRecommendAttention(json) {
         return fetch({
             url: `${URLS}/api/nr/Follower/GetTNBListAsync`,
             body:json
         })
     }
-    //关注、取消关注接口
+    // 关注、取消关注接口
     postAttention(json){
         return fetch({
             url: `${URLS}/api/nr/Follower/PostFollowerAsync`,
@@ -122,21 +122,21 @@ class XHR {
             type:'POST'
         })
     }
-    //分类标签接口
+    // 分类标签接口
     getCategoryList(json) {
         return fetch({
             url: `${URLS}/api/nr/Index/GetNBCategoryAsync`,
             body:json
         })
     }
-    //请求已关注列表
+    // 请求已关注列表
     getFollowed(json) {
         return fetch({
             url: `${URLS}/api/nr/Follower/GetNBFollowerListAsync`,
             body:json
         })
     }
-    //分类标签已关注接口
+    // 分类标签已关注接口
     getFollowedCategoryList(json) {
         return fetch({
             url: `${URLS}/api/nr/Follower/GetNBFollowerListByCategoryIdAsync`,
@@ -144,14 +144,14 @@ class XHR {
         })
     }
 
-    //获取标签属性
+    // 获取标签属性
     getTagAttributes(json){
         return fetch({
             url: `${URLS}/api/nr/Index/GetNBCategoryAsync`,
             body:json
         })
     }
-    //牛人认证接口
+    // 牛人认证接口
     postNbAuthentication(json){
         return fetch({
             url: `${URLS}/api/nr/Index/PostAddNBManAsync`,
@@ -159,14 +159,22 @@ class XHR {
             type:'POST'
         })
     }
-    //牛人个人信息接口
+    // 牛人点赞接口
+    postUpvoteAsync(json){
+        return fetch({
+            url: `${URLS}/api/nr/NBMan/PostUpvoteAsync`,
+            body: json,
+            type: 'POST'
+        })
+    }
+    // 牛人个人信息接口
     getNbInfo(json){
         return fetch({
             url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
             body:json
         })
     }
-    //修改牛人信息接口
+    // 修改牛人信息接口
     getEditNBMan(json){
         return fetch({
             url: `${URLS}/api/nr/NBMan/EditNBMan`,
@@ -174,14 +182,14 @@ class XHR {
             type:'POST'
         })
     }
-    //牛人"我的"选项卡文章列表接口
+    // 牛人"我的"选项卡文章列表接口
     getNbArticleList(json){
         return fetch({
             url: `${URLS}/api/nr/NBMan/GetArticleList`,
             body:json,
         })
     }
-    //文章发布 || 取消接口
+    // 文章发布 || 取消接口
     getArticleAttention(json){
         return fetch({
             url: `${URLS}/api/nr/pcedit/PostB`,
@@ -189,7 +197,14 @@ class XHR {
             type:'POST'
         })
     }
-
+    // 评论文章--回复，发表
+    postComSub (json) {
+        return fetch({
+              url: `${URLS}/api/nr/index/postcmt`,
+              body: json,
+              type:'POST'
+           })
+    }
 
 /*---------------C_URLS---评论相关---------------------*/
 // 文章详情－评论列表
@@ -199,8 +214,9 @@ class XHR {
               body: json
            })
   }
+
 /*----------------B_URLS---论坛相关--------------------------*/
-    //获取论坛个人信息接口
+    // 获取论坛个人信息接口
     getBbsUserInfo(json){
         return fetch({
             url: `${B_URLS}?c=user&m=userInfo`,
