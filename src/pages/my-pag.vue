@@ -15,19 +15,19 @@
             <text class="min-msg-time">{{DATA.bu_publishdatetime | dataTimeFgo}}</text>
           </div>
 
-          <div v-if="true" class="min-msg-btn">
+          <div v-if="!DATA.bu_isfollower" class="min-msg-btn" @click="singleFollowed(1)">
             <image class="min-btm-ico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
             <text class="min-btn-name">关注</text>
           </div>
 
-          <div v-if="false" class="min-msg-btn min-ok">
+          <div v-if="DATA.bu_isfollower" class="min-msg-btn min-ok" @click="singleFollowed(2)">
             <text class="min-btn-name-ok">已关注</text>
           </div>
 
         </div>
 
 
-        <div class="alt-min-box">
+        <div v-if="!DATA.bu_isfollower" class="alt-min-box">
           <text class="alt-txt">点击右上方关注按钮，立刻关注吧！～</text>
           <div class="alt-san"></div>
         </div>
@@ -49,22 +49,22 @@
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{items.nikename}}</text>
-            <div class="com-z-box">
+            <!-- <div class="com-z-box">
               <image class="com-z-ico" :src="icos"></image>
               <text v-if="false" class="com-z-txt">{{items.praisecount}}</text>
-              <text v-if="true" class="com-z-txt blu">{{items.praisecount}}</text>
-            </div>
+              <text v-if="false" class="com-z-txt blu">{{items.praisecount}}</text>
+            </div> -->
           </div>
 
-          <text class="com-b-msg">{{items.content}}</text>
+          <text class="com-b-msg" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index}})">{{items.content}}</text>
 
           <div class="com-r-box">
             <text class="com-r-time">{{items.viewtime}}</text>
-            <text class="com-r-cal">回复</text>
+            <text class="com-r-cal" @click="hideForm(index)">回复</text>
           </div>
 
-          <div class="com-mi-box">
-            <text class="com-mi-txt" @click="jump('/comment')">共{{items.comments}}条回复……</text>
+          <div v-if="items.comments.length > 0" class="com-mi-box">
+            <text class="com-mi-txt" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index}})">共{{items.comments.length}}条回复……</text>
             <div class="com-mi-san"></div>
           </div>
 
@@ -73,19 +73,19 @@
 
 
     </scroller>
-    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm"></bot-nav>
+    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote"></bot-nav>
 
     <txt-frm v-if="showForm" @hides="hideForm" @save="saveForm"></txt-frm>
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import WHeader from '../components/w-header.vue'
   import BotNav from '../components/bottom-nav.vue'
   import TxtFrm from '../components/txt.vue'
 
   import XHR from '../api'
-  var modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal')
   export default {
     components: { WHeader, BotNav, TxtFrm },
     data () {
@@ -96,6 +96,9 @@
           'https://s.kcimg.cn/app/icon/oxman/t-zanok.png',
         ],
         showForm: false,        // 回复弹窗
+        cengCom: false,        // 是否是回复楼层
+        cengIndex:0,            // index
+
         page:1,               // 当前页码
         pageSize: 10,        // 每页显示记录数
         cmtSum:0,           // 评论总数
@@ -104,19 +107,56 @@
 
         DATA:{},            // 文章详情
 
-
+        topic:{}, // 评论信息接口(getTopic)
       }
     },
     created () {
       this.getNewsMsg()
-      this.getNewsComList()
+      this.getTopic()
+      
     },
     methods: {
-      hideForm () { this.showForm = !this.showForm},
+      hideForm (tp) { 
+        if (tp > -1) {
+          this.cengCom = true
+          this.cengIndex = tp
+        }
+        if( !tp && this.cengCom){
+          this.cengCom = false
+        }
+        this.showForm = !this.showForm
+      },
+      // 获取页面评论信息接口
+      getTopic (){
+        let self = this
+        let json = {}
+        json.articleid = this.$route.query.id
+        json.siteid = 2
+        json.title = this.$store.state.comTitle
+        json.url = this.$store.state.comUrl
+
+        // if (this.$getConfig().UA !== 0) {
+        //   json.UA = this.$getConfig().UA
+        // }
+        XHR.getTopic(json).then((res) => {
+          if( res.data.status == '1'){
+            self.topic = res.data
+            self.getNewsComList()
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
+          }
+        })
+      },
       getNewsMsg(){
         let self = this
         let json = {}
         json.id = this.$route.query.id
+        if (this.$getConfig().UA !== 0) {
+          json.UA = this.$getConfig().UA
+        }
         XHR.getNewsMsg(json).then((res) => {
           if( res.data.status == '1'){
             self.DATA = res.data.data
@@ -129,15 +169,26 @@
         })
         
       },
+      //单个关注
+      singleFollowed(type){
+        let self = this
+        let nbbsid = [`${this.DATA.bu_id}`];
+        XHR.postAttention({type:type,watchtype:3,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
+          if(ele.ok && ele.data.status == 1){
+            self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+          }
+        });
+      },
       getNewsComList(){
         let self = this
         let json = {}
-        json.topicid = this.$route.query.id
+        json.topicid = this.topic.topicid
         json.CurrentPage = this.page
         json.pagesize = this.pageSize
         XHR.getNewsComList(json).then((res) => {
           if( res.data.status == '1'){
             self.COMDATA.push(...res.data.comments)
+            self.$store.commit('setComDATA',self.COMDATA)
             self.cmtSum = res.data.cmt_sum
             self.outerCS = res.data.outer_cmt_sum
           } else {
@@ -153,17 +204,31 @@
         let json = {}
         let ACT
         json.topicid = this.$route.query.id
+        // json.topicid = this.topic.topicid
         json.content = txt
         json.parentid = 0
         json.replyid = 0
         json.touserid = 0
+        if(this.cengCom){
+          json.parentid = this.COMDATA[this.cengIndex].id
+          json.replyid = this.COMDATA[this.cengIndex].id
+          json.touserid = this.COMDATA[this.cengIndex].userid
+        }
         json.UA = this.$getConfig().UA
         if(this.$route.query.tp == '1'){
           ACT = 'postComSub'
         }
         XHR.postComSub(json).then((res) => {
           if( res.data.status == '1'){
-            self.getNewsComList()
+            let resd = res.data.data
+            resd.viewtime = self.getNowFormatDate()
+            if(json.replyid == 0){
+              resd.comments = []
+              self.COMDATA.push(resd)
+            } else {
+              self.COMDATA[self.cengIndex].comments.push(resd)
+            }
+            self.cmtSum++
           } else {
             modal.toast({
               message: res.data.msg,
@@ -171,7 +236,42 @@
             })
           }
         })
-      }
+      },
+      upVote(){
+        let self = this
+        let json = {}
+        json.id = this.$route.query.id
+        json.UA = this.$getConfig().UA
+        if(!this.DATA.bu_islike){
+          XHR.getPcd(json).then((res) => {
+            if( res.data.status == '1'){
+              this.DATA.bu_islike = true
+            } else {
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      },
+      getNowFormatDate() {
+          var date = new Date()
+          var seperator1 = "/"
+          var seperator2 = ":"
+          var month = date.getMonth() + 1
+          var strDate = date.getDate()
+          if (month >= 1 && month <= 9) {
+              month = "0" + month
+          }
+          if (strDate >= 0 && strDate <= 9) {
+              strDate = "0" + strDate
+          }
+          var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                  + " " + date.getHours() + seperator2 + date.getMinutes()
+                  + seperator2 + date.getSeconds()
+          return currentdate
+      },
     }
   }
 </script>

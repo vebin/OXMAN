@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  var modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal')
   export default {
     data(){
       return {

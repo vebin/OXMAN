@@ -21,6 +21,14 @@ const store = new Vuex.Store({
       //认证头
     attestation:1, // 1：认证 2：修改资料
 
+    // 评论参数暂存
+    comTitle:'',
+    comUrl:'',
+
+    comDATA:{},     //  文章评论列表
+
+
+
     hotTab: {
         top: 0,
         DATA:[

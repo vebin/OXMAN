@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import router from '../router'
   import XHR from '../api'
   const modal = weex.requireModule('modal')

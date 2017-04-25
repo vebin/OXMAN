@@ -26,10 +26,7 @@
       actTab () {return this.$store.state.tabbar},
     },
     created () {
-      // console.log(this.tab1,11111)
-      // console.log(this.actTab,22222)
-      // this.changUrl()
-      // console.log(this.tab1,333)
+      
     },
     data () {
       return {

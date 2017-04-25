@@ -27,7 +27,7 @@
   </div>
 </div>
 </template>
-<script type="text/babel">
+<script>
   import XHR from '../api'
   const storage = weex.requireModule('storage');
   export default {
@@ -40,8 +40,12 @@
     methods: {
       //单个关注
       singleFollowed(type,id,index){
-        let nbbsid = [`${id}`];
-        XHR.postAttention({type:type,watchtype:1,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
+        let nbbsid = [`${id}`]
+        XHR.postAttention({
+          type:type,watchtype:1,
+          nbbsid:JSON.stringify(nbbsid),
+          UA:this.$getConfig().UA
+        }).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower;
             //查看是否是关注
@@ -49,12 +53,12 @@
               //查看是否已经弹出过弹层，
               storage.getItem('followedSuccess', (ele) => {
                 if (ele.result != 'success') {
-                  this.followedSuccessShow = true;
+                  this.followedSuccessShow = true
                 }
-              });
+              })
             }
           }
-        });
+        })
       },
       //关闭关注成功弹层
       closeFollowedSuccess(){

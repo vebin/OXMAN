@@ -36,7 +36,7 @@
       <image class="input-picos" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
     </div>
 
-    <div  :class="['button','mt60',submitDisabled?'':'buts']" @click="submitData">
+    <div :class="['button','mt60',submitDisabled?'':'buts']" @click="submitData">
       <text class="but-txt">提交</text>
     </div>
 
@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import WHeader from '../components/w-header.vue'
   import AppHeader from '../components/app-header.vue'
   import SelectOps from '../components/select.vue'
@@ -212,34 +212,34 @@
   
   .mt60{margin-top: 120px;}
   
-.pop-box{
-  height: 314px;
-  margin-top: 20px;
-  flex-direction:row;
-  flex-wrap:wrap;
-  justify-content: space-around;
-  align-items:center;
-}
+  .pop-box{
+    height: 314px;
+    margin-top: 20px;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content: space-around;
+    align-items:center;
+  }
 
-.pop-item{width: 250px;height: 200px; position: relative;
-  justify-content: center;
-  align-items:center; margin-top: 46px;
-}
-.pop-pic{width: 140px;height: 140px; border-radius: 140px;}
-.pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}
+  .pop-item{width: 250px; height: 200px; position: relative;
+    justify-content: center;
+    align-items:center; margin-top: 46px;
+  }
+  .pop-pic{width: 140px;height: 140px; border-radius: 140px;}
+  .pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}
 
-.pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; position: relative;}
-.top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
-.blue{ background-color: #2c63ff;}
-.button{ background-image:linear-gradient(to top,#e5e5e5,#eee); width: 690px; height: 88px; border-radius: 16px; margin-left: 30px; }
-.buts{background-image:linear-gradient(to top,#2c63ff,#5296ff);}
-.but-txt{ font-size: 36px; color: #fff; height: 88px; text-align: center; line-height: 88px;}
+  .pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; position: relative;}
+  .top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
+  .blue{ background-color: #2c63ff;}
+  .button{ background-image:linear-gradient(to top,#e5e5e5,#eee); width: 690px; height: 88px; border-radius: 16px; margin-left: 30px; }
+  .buts{background-image:linear-gradient(to top,#2c63ff,#5296ff);}
+  .but-txt{ font-size: 36px; color: #fff; height: 88px; text-align: center; line-height: 88px;}
 
-.input-box{flex-direction:row;align-items:flex-start;padding-left: 30px; padding-right: 30px; padding-top: 30px;}
-.input-txt{width: 222px; font-size: 32px;color: #333; line-height: 80px;}
-.input{flex:1; background-color: #f5f5f5;height: 80px; padding-left: 20px; border-radius: 16px; line-height: 80px; font-size: 28px;border-width: 0;}
-.textarea{height: 124px;}
+  .input-box{flex-direction:row;align-items:flex-start;padding-left: 30px; padding-right: 30px; padding-top: 30px;}
+  .input-txt{width: 222px; font-size: 32px;color: #333; line-height: 80px;}
+  .input{flex:1; background-color: #f5f5f5;height: 80px; padding-left: 20px; border-radius: 16px; line-height: 80px; font-size: 28px;border-width: 0;}
+  .textarea{height: 124px;}
 
-.post{position: relative;}
-.input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-90deg); position: absolute;right: 60px; top: 56px;}
+  .post{position: relative;}
+  .input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-90deg); position: absolute;right: 60px; top: 56px;}
 </style>

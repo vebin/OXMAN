@@ -5,9 +5,9 @@
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/home-ico.png"></image>
       <text class="btm-txt">首页</text>
     </div>
-    <div class="btm-nav">
-      <image class="btm-ico" :src="icos"></image>
-      <text class="btm-txt">{{DATA.bu_like}}</text>
+    <div class="btm-nav" @click="$emit('cite')">
+      <image class="btm-ico" :src="DATA.bu_islike ? zans[1] : zans[0]"></image>
+      <text :class="DATA.bu_islike ? ['btm-txt blu'] : ['btm-txt']">{{DATA.bu_like}}</text>
     </div>
     <div class="btm-nav" @click="$emit('hides')">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
@@ -25,11 +25,13 @@
   export default {
     props:{
       DATA: Object,
-      SUM: Number
+      SUM: {
+        type: [Number, String],
+        default: 0
+      }
     },
     data () {
       return {
-        icos: 'https://s.kcimg.cn/app/icon/oxman/t-zans.png',
         zans: [
           'https://s.kcimg.cn/app/icon/oxman/t-zans.png',
           'https://s.kcimg.cn/app/icon/oxman/t-zanok.png',
@@ -37,7 +39,7 @@
       }
     },
     methods: {
-      
+
     }
   }
 </script>
@@ -47,4 +49,5 @@
 .btm-ico{width: 34px; height: 34px; margin-right: 20px;}
 .btm-nav{flex:1; flex-direction:row;justify-content:center;align-items:center;}
 .btm-txt{font-size: 28px;color: #999;}
+.blu{color: #2A60FE;}
 </style>

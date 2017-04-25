@@ -24,7 +24,7 @@
 <script>
   import MsgHeader from '../components/msg-header.vue'
   import ListCentent from '../components/list-centent.vue'
-  var modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal')
   import XHR from '../api'
   export default {
     components: { MsgHeader, ListCentent },

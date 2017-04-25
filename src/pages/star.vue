@@ -30,14 +30,14 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import AppHeader from '../components/app-header.vue'
   import StrItem from '../components/str-item.vue'
   import flow from '../components/flow.vue'
   import XHR from '../api'
 
-  const modal = weex.requireModule('modal');
-  const storage = weex.requireModule('storage');
+  const modal = weex.requireModule('modal')
+  const storage = weex.requireModule('storage')
 
   export default {
     components: { AppHeader, StrItem,flow},
@@ -165,7 +165,7 @@
             this.RecommendAttentionShow = false;
             //请求关注列表
             this.getFollowed();
-            storage.setItem('RecommendAttention',true);
+            storage.setItem('RecommendAttention',true)
             storage.getItem('followedSuccess', (ele) => {
               if (ele.result != 'success') {
                 this.followedSuccessShow = true;
@@ -177,7 +177,7 @@
       //跳过一键关注
       skipBatchFollowed(){
           //请求关注列表
-          this.getFollowed();
+          this.getFollowed()
           storage.setItem('RecommendAttention',true)
           this.RecommendAttentionShow = false;
       },

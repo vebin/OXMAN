@@ -14,8 +14,8 @@ export const SE_ID = ({ commit }, nb) => {
 }
 
 // 测试
-export const IS_CK = ({ commit }) => {
-    XHR.isCK().then( function (res) {
-        commit(types.IS_CK, res)
-    })
-}
+// export const IS_CK = ({ commit }) => {
+//     XHR.isCK().then( function (res) {
+//         commit(types.IS_CK, res)
+//     })
+// }

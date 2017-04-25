@@ -21,16 +21,17 @@
     </div>
   </div>
 </template>
-<script type="text/babel">
-  const modal = weex.requireModule('modal')
-  const dom = weex.requireModule('dom')
+<script>
   export default {
     props: {
       show: {
         type: String,
-        default: '1',
-
-        //如果未登录 隐藏我的信息
+        default: '1'
+      }
+    },
+    data(){
+      return{
+         //如果未登录 隐藏我的信息
         userInfoShow:false
       }
     },
@@ -44,16 +45,12 @@
     },
     methods: {
       actClass(nb){
-        return this.$props.show == nb ? 'title active' : 'title'
+        return this.$props.show == nb ? ['title active'] : ['title']
       }
     }
   }
 </script>
 <style scoped>
-  .ffm{
-    font-family: iconfont;
-    font-size: 36px; color: #1571e5; line-height: 88px;
-  }
   .header {
     position: relative;
     height: 88px;
@@ -103,5 +100,4 @@
     border-bottom: 3px solid #fff;
   }
 
-  
 </style>

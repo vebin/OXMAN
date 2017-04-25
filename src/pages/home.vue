@@ -27,19 +27,15 @@
 </template>
 
 
-<script type="text/babel">
+<script>
   import AppHeader from '../components/app-header.vue'
   import ListCentent from '../components/list-centent.vue'
   import HotTop from '../components/hot-top.vue'
 
   import XHR from '../api'
-  var modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal')
   export default {
     components: { AppHeader, ListCentent, HotTop },
-    // computed: {
-    //   // 热门新闻
-    //   hotTab () {return this.$store.state.hotTab}
-    // },
     data () {
       return {
         showLoading: false,
@@ -62,27 +58,27 @@
       //     me.userName = ret.userName
       // }
 
-      this.getEverHot();
-      this.getIndexAsy();
+      this.getEverHot()
+      this.getIndexAsy()
 
       //如果用户未登录
       if(this.$getConfig().userId == 0){
 
       }else{
-        this.attestation = true;
+        this.attestation = true
       }
 
     },
     methods: {
-      getEverHot(){
-        let self = this;
-        XHR.getEveryDay().then((res) => {
+      getEverHot () {
+        let self = this
+        XHR.getEveryDay().then( (res) => {
           if( res.data.status == '1'){
             self.hot = res.data.data
           }
         })
       },
-      getIndexAsy(){
+      getIndexAsy () {
         let self = this
         let json = {}
         if( this.page !== ''){

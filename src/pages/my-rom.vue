@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import AppHeader from '../components/app-header.vue'
   import Tabbar from '../components/tabbar.vue'
   import MyNew from '../components/my-new.vue'
@@ -48,6 +48,7 @@
   export default {
     data(){
       return {
+        cPage:1,
         //圈子id
         circleId:'',
         //圈子列表
@@ -87,9 +88,13 @@
     methods: {
       //获取圈子列表
       getBbsNbCircleList(){
-        XHR.getBbsNbCircleList({sub_fid:circleId}).then((ele) => {
+        let self = this
+        let json = {}
+        json.nbuid = this.$getConfig().userId
+        // json.currentPage = this.cPage
+        XHR.getBbsNbCircleList(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
-            this.CircleList = ele.data.data;
+            this.CircleList = ele.data.data.threadslist
           }
         })
       }

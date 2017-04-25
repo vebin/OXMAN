@@ -102,7 +102,7 @@
 <script>
   import ListCentent from '../components/list-centent.vue'
   import XHR from '../api'
-  var modal = weex.requireModule('modal')
+  const modal = weex.requireModule('modal')
   export default {
     components: { ListCentent },
     data (){

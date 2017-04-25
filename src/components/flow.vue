@@ -40,12 +40,14 @@
   </div>
 </template>
 
-<script type="text/babel">
-  const modal = weex.requireModule('modal');
-  const storage = weex.requireModule('storage');
+<script>
+  // const modal = weex.requireModule('modal');
+  // const storage = weex.requireModule('storage');
 
   import router from '../router'
+  
   import XHR from '../api'
+
   export default {
     props:['RecommendAttentionList'],
     data () {

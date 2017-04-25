@@ -1,5 +1,5 @@
 <template>
-  <div class="main-list" @click="jump({path:'/pages',query:{id: DATA.bu_articleid,tp: types}})">
+  <div class="main-list" @click="goMsg">
       <list-share 
       v-if="DATA.bu_mainimgjson.length === 1 ? true : false"
       :DATA="DATA"
@@ -26,7 +26,11 @@
       }
     },
     methods: {
+      goMsg () {
 
+        this.$store.commit('setComTU',{tit:this.DATA.bu_title,url:this.DATA.bu_articleurl})
+        this.jump({path:'/pages',query:{id: this.DATA.bu_articleid,tp: this.types}})
+      }
     }
   }
 </script>

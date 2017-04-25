@@ -14,8 +14,8 @@
   </div>
 </template>
 <script>
-  const modal = weex.requireModule('modal')
-  const dom = weex.requireModule('dom')
+  // const modal = weex.requireModule('modal')
+  // const dom = weex.requireModule('dom')
   export default {
     props: {
       titles: {
@@ -29,10 +29,6 @@
   }
 </script>
 <style scoped>
-  .ffm{
-    font-family: iconfont;
-    font-size: 36px; color: #1571e5; line-height: 88px;
-  }
   .header {
     position: relative;
     height: 88px;

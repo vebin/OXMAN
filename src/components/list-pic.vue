@@ -1,5 +1,5 @@
 <template>
-    <div class="ymsg-box">
+  <div class="ymsg-box">
       <text class="text">{{DATA.bu_title}}</text>
       
       <div 
@@ -14,7 +14,6 @@
         <text class="time">{{ DATA.bu_pushdatetime | timeAgo }}</text>
       </div>
   </div>
-  
 </template>
 <script>
   export default {

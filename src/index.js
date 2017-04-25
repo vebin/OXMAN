@@ -22,5 +22,5 @@ Vue.mixin(mixins)
 // making them available everywhere as `this.$router` and `this.$store`.
 new Vue(Vue.util.extend({ el: '#root', router, store }, App))
 
-router.push('/home');
+router.push('/')
 
