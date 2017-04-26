@@ -29,16 +29,17 @@
 </script>
 
 <style scoped>
-.hot-box{border-bottom: 20px; border-color: #F7F9FA; border-bottom-style: solid;}
+.hot-box{border-bottom-width: 20px; border-bottom-color: #F7F9FA; border-bottom-style: solid;background-color: #fff;}
 .day{color: #333;font-size: 36px; padding-top: 30px; padding-left: 30px;}
-.msg-box{height: 66px;border-top: 2px;border-bottom: 2px; border-color: #e5e5e5;
+.msg-box{height: 66px;border-top-width: 2px;border-bottom-width: 2px; border-bottom-color: #e5e5e5;
   flex-direction:row;
   justify-content: flex-start;
   align-items: center;
   border-top-style: solid;
   border-bottom-style: solid;
+  border-top-color: #e5e5e5;
 }
-.msg-ico{font-size: 28px;color: #F74948; width: 128px; border-right: 2px; border-color: #e5e5e5; text-align: center;border-right-style: solid;}
+.msg-ico{font-size: 28px;color: #F74948; width: 128px; border-right-width: 2px; border-right-color: #e5e5e5; text-align: center;border-right-style: solid;}
 .msg{flex:1; font-size: 24px; color: #666; padding-left: 20px;}
 
 .top-list{

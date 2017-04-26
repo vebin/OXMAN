@@ -3,8 +3,10 @@
     <app-header show="1"></app-header>
 
     <div class="scroller">
-      <list class="hot-scroller" @loadmore="getIndexAsy" loadmoreoffset="30">
-        <hot-top :DATA="hot"></hot-top>
+      <list class="hot-scroller" @loadmore="getIndexAsy" loadmoreoffset="50">
+        <cell>
+          <hot-top :DATA="hot"></hot-top>
+        </cell>
         <cell
           v-for="(items, index) in indexDATA"
           append="tree"
@@ -13,8 +15,10 @@
           keep-scroll-position="true">
           <list-centent :DATA="items" :types="items.bu_authortype ? 1 : 0"></list-centent>
         </cell>
-        <text class="indicator" v-if="showLoading">Loading ...</text>
-        <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
+        <cell>
+          <text class="indicator" v-if="showLoading">Loading ...</text>
+          <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
+        </cell>
       </list>
     </div>
 
@@ -33,6 +37,7 @@
   import HotTop from '../components/hot-top.vue'
 
   import XHR from '../api'
+  const THAW = weex.requireModule('THAW')
   const modal = weex.requireModule('modal')
   export default {
     components: { AppHeader, ListCentent, HotTop },
@@ -76,6 +81,7 @@
           if( res.data.status == '1'){
             self.hot = res.data.data
           }
+          THAW.onHideLoading()
         })
       },
       getIndexAsy () {
@@ -89,7 +95,7 @@
           XHR.getIndexAsy(json).then((res) => {
             if( res.data.status == '1'){
               self.showLoading = false
-              self.page = res.data.data[res.data.data.length -1].bu_pushdatetime
+              self.page = res.data.data[res.data.data.length -1].bu_pushdatetime || ''
               if(res.data.data.length == 0){
                 self.noLoading = true
               }
@@ -117,6 +123,7 @@
 
 <style scoped>
 .commont-view {
+    flex-direction:column;
     background-color: #FAFBFC;
 }
 .flow-btn{
@@ -134,7 +141,7 @@
 .flow-pic{width: 34px;height: 34px;}
 
 .blue{color: #1571E5;}
-.scroller {width: 750px; height: 1246px; background-color: #FAFBFC;}
+.scroller {width: 750px; flex:1;  background-color: #FAFBFC;}
 .row{padding-bottom: 20px;background-color:#FAFBFC;}
 .indicator {
     height: 94px;

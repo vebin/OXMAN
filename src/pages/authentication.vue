@@ -216,14 +216,14 @@
     height: 314px;
     margin-top: 20px;
     flex-direction:row;
-    flex-wrap:wrap;
-    justify-content: space-around;
+    justify-content: center;
     align-items:center;
   }
 
   .pop-item{width: 250px; height: 200px; position: relative;
     justify-content: center;
-    align-items:center; margin-top: 46px;
+    align-items:center;
+    margin-top: 46px;
   }
   .pop-pic{width: 140px;height: 140px; border-radius: 140px;}
   .pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}

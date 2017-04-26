@@ -245,7 +245,8 @@
         if(!this.DATA.bu_islike){
           XHR.getPcd(json).then((res) => {
             if( res.data.status == '1'){
-              this.DATA.bu_islike = true
+              self.DATA.bu_islike = true
+              self.DATA.bu_like++
             } else {
               modal.toast({
                 message: res.data.msg,
@@ -278,7 +279,7 @@
 
 <style scoped>
 .commont-view{background-color: #fff;}
-.page-box{height: 1148px;}
+.page-box{flex:1;}
 .main-box{padding-left: 30px;padding-top: 30px;padding-right: 30px;padding-bottom: 30px;border-bottom-style: solid; border-bottom-color: #f5f5f5; border-bottom-width: 20px;}
 .min-title{font-size: 40px; color: #333;}
 

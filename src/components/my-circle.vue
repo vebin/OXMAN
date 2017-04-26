@@ -1,22 +1,22 @@
 <template>
   <div class="new-box">
-    <text class="new-tit">{{items.bu_title}}</text>
+    <text class="new-tit">{{items.subject}}</text>
     <div class="new-pin">
 
       <div class="new-left">
         <div class="new-pic-box">
           <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/ay.png"></image>
-          <text class="new-txt">123</text>
+          <text class="new-txt">{{items.views}}</text>
         </div>
         <div class="new-pic-box">
           <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/msg-ico.png"></image>
-          <text class="new-txt">123</text>
+          <text class="new-txt">{{items.replies}}</text>
         </div>
-        <text class="new-txt">{{items.bu_pushdatetime | dataTimeFgo}}</text>
+        <text class="new-txt">{{items.dateline | dataTimeFgo}}</text>
       </div>
 
-      <text v-if="false" class="new-but">已推送</text>
-      <text v-if="true" class="new-but but-blue">推送</text>
+      <text v-if="items.sync" class="new-but">已推送</text>
+      <text v-if="!items.sync" @click="$emit('put',items,inx)" class="new-but but-blue">推送</text>
     </div>
   </div>
 </template>
@@ -26,9 +26,7 @@
   export default {
     props: {
       items: Object,
-    },
-    methods: {
-      
+      inx: Number
     }
   }
 </script>

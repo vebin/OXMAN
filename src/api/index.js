@@ -1,7 +1,7 @@
 import fetch from './ajax'
 
 const HTTP_DEV = 'http://192.168.0.247:8087'  // 开发
-const HTTP_PRO = 'http://qa.k.360che.com'   // 预发布
+const HTTP_PRO = 'https://wxcms-api.360che.com'   // 预发布
 
 /*
 //  评论系统地址说明
@@ -223,6 +223,14 @@ class XHR {
               body: json
            })
   }
+// 牛人圈子－－推送接口
+  postPushAsyn (json) {
+    return fetch({
+              url: `${URLS}/api/nr/NBMan/PostPushCircleArticleAsync`,
+              body: json,
+              type:'POST'
+           })
+  }
 /*---------------C_URLS---评论相关---------------------*/
 // 获取评论信息
   getTopic (json) {
@@ -258,7 +266,7 @@ class XHR {
     }
     getBbsNbCircleList(json){
         return fetch({
-            url: `${B_URLS}?c=subForum&m=threadsBySubFid&sub_fid=5`,
+            url: `${B_URLS}?c=subForum&m=threadsBySubFid&sub_fid=5&sync=1`,
             body: json,
             type:'POST'
         })

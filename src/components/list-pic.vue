@@ -30,7 +30,7 @@
 .ymsg-box{
   padding-top: 30px;
   padding-bottom: 30px;
-  border-bottom-width: 4px;
+  border-bottom-width: 2px;
   border-bottom-color: #eee;
   border-bottom-style: solid;
 }

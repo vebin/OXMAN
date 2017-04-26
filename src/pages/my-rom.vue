@@ -3,7 +3,7 @@
     <app-header show="3"></app-header>
 
     <list class="con-box"
-      v-if="actTab == '2' && ArticleList.length > 0 ? true : false ">
+      v-if="actTab == '2' && ArticleList.length > 0 ? true : false " @loadmore="getNbArtList" loadmoreoffset="30">
        <cell
         v-for="(items, index) in ArticleList"
         append="tree"
@@ -12,17 +12,25 @@
         keep-scroll-position="true">
         <my-new :items="items"></my-new>
       </cell>
+      <cell>
+        <text class="indicator" v-if="aLoading">Loading ...</text>
+        <text class="indicator" v-if="aNoLoading">～我是有底线滴～</text>
+      </cell>
     </list>
 
     <list class="con-box"
-      v-if="actTab == '1' && CircleList.length > 0 ? true : false">
+      v-if="actTab == '1' && CircleList.length > 0 ? true : false" @loadmore="getBbsNbCircleList" loadmoreoffset="30">
        <cell
         v-for="(items, index) in CircleList"
         append="tree"
         :ref="'item'+index"
         :index="index"
         keep-scroll-position="true">
-        <my-circle :items="items"></my-circle>
+        <my-circle :items="items" :inx="index" @put="pusht"></my-circle>
+      </cell>
+      <cell>
+      <text class="indicator" v-if="showLoading">Loading ...</text>
+      <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
       </cell>
     </list>
 
@@ -45,9 +53,12 @@
   import MyNew from '../components/my-new.vue'
   import MyCircle from '../components/my-circle.vue'
   import XHR from '../api'
+  const modal = weex.requireModule('modal')
   export default {
     data(){
       return {
+        showLoading: false,
+        noLoading: false,
         cPage:1,
         //圈子id
         circleId:'',
@@ -55,7 +66,9 @@
         CircleList:[],
         //文章列表
         ArticleList:[],
-
+        aPage:1,
+        aLoading: false,
+        aNoLoading: false,
       }
     },
     components: { AppHeader, Tabbar, MyNew, MyCircle },
@@ -68,7 +81,6 @@
       //获取个人信息
       XHR.getBbsUserInfo({uid:this.$getConfig().userId}).then((ele) => {
         if(ele.ok){
-          console.log(ele);
           //如果创建过圈子
           if(ele.data.data.subForum){
               this.circleId = ele.data.data.subForum.id;
@@ -76,14 +88,10 @@
               this.getBbsNbCircleList();
           }
         }
-      });
-
-      //请求文章列表
-      XHR.getNbArticleList({UA:this.$getConfig().UA,page:1,pagesize:20,}).then((ele) => {
-        if(ele.ok && ele.data.status == 1){
-          this.ArticleList = ele.data.data;
-        }
       })
+
+      this.getNbArtList()
+      
     },
     methods: {
       //获取圈子列表
@@ -92,9 +100,71 @@
         let json = {}
         json.nbuid = this.$getConfig().userId
         // json.currentPage = this.cPage
-        XHR.getBbsNbCircleList(json).then((ele) => {
+        if(!this.noLoading && !this.showLoading){
+          self.showLoading = true
+          XHR.getBbsNbCircleList(json).then((ele) => {
+            if(ele.ok && ele.data.status == 1){
+              self.showLoading = false
+              if(ele.data.data.nextPageToken == '-1'){
+                self.noLoading = true
+              }
+              self.CircleList.push(...ele.data.data.threadslist)
+            } else {
+              self.showLoading = false
+              modal.toast({
+                message: ele.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      },
+
+      // 请求文章列表
+      getNbArtList () {
+        let self = this
+        let json = {}
+        json.UA = this.$getConfig().UA
+        json.page = this.aPage
+        json.pagesize = 20
+        if(!this.aNoLoading && !this.aLoading){
+          self.aLoading = true
+          XHR.getNbArticleList(json).then((ele) => {
+            if(ele.ok && ele.data.status == 1){
+              if (ele.data.data.length < 20) {
+                self.aNoLoading = true
+              }
+              this.ArticleList.push(...ele.data.data)
+            } else {
+              self.aLoading = false
+              modal.toast({
+                message: ele.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
+      },
+
+      // 推送
+      pusht (obj,inx){
+        let self = this
+        let json = {}
+        json.bu_articleid = obj.tid
+        json.bu_title = obj.subject
+        json.bu_authorid = obj.authorid
+        json.bu_author = obj.author
+        json.bu_mainimgjson = `["${obj.images[0]}"]`
+        json.UA = this.$getConfig().UA
+        // console.log(obj,inx)
+        XHR.postPushAsyn(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
-            this.CircleList = ele.data.data.threadslist
+            self.CircleList[inx].sync = true
+          } else {
+            modal.toast({
+              message: ele.data.msg,
+              duration: 2
+            })
           }
         })
       }
@@ -111,4 +181,12 @@
 .null-box{flex:1; justify-content:center; align-items:center;}
 .null-img{width: 400px; height: 300px;}
 .null-txt{font-size: 28px; color: #999; margin-top: 40px;}
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

@@ -170,7 +170,7 @@
           XHR.getNbTindex(json).then((res) => {
             if( res.data.status == '1'){
               self.showLoading = false
-              self.pageN = res.data.data[res.data.data.length -1].bu_pushdatetime
+              self.pageN = res.data.data[res.data.data.length -1].bu_pushdatetime || ''
               if(res.data.data.length == 0){
                 self.noLoading = true
               }
@@ -246,7 +246,7 @@
   justify-content:center;
 }
 .top-use-box{flex-direction:row; justify-content:flex-start; align-items:center;}
-.top-use-left{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative;}
+.top-use-left{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative; border-radius: 124px;}
 .top-use-pic{width: 120px; height: 120px; border-radius: 120px; border-width: 2px;border-color: #fff;border-style: solid;}
 .top-use-name{font-size: 36px; color: #fff;margin-bottom: 14px;}
 .top-right-box{flex-direction:row; justify-content:flex-start; align-items:center;}
@@ -272,7 +272,7 @@
   font-size: 24px;
 }
 .pro-times{font-size: 24px; color: #ccc; height: 48px; background-color: #F7F9FA; text-align: center; line-height: 48px;}
-.pro-box{height: 896px;}
+.pro-box{flex:1;}
 .border{border-left-style: solid; border-left-color: #fff;border-left-width: 2px;}
 .pro-fot{
   height: 98px;

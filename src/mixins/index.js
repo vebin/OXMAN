@@ -5,10 +5,8 @@ export default {
         this.$router.push(to)
       }
     },
-    back () {
-        if (this.$router) {
-            this.$router.back()
-        }
+    back (){
+        this.$router.back()
     }
   }
 }
