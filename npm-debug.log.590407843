@@ -1,0 +1,63 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'show',
+1 verbose cli   'weex-devtool',
+1 verbose cli   'version' ]
+2 info using npm@3.10.10
+3 info using node@v7.2.1
+4 silly mapToRegistry name weex-devtool
+5 silly mapToRegistry using default registry
+6 silly mapToRegistry registry http://r.cnpmjs.org/
+7 silly mapToRegistry data Result {
+7 silly mapToRegistry   raw: 'weex-devtool',
+7 silly mapToRegistry   scope: null,
+7 silly mapToRegistry   escapedName: 'weex-devtool',
+7 silly mapToRegistry   name: 'weex-devtool',
+7 silly mapToRegistry   rawSpec: '',
+7 silly mapToRegistry   spec: 'latest',
+7 silly mapToRegistry   type: 'tag' }
+8 silly mapToRegistry uri http://r.cnpmjs.org/weex-devtool
+9 verbose request uri http://r.cnpmjs.org/weex-devtool
+10 verbose request no auth needed
+11 info attempt registry request try #1 at 16:15:04
+12 verbose request id 9c5f7b57c5b2e57e
+13 http request GET http://r.cnpmjs.org/weex-devtool
+14 http 200 http://r.cnpmjs.org/weex-devtool
+15 verbose headers { server: 'nginx/1.4.6 (Ubuntu)',
+15 verbose headers   date: 'Fri, 05 May 2017 08:15:06 GMT',
+15 verbose headers   'content-type': 'application/json; charset=utf-8',
+15 verbose headers   'transfer-encoding': 'chunked',
+15 verbose headers   connection: 'keep-alive',
+15 verbose headers   'x-current-requests': '1',
+15 verbose headers   'x-readtime': '1851',
+15 verbose headers   'strict-transport-security': 'max-age=15768000',
+15 verbose headers   'content-encoding': 'gzip' }
+16 silly get cb [ 200,
+16 silly get   { server: 'nginx/1.4.6 (Ubuntu)',
+16 silly get     date: 'Fri, 05 May 2017 08:15:06 GMT',
+16 silly get     'content-type': 'application/json; charset=utf-8',
+16 silly get     'transfer-encoding': 'chunked',
+16 silly get     connection: 'keep-alive',
+16 silly get     'x-current-requests': '1',
+16 silly get     'x-readtime': '1851',
+16 silly get     'strict-transport-security': 'max-age=15768000',
+16 silly get     'content-encoding': 'gzip' } ]
+17 verbose get saving weex-devtool to /Users/mr.han/.npm/r.cnpmjs.org/weex-devtool/.cache.json
+18 verbose correctMkdir /Users/mr.han/.npm correctMkdir not in flight; initializing
+19 verbose exit [ 0, true ]
+20 verbose stack Error: write EPIPE
+20 verbose stack     at exports._errnoException (util.js:1022:11)
+20 verbose stack     at WriteWrap.afterWrite [as oncomplete] (net.js:804:14)
+21 verbose cwd /Users/mr.han/WEEXS/OXMAN
+22 error Darwin 15.6.0
+23 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "show" "weex-devtool" "version"
+24 error node v7.2.1
+25 error npm  v3.10.10
+26 error code EPIPE
+27 error errno EPIPE
+28 error syscall write
+29 error write EPIPE
+30 error If you need help, you may report this error at:
+30 error     <https://github.com/npm/npm/issues>
+31 verbose exit [ 1, true ]

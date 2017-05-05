@@ -17,30 +17,30 @@
 
     <div class="input-box">
       <text class="input-txt">牛人名称：</text>
-      <input class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="addInfo('name')"/>
+      <input class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="fnames"/>
     </div>
 
     <div class="input-box">
       <text class="input-txt">个人简介：</text>
-      <textarea class="input textarea" placeholder="5-20个字以内" :value="Data.bu_manintroduction" @input="addInfo('intro')"></textarea>
+      <textarea class="input textarea" placeholder="5-20个字以内" :value="Data.bu_manintroduction" @input="fintros"></textarea>
     </div>
 
     <div class="input-box">
       <text class="input-txt">联系电话：</text>
-      <input class="input" type="text" placeholder="请输入您的电话" :value="Data.bu_manphone" @input="addInfo('phone')"/>
+      <input class="input" type="text" placeholder="请输入您的电话" :value="Data.bu_manphone" @input="fphones"/>
     </div>
 
     <div class="input-box post">
       <text class="input-txt">标签属性：</text>
-      <text @click="selectVal('fold')" class="input">{{typeVal}}</text>
+      <text @click="selectOk = !selectOk" class="input">{{typeVal}}</text>
       <image class="input-picos" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
     </div>
 
-    <div :class="['button','mt60','buts']" @click="submitData">
+    <div :class="submitDisabled ? ['button','mt60'] : ['button','mt60','buts']" @click="submitData">
       <text class="but-txt">提交</text>
     </div>
 
-    <select-ops v-if="selectOk" v-on:hideSlt="selectVal" :types="typeVal" :DATA="select"></select-ops>
+    <select-ops v-if="selectOk" @hideSlt="selectVal" :types="typeVal" :DATA="select"></select-ops>
   </div>
 </template>
 
@@ -62,7 +62,6 @@
         headerType:1,
         //提交资料
         Data:{
-          UA:'',
           //头像
           bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
           //姓名
@@ -82,7 +81,7 @@
         select: [],
 
         //提交按钮状态
-        submitDisabled:false,
+        submitDisabled: true,
         logo:'',
         name:'',
         phone:'',
@@ -93,9 +92,11 @@
       }
     },
     created () {
-//      getNbInfo
+      //  储存登录字符串
+      this.$store.commit('setAPPSTR',this.$getConfig().auth)
+
 //      this.headerType = this.$store.state.attestation;
-      this.Data.UA = this.$getConfig().UA;
+      this.pick()
 
 //      如果是修改个人资料，请求个人资料数据
         XHR.getNbInfo({'nbuid':this.$getConfig().userId}).then((ele) => {
@@ -140,46 +141,35 @@
         })
       },
       selectVal (nb,content) {
-        // console.log(nb)
-        if(nb == 'fold'){
-          XHR.getTagAttributes().then((ele) => {
-            if(ele.ok && ele.data.status == 1){
-              this.select = ele.data.data;
-            }
-          })
-        }else if(nb != -1){
-          this.typeVal = content;
-          this.Data.bu_categoryid = nb;
+        if(nb != -1){
+          this.typeVal = content
+          this.Data.bu_categoryid = nb
         }
-//        if( nb !== -1 && typeof nb == 'number') {
-//          this.typeVal = this.select[nb].bu_categoryname
-//          this.typeNum = this.select[nb].bu_categoryid
-//        }
         this.selectOk = !this.selectOk
-        this.buttonState()
       },
       //编辑资料
-      addInfo(type){
-        if(type == 'name'){
-          this.Data.bu_manname = event.value;
-        }else if(type == 'intro'){
-          this.Data.bu_manintroduction = event.value;
-        }else if(type == 'phone'){
-          this.Data.bu_manphone = event.value;
-        }
+      fnames(event){
+        this.Data.bu_manname = event.value
         this.buttonState()
       },
+      fintros(event){
+        this.Data.bu_manintroduction = event.value
+      },
+      fphones(event){
+          this.Data.bu_manphone = event.value
+          this.buttonState()
+      },
       buttonState(){
-        if(this.Data.bu_manname != '' && this.Data.bu_manphone != '' && this.Data.bu_categoryid !== ''){
+        if(this.Data.bu_manname != '' && this.Data.bu_manphone != ''){
           this.submitDisabled = false
-        }else{
+        } else {
           this.submitDisabled = true
         }
       },
       submitData(){
-        // if(this.submitDisabled){
-        //   return
-        // }
+        if(this.submitDisabled){
+          return false
+        }
         let type = 'postNbAuthentication';
         //如果是修改个人资料，提交修改个人资料数据
         if(this.headerType ==2){
@@ -211,7 +201,6 @@
         //         self.index = ret.data
         //     }
         // })
-
 
         let self = this
         XHR.getNoteName().then((res) => {

@@ -43,7 +43,7 @@
       },
       //发布 || 取消发布
       issueAlert(articleId,state){
-        XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1, UA: this.$getConfig().UA}).then((ele) => {
+        XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1}).then((ele) => {
           if (ele.ok && ele.data.status == 1) {
             this.items.bu_ispublish = !this.items.bu_ispublish;
           }else if(ele.data.status == 0){

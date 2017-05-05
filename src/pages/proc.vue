@@ -6,7 +6,7 @@
           <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
         </div>
         <div class="add-btn" @click="share">
-          <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
+          <image v-if="false" class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
         </div>
       </div>
 
@@ -149,12 +149,8 @@
         let self = this
         let json = {}
         json.nbuid = this.$route.query.id
-        if(this.$route.query.u == '1'){
-          json.UA = this.$getConfig().UA
-        }
-        if(this.$getConfig().UA !== 0){
-          json.UA = this.$getConfig().UA
-        }
+        // if(this.$route.query.u == '1'){
+        // }
         XHR.getManInfo(json).then((res) => {
           if( res.data.status == '1'){
             self.DATA = res.data.data[0]
@@ -202,7 +198,7 @@
       singleFollowed(type){
         let self = this
         let nbbsid = [`${this.DATA.bu_id}`];
-        XHR.postAttention({type:type,watchtype:2,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
+        XHR.postAttention({type:type,watchtype:2,nbbsid:JSON.stringify(nbbsid)}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }
@@ -212,7 +208,6 @@
         let self = this
         let json = {}
         json.nbuid = this.DATA.bu_id
-        json.UA = this.$getConfig().UA
         if(!this.DATA.bu_isupvote){
           XHR.postUpvoteAsync(json).then((res) => {
             if( res.data.status == '1'){

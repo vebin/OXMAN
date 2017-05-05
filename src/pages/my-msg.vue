@@ -127,7 +127,6 @@
         json.replyid = this.DATA.id
         json.touserid = this.DATA.userid
 
-        json.UA = this.$getConfig().UA
         if(this.$route.query.tp == '1'){
           ACT = 'postComSub'
         }
@@ -169,7 +168,7 @@
 
 <style scoped>
 .commont-view{background-color: #f5f5f5;}
-.page-box{height: 1148px;}
+.page-box{flex:1;}
 
 
 .commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px; background-color:#f5f5f5; }

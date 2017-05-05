@@ -116,7 +116,7 @@
       //请求接口列表
       getFollowed(){
         //请求已关注列表
-        XHR.getFollowed({UA:this.$getConfig().UA,'currentPage':1}).then((res) => {
+        XHR.getFollowed({'currentPage':1}).then((res) => {
           if(res.ok && res.data.status == 1){
             this.followedList = res.data.data;
             if(res.data.msg == "推荐列表"){
@@ -134,8 +134,6 @@
         let ajaxName = 'getFollowed';
         let o = {};
         o.currentPage = 1;
-        o.UA = this.$getConfig().UA;
-
         if(id != 0){
           ajaxName = 'getFollowedCategoryList';
           o.categoryid = id;
@@ -159,8 +157,7 @@
         XHR.postAttention({
           type: 1,
           watchtype: 1,
-          nbbsid: nbbsid,
-          UA: this.$getConfig().UA
+          nbbsid: nbbsid
         }).then((ele) => {
           if (ele.ok && ele.data.status == 1) {
             this.RecommendAttentionShow = false;

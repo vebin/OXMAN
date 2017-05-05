@@ -6,7 +6,7 @@
         append="tree"
         :index="i"
         class="row">
-        <text @click="opect(v.bu_categoryid,v.bu_categoryname)" class="item-title" :class="types == v.bu_categoryname ? [' bule'] : ['']">{{ v.bu_categoryname }}</text>
+        <text @click="opect(v.bu_categoryid,v.bu_categoryname)" :class="types == v.bu_categoryname ? ['item-title','bule'] : ['item-title']">{{ v.bu_categoryname }}</text>
       </cell>
     </list>
   </div>

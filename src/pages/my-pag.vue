@@ -2,7 +2,7 @@
   <div class="commont-view">
     <w-header v-if="true" titles="文章详情"></w-header>
     <scroller class="page-box">
-      <div class="main-box">
+      <div v-if="$route.query.tp == '1'" class="main-box">
         <text class="min-title">{{DATA.bu_title}}</text>
 
         <div class="min-btn-box">
@@ -31,13 +31,57 @@
           <text class="alt-txt">点击右上方关注按钮，立刻关注吧！～</text>
           <div class="alt-san"></div>
         </div>
+        <div v-for="(em, index) in DATA.bu_content">
+          <text v-if="em.text" class="min-min-txt">{{em.text}}</text>
+          <image v-if="em.img" resize="cover" class="min-min-img" :src="em.img"></image>
+        </div>
+      </div>
 
-        <text class="min-min-txt">{{DATA.bu_content}}</text>
-        <image resize="cover" class="min-min-img" src="http://usr.im/345x345"></image>
+
+
+
+      <div v-if="$route.query.tp == '0'" class="main-box">
+        <text class="min-title">{{DATA.subject}}</text>
+
+        <div class="min-btn-box">
+          <image class="min-pic"
+            :src="DATA.avatar"
+            @click="jump({path:'/proc',query:{id: DATA.authorid}})"></image>
+
+          <div class="min-msg">
+            <text class="min-msg-name">{{DATA.author}}</text>
+            <text class="min-msg-time">{{DATA.dateline | dataTimeFgo}}</text>
+          </div>
+
+          <div v-if="!DATA.tid" class="min-msg-btn" @click="singleFollowed(1)">
+            <image class="min-btm-ico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+            <text class="min-btn-name">关注</text>
+          </div>
+
+          <div v-if="DATA.tid" class="min-msg-btn min-ok" @click="singleFollowed(2)">
+            <text class="min-btn-name-ok">已关注</text>
+          </div>
+
+        </div>
+
+
+        <div v-if="!DATA.tid" class="alt-min-box">
+          <text class="alt-txt">点击右上方关注按钮，立刻关注吧！～</text>
+          <div class="alt-san"></div>
+        </div>
+        <text class="min-min-txt">{{DATA.message}}</text>
+        <image v-for="(em, index) in DATA.pics" resize="cover" class="min-min-img" :src="em"></image>
         <text class="min-min-txt"></text>
 
-
       </div>
+
+
+
+
+
+
+
+
 
       <div class="commit-tit">
         <div class="commit-s"></div>
@@ -153,27 +197,38 @@
       getNewsMsg(){
         let self = this
         let json = {}
-        json.id = this.$route.query.id
-        if (this.$getConfig().UA !== 0) {
-          json.UA = this.$getConfig().UA
+        if(this.$route.query.tp == '1'){
+          json.id = this.$route.query.id
+          XHR.getNewsMsg(json).then((res) => {
+            if( res.data.status == '1'){
+              res.data.data.bu_content = JSON.parse(res.data.data.bu_content)
+              self.DATA = res.data.data
+            } else {
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        } else {
+          json.tid = this.$route.query.id
+          XHR.getTmsgInfo(json).then((res) => {
+            if( res.data.status == '0'){
+              self.DATA = res.data.data
+            } else {
+              modal.toast({
+                message: res.data.data,
+                duration: 2
+              })
+            }
+          })
         }
-        XHR.getNewsMsg(json).then((res) => {
-          if( res.data.status == '1'){
-            self.DATA = res.data.data
-          } else {
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
-          }
-        })
-
       },
       //单个关注
       singleFollowed(type){
         let self = this
         let nbbsid = [this.DATA.bu_id];
-        XHR.postAttention({type:type,watchtype:3,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
+        XHR.postAttention({type:type,watchtype:3,nbbsid:JSON.stringify(nbbsid)}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }
@@ -214,7 +269,6 @@
           json.replyid = this.COMDATA[this.cengIndex].id
           json.touserid = this.COMDATA[this.cengIndex].userid
         }
-        json.UA = this.$getConfig().UA
         if(this.$route.query.tp == '1'){
           ACT = 'postComSub'
         }
@@ -241,7 +295,6 @@
         let self = this
         let json = {}
         json.id = this.$route.query.id
-        json.UA = this.$getConfig().UA
         if(!this.DATA.bu_islike){
           XHR.getPcd(json).then((res) => {
             if( res.data.status == '1'){

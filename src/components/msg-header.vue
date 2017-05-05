@@ -9,7 +9,7 @@
     </div>
 
     <div class="add-btn" @click="jump('/aution')">
-      <image class="image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
+      <image v-if="false" class="image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
     </div>
   </div>
 </template>

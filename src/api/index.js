@@ -1,4 +1,5 @@
 import fetch from './ajax'
+import store from '../store'
 
 const HTTP_DEV = 'http://192.168.0.247:8087'  // 开发
 const HTTP_PRO = 'https://wxcms-api.360che.com'   // 预发布
@@ -18,13 +19,24 @@ const B_HTTP_DEV = 'https://circle-api-yufabu.360che.com/'
 const B_HTTP = 'https://circle-api.360che.com/'
 
 
-const DEBUG = false                         // 是否开发模式
+//  帖子圈子域名
+// 预发布：2b.360che.com
+// 正式：bbs.api.360che.com
+// 接口调用地址：http://接口域名/interface/app/index.php，所有接口调用地址均一样，根据传参不同
+const T_HTTP_DEV = 'http://2b.360che.com'
+const T_HTTP = 'https://bbs-api.360che.com'
+
+const DEBUG = false                       // 是否开发模式
 
 const URLS = DEBUG ? HTTP_DEV : HTTP_PRO
 
 const C_URLS = DEBUG ? C_HTTP_DEV : C_HTTP
 
 const B_URLS = DEBUG ? B_HTTP_DEV : B_HTTP
+
+const T_URLS = DEBUG ? T_HTTP_DEV : T_HTTP
+
+// const UA = store.state.APPSTR      // 获取app密匙
 
 class XHR {
 // 获取用户信息
@@ -54,6 +66,7 @@ class XHR {
 
     // 首页推荐文章列表接口
     getIndexAsy(json) {
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/Index/GetIndexArticleAsync`,
             body: json
@@ -69,6 +82,7 @@ class XHR {
     }
     // 牛人个人信息接口
     getManInfo(json){
+      json.APPSTR = store.state.APPSTR 
       return fetch({
                   url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
                   body: json
@@ -104,6 +118,7 @@ class XHR {
 
     // 文章详情
       getNewsMsg (json) {
+        json.APPSTR = store.state.APPSTR 
         return fetch({
                   url: `${URLS}/api/nr/pcedit/GetA`,
                   body: json
@@ -119,6 +134,7 @@ class XHR {
     }
     // 关注、取消关注接口
     postAttention(json){
+        json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/Follower/PostFollowerAsync`,
             body:json,
@@ -134,6 +150,7 @@ class XHR {
     }
     // 请求已关注列表
     getFollowed(json) {
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/Follower/GetNBFollowerListAsync`,
             body:json
@@ -141,6 +158,7 @@ class XHR {
     }
     // 分类标签已关注接口
     getFollowedCategoryList(json) {
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/Follower/GetNBFollowerListByCategoryIdAsync`,
             body:json
@@ -156,6 +174,7 @@ class XHR {
     }
     // 牛人认证接口
     postNbAuthentication(json){
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/Index/PostAddNBManAsync`,
             body:json,
@@ -164,6 +183,7 @@ class XHR {
     }
     // 牛人点赞接口
     postUpvoteAsync(json){
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/NBMan/PostUpvoteAsync`,
             body: json,
@@ -179,6 +199,7 @@ class XHR {
     }
     // 修改牛人信息接口
     getEditNBMan(json){
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/NBMan/EditNBMan`,
             body:json,
@@ -187,6 +208,7 @@ class XHR {
     }
     // 牛人"我的"选项卡文章列表接口
     getNbArticleList(json){
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/NBMan/GetArticleList`,
             body:json,
@@ -194,6 +216,7 @@ class XHR {
     }
     // 文章发布 || 取消接口
     getArticleAttention(json){
+      json.APPSTR = store.state.APPSTR 
         return fetch({
             url: `${URLS}/api/nr/pcedit/PostB`,
             body:json,
@@ -202,6 +225,7 @@ class XHR {
     }
     // 评论文章--回复，发表
     postComSub (json) {
+      json.APPSTR = store.state.APPSTR 
         return fetch({
               url: `${URLS}/api/nr/index/postcmt`,
               body: json,
@@ -218,6 +242,7 @@ class XHR {
   }
 // 文章点赞－点赞
   getPcd (json) {
+    json.APPSTR = store.state.APPSTR 
     return fetch({
               url: `${URLS}/api/nr/pcedit/GetD`,
               body: json
@@ -225,6 +250,7 @@ class XHR {
   }
 // 牛人圈子－－推送接口
   postPushAsyn (json) {
+    json.APPSTR = store.state.APPSTR 
     return fetch({
               url: `${URLS}/api/nr/NBMan/PostPushCircleArticleAsync`,
               body: json,
@@ -234,6 +260,7 @@ class XHR {
 /*---------------C_URLS---评论相关---------------------*/
 // 获取评论信息
   getTopic (json) {
+    // json.APPSTR = store.state.APPSTR 
     return fetch({
               url: `${C_URLS}/api/getTopic.ashx?action=topicinfo`,
               body: json
@@ -272,8 +299,14 @@ class XHR {
         })
     }
 
-
-
+/*----------------T_URLS---帖子相关--------------------------*/
+// 获取帖子信息
+    getTmsgInfo(json){
+        return fetch({
+            url: `${T_URLS}/interface/app/index.php?action=thread&method=getInfo`,
+            body: json
+        })
+    }
 
 
 

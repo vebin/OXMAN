@@ -56,6 +56,8 @@
       }
     },
     created () {
+      //  储存登录字符串
+      this.$store.commit('setAPPSTR',this.$getConfig().auth)
       // const me = this
       // const THAW = weex.requireModule('thaw')
       // THAW.onGetData('1',function(ret) {

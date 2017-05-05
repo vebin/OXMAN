@@ -124,7 +124,6 @@
       getNbArtList () {
         let self = this
         let json = {}
-        json.UA = this.$getConfig().UA
         json.page = this.aPage
         json.pagesize = 20
         if(!this.aNoLoading && !this.aLoading){
@@ -155,7 +154,6 @@
         json.bu_authorid = obj.authorid
         json.bu_author = obj.author
         json.bu_mainimgjson = obj.images.length == 0 ? '[]' : `["${obj.images[0]}"]`
-        json.UA = this.$getConfig().UA
         XHR.postPushAsyn(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.CircleList[inx].sync = true

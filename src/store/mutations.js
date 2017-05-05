@@ -1,6 +1,9 @@
 import * as types from './type'
 
 export default {
+    setAPPSTR (state, txt) {
+        state.APPSTR = txt
+    },
     setBlueTxt (state, txt) {
         state.blueTxt = txt
     },

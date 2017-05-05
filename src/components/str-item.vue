@@ -47,8 +47,7 @@
         let nbbsid = [id]
         XHR.postAttention({
           type:type,watchtype:1,
-          nbbsid:JSON.stringify(nbbsid),
-          UA:this.$getConfig().UA
+          nbbsid:JSON.stringify(nbbsid)
         }).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower;
