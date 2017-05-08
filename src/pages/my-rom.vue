@@ -85,7 +85,7 @@
           if(ele.data.data.subForum){
               this.circleId = ele.data.data.subForum.id;
               //获取圈子列表
-              this.getBbsNbCircleList();
+              this.getBbsNbCircleList()
           }
         }
       })
@@ -98,8 +98,7 @@
       getBbsNbCircleList(){
         let self = this
         let json = {}
-        json.nbuid = this.$getConfig().userId
-        // json.currentPage = this.cPage
+        json.sub_fid = this.circleId
         if(!this.noLoading && !this.showLoading){
           self.showLoading = true
           XHR.getBbsNbCircleList(json).then((ele) => {

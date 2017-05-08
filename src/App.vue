@@ -11,9 +11,9 @@
   export default {
     methods: {
       back (){
-        if(this.$router && this.$route.path != "/home"){
+        if (this.$router && this.$route.path !== "/home"){
           this.$router.back();
-        }else{
+        } else {
           thaw.onGoBack();
         }
       },
@@ -48,7 +48,7 @@
       this.$getConfig().shareUrl = "www.360che.com"
       
       // 返回键监测
-      var me = this
+      let me = this
       globalEvent.addEventListener('onRespondNativeBack',function(data){
         // me.alert(me.$store.state.APPSTR)
         me.back()

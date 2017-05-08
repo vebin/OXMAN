@@ -4,8 +4,10 @@
 
     <div class="top-list">
       <div class="top-cell" v-for="(item, index) in DATA" @click="jump({path:'/proc',query:{id: item.bu_id}})">
-        <image class="image" :src="item.bu_imgsrc"></image>
-        <text class="text">{{item.bu_name}}</text>
+        <div class="image">
+          <image class="image" :src="item.bu_imgsrc"></image>
+        </div>
+        <text class="text">{{item.bu_name.length > 4 ? `${item.bu_name.substring(0,4)}...` : item.bu_name}}</text>
       </div>
     </div>
 

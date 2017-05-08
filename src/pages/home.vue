@@ -56,6 +56,8 @@
       }
     },
     created () {
+      let auths = `${this.$getConfig().auth}`
+      let userIds = `${this.$getConfig().userId}`
       //  储存登录字符串
       this.$store.commit('setAPPSTR',this.$getConfig().auth)
       // const me = this
@@ -65,10 +67,12 @@
       //     me.userName = ret.userName
       // }
 
+      if(auths.length > 9 && userIds > 0) {
+        this.attestation = true
+      }
       this.getManInfo()
       this.getEverHot()
       this.getIndexAsy()
-
 
     },
     methods: {
@@ -77,8 +81,6 @@
         XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = false
-          }else{
-            self.attestation = true
           }
         })
       },

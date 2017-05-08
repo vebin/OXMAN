@@ -1,35 +1,35 @@
 <template>
-<div>
-  <div v-for="(ele,index) in followedList" class="ritItem">
-    <image class="ritPic" :src="ele.bu_imgsrc"
-      @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
-    <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
-      <text class="ritCenName">{{ele.bu_name}}</text>
-      <text class="ritCenNmb">{{ele.followercount}}人关注</text>
-    </div>
+  <div>
+    <div v-for="(ele,index) in followedList" class="ritItem">
+      <image class="ritPic" :src="ele.bu_imgsrc"
+        @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
+      <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
+        <text class="ritCenName">{{ele.bu_name}}</text>
+        <text class="ritCenNmb">{{ele.followercount}}人关注</text>
+      </div>
 
-    <div v-if="ele.bu_isfollower" class="ritStrBtn isok" @click="singleFollowed(2,ele.bu_id,index)">
-      <text class="ritButTxt isokTxt">已关注</text>
-    </div>
+      <div v-if="ele.bu_isfollower" class="ritStrBtn isok" @click="singleFollowed(2,ele.bu_id,index)">
+        <text class="ritButTxt isokTxt">已关注</text>
+      </div>
 
-    <div v-else class="ritStrBtn" @click="singleFollowed(1,ele.bu_id,index)">
-      <image class="ritSico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
-      <text class="ritButTxt">关注</text>
-      <!--<text class="ritButTxt">已关注</text>-->
-    </div>
+      <div v-else class="ritStrBtn" @click="singleFollowed(1,ele.bu_id,index)">
+        <image class="ritSico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+        <text class="ritButTxt">关注</text>
+        <!--<text class="ritButTxt">已关注</text>-->
+      </div>
 
+    </div>
+    <div v-if="followedSuccessShow" class="oneAlert">
+      <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
+      <div class="altClsBox" @click="closeFollowedSuccess">
+        <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+      </div>
+    </div>
   </div>
-  <div v-if="followedSuccessShow" class="oneAlert">
-    <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
-    <div class="altClsBox" @click="closeFollowedSuccess">
-      <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
-    </div>
-  </div>
-</div>
 </template>
 <script>
   import XHR from '../api'
-  const storage = weex.requireModule('storage');
+  const storage = weex.requireModule('storage')
   export default {
     props:['followedList'],
     data () {
@@ -45,17 +45,18 @@
         //   weex.requireModule('THAW').onGoLogin();
         // }
         let nbbsid = [id]
-        XHR.postAttention({
-          type:type,watchtype:1,
-          nbbsid:JSON.stringify(nbbsid)
-        }).then((ele) => {
+        let json = {}
+        json.type = type
+        json.watchtype = 1
+        json.nbbsid = JSON.stringify(nbbsid)
+        XHR.postAttention(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
-            this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower;
+            this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower
             //查看是否是关注
             if(type == 1){
               //查看是否已经弹出过弹层，
               storage.getItem('followedSuccess', (ele) => {
-                if (ele.result != 'success') {
+                if (ele.result !== 'success') {
                   this.followedSuccessShow = true
                 }
               })

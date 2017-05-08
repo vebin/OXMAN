@@ -227,10 +227,19 @@
       //单个关注
       singleFollowed(type){
         let self = this
-        let nbbsid = [this.DATA.bu_id];
-        XHR.postAttention({type:type,watchtype:3,nbbsid:JSON.stringify(nbbsid)}).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
+        let nbbsid = [this.DATA.bu_id]
+        let json = {}
+        json.type = type
+        json.watchtype = 3
+        json.nbbsid = JSON.stringify(nbbsid)
+        XHR.postAttention(json).then((ele) => {
+          if(ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
           }
         });
       },

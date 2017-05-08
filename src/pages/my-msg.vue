@@ -1,7 +1,7 @@
 <template>
   <div class="commont-view">
     <w-header v-if="true" titles="评价详情"></w-header>
-    <scroller class="page-box">
+    <scroller class="page-box" @loadmore="getComListMsg" loadmoreoffset="50">
 
       <div class="com-item-box">
         <image class="com-item-pic" :src="DATA.headpic"></image>
@@ -19,7 +19,7 @@
 
           <div class="com-r-box">
             <text class="com-r-time">{{DATA.viewtime}}</text>
-            <text class="com-r-cal">回复</text>
+            <!-- <text class="com-r-cal">回复</text> -->
           </div>
 
         </div>
@@ -29,30 +29,29 @@
         <div class="commit-s"></div>
         <text class="commit-m">评论</text>
       </div>
-      
-      <div class="com-item-box" v-for="(items, index) in COMDATA">
-        <image class="com-item-pic" :src="items.headpic"></image>
-        <div class="com-item-right">
-          <div class="com-box-s">
-            <text class="com-s-name">{{items.nikename}}</text>
-            <!-- <div class="com-z-box">
-              <image class="com-z-ico" :src="icos"></image>
-              <text v-if="false" class="com-z-txt">{{items.praisecount}}</text>
-              <text v-if="false" class="com-z-txt blu">{{items.praisecount}}</text>
-            </div> -->
+
+      <div>
+        <div class="com-item-box" v-for="(items, index) in COMDATA">
+          <image class="com-item-pic" :src="items.headpic"></image>
+          <div class="com-item-right">
+            <div class="com-box-s">
+              <text class="com-s-name">{{items.nikename}}</text>
+            </div>
+
+            <text class="com-b-msg">{{items.content}}</text>
+
+            <div class="com-r-box">
+              <text class="com-r-time">{{items.viewtime}}</text>
+              <!-- <text class="com-r-cal" @click="hideForm()">回复</text> -->
+            </div>
+
+
           </div>
-
-          <text class="com-b-msg">{{items.content}}</text>
-
-          <div class="com-r-box">
-            <text class="com-r-time">{{items.viewtime}}</text>
-            <text class="com-r-cal" @click="hideForm()">回复</text>
-          </div>
-
-
         </div>
       </div>
-
+      
+      <text class="indicator" v-if="showLoading">Loading ...</text>
+      <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
 
     </scroller>
     <text class="comment" @click="hideForm()">回复评论</text>
@@ -71,6 +70,8 @@
     components: { WHeader, TxtFrm },
     data () {
       return {
+        showLoading: false,
+        noLoading: false,
         icos: 'https://s.kcimg.cn/app/icon/oxman/t-zan.png',
         zans: [
           'https://s.kcimg.cn/app/icon/oxman/t-zan.png',
@@ -102,18 +103,28 @@
         json.id = this.$route.query.tp
         json.CurrentPage = this.page
         json.pagesize = this.pageSize
-        XHR.getComListMsg(json).then((res) => {
-          if( res.data.status == '1'){
-            self.COMDATA.push(...res.data.comments)
-            // self.DATA = res.data.cmt_sum
-            // self.outerCS = res.data.outer_cmt_sum
-          } else {
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
-          }
-        })
+        if(!this.noLoading && !this.showLoading){
+          self.showLoading = true
+          XHR.getComListMsg(json).then((res) => {
+            if( res.data.status == '1'){
+              self.showLoading = false
+              
+              if(res.data.comments.length < 10 ){
+                self.COMDATA.push(...res.data.comments)
+                self.noLoading = true
+              } else {
+                self.COMDATA.push(...res.data.comments)
+              }
+              // self.DATA = res.data.cmt_sum
+              // self.outerCS = res.data.outer_cmt_sum
+            } else {
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+        }
       },
       saveForm(txt){
         let self = this
@@ -193,4 +204,13 @@
 .comment{ height: 98px; width: 750px; text-align: center; line-height: 98px;background-color: #FAFBFC; font-size: 36px; color: #999;}
 
 .blu{color: #2A60FE;}
+
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

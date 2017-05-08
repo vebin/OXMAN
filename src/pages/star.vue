@@ -8,7 +8,7 @@
         <text v-for="ele in categoryList" :class="['lefTxt',categorySelected == ele.bu_categoryid ? 'lefAct' : '']" @click="switchList(ele.bu_categoryid)">{{ele.bu_categoryname}}</text>
       </div>
 
-      <div class="star-rit">
+      <scroller class="star-rit">
         <text v-if="!isLogin" class="ritBtn" @click="goLogin">您还未登录 马上登录</text>
         <div v-if="emptyList">
           <text class="ritWelx">您还未订阅任何牛人，快去订阅一波</text>
@@ -16,8 +16,9 @@
         </div>
 
         <str-item v-if="isLogin" :followedList="followedList"></str-item>
-      </div>
+      </scroller>
     </div>
+
     <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
       <div class="altClsBox" @click="closeFollowedSuccess">
@@ -59,7 +60,7 @@
         //是否显示推荐关注列表
         RecommendAttentionShow:false,
 //        关注成功弹层
-        followedSuccessShow:false,
+        followedSuccessShow: false,
         //是否显示我的
         attestation:false
       }
@@ -79,7 +80,7 @@
       }else{
         //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
         storage.getItem('RecommendAttention', ele => {
-          if(ele.result != 'success'){
+          if(ele.result !== 'success'){
             this.RecommendAttentionShow = true;
             //请求分类标签接口
             XHR.getRecommendAttention().then((res) => {
@@ -93,8 +94,8 @@
           }
         });
 
-        //请求分类标签接口
-        XHR.getCategoryList().then((res) => {
+        //请求分类标签接口  getCategoryList
+        XHR.getNoteName().then((res) => {
           if(res.ok && res.data.status == 1){
             this.categoryList = res.data.data;
           }
@@ -134,7 +135,7 @@
         let ajaxName = 'getFollowed';
         let o = {};
         o.currentPage = 1;
-        if(id != 0){
+        if(id !== 0){
           ajaxName = 'getFollowedCategoryList';
           o.categoryid = id;
           this.emptyList = false;
@@ -165,9 +166,14 @@
             this.getFollowed();
             storage.setItem('RecommendAttention',true)
             storage.getItem('followedSuccess', (ele) => {
-              if (ele.result != 'success') {
+              if (ele.result !== 'success') {
                 this.followedSuccessShow = true;
               }
+            })
+          } else {
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
             })
           }
         });
@@ -202,8 +208,8 @@
   .ritWelx{font-size: 28px; color: #999; text-align: center;margin-top: 60px; margin-bottom: 30px;}
   .ritTit{font-size: 36px; color: #333; text-align: center;}
 
-  .oneAlert{width:750px; height: 1246px; position: absolute;top: 88px; left: 0; background-color: rgba(0,0,0,.6); justify-content: center;
-  align-items:center;}
+  .oneAlert{position:fixed;left:0;top:0;bottom:0;right:0; background-color: rgba(0,0,0,.6); justify-content: center;
+  align-items:center; flex:1; width: 100%;}
   .alertImg{ width: 534px; height: 612px;}
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}
   .alertClox{ width: 30px; height:30px; -webkit-transform:rotate(45deg);}

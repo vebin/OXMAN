@@ -6,9 +6,13 @@
     <div class="pop-box">
 
       <div class="pop-item" @click="loadHeadPortrait">
-        <div class="pop-pic-box">
-          <image class="pop-pic" :src="Data.bu_facelogo"></image>
-          <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+        <div class="pop-pic-icopi">
+          <div class="pop-pic-box">
+            <image class="pop-pic" :src="Data.bu_facelogo"></image>
+          </div>
+          <div class="pop-pic-v">
+            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+          </div>
         </div>
         <text class="pop-name">上传头像</text>
       </div>
@@ -127,6 +131,7 @@
         //   })
         // })
       };
+      
       // 上传图片
       globalEvent.addEventListener('chooseImageCallBack',(res) => {
         this.Data.bu_facelogo =  res.imageUpload;
@@ -141,7 +146,7 @@
         })
       },
       selectVal (nb,content) {
-        if(nb != -1){
+        if(nb !== -1){
           this.typeVal = content
           this.Data.bu_categoryid = nb
         }
@@ -160,7 +165,7 @@
           this.buttonState()
       },
       buttonState(){
-        if(this.Data.bu_manname != '' && this.Data.bu_manphone != ''){
+        if(this.Data.bu_manname !== '' && this.Data.bu_manphone !== ''){
           this.submitDisabled = false
         } else {
           this.submitDisabled = true
@@ -239,9 +244,10 @@
   }
   .pop-pic{width: 140px;height: 140px; border-radius: 140px;}
   .pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}
-
-  .pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; position: relative;}
-  .top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
+  .pop-pic-icopi{width: 140px;height: 140px;position: relative;}
+  .pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; }
+  .pop-pic-v{position: absolute; right: 0;bottom: 10px;width: 28px; height: 28px;}
+  .top-use-vip{ width: 28px; height: 28px;}
   .blue{ background-color: #2c63ff;}
   .button{ background-image:linear-gradient(to top,#e5e5e5,#eee); width: 690px; height: 88px; border-radius: 16px; margin-left: 30px; }
   .buts{background-image:linear-gradient(to top,#2c63ff,#5296ff);}

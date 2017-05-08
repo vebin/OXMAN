@@ -35,7 +35,7 @@
         }
       },
       saveForm(){
-        if (this.isok) {
+        if (this.isok && this.txt !== '') {
           this.$emit('save',this.txt)
           this.$emit('hides')
         }else{

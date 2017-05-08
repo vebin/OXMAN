@@ -35,19 +35,17 @@ import XHR from '../api'
     data(){
       return{
          //如果未登录 隐藏我的信息
-        attestation:true
+        attestation: true
       }
     },
     created(){
-      // this.getManInfo()
-      //如果用户未登录
-      // if(this.$getConfig().userId == 0){
-      //   this.userInfoShow = false
-      // }else{
-      //   this.userInfoShow = true
-      // }
+      let auths = `${this.$getConfig().auth}`
+      let userIds = `${this.$getConfig().userId}`
+      if(auths.length > 9 && userIds > 0) {
+        this.attestation = false
+      }
       // 判断是否注册
-      this.getManInfo()
+      // this.getManInfo()
 
     },
     methods: {
@@ -57,7 +55,7 @@ import XHR from '../api'
           if( res.data.status == '1'){
             self.attestation = false
           }else{
-            self.attestation = true
+            
           }
         })
       },

@@ -11,9 +11,13 @@
       </div>
 
       <div class="top-use-box">
-        <div class="top-use-left">
-          <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
-          <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+        <div class="top-use-lebox">
+          <div class="top-use-left">
+            <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
+          </div>
+          <div class="top-use-v">
+            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+          </div>
         </div>
         <div class="top-use-right">
           <text class="top-use-name">{{DATA.bu_name}}</text>
@@ -197,10 +201,19 @@
       },
       singleFollowed(type){
         let self = this
-        let nbbsid = [`${this.DATA.bu_id}`];
-        XHR.postAttention({type:type,watchtype:2,nbbsid:JSON.stringify(nbbsid)}).then((ele) => {
+        let nbbsid = [this.DATA.bu_id]
+        let json = {}
+        json.type = type
+        json.watchtype = 2
+        json.nbbsid = JSON.stringify(nbbsid)
+        XHR.postAttention(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+          }else{
+            modal.toast({
+              message: res.data.msg,
+              duration: 2
+            })
           }
         });
       },
@@ -250,7 +263,9 @@
   justify-content:center;
 }
 .top-use-box{flex-direction:row; justify-content:flex-start; align-items:center;}
-.top-use-left{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative; border-radius: 124px;}
+.top-use-lebox{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative;}
+.top-use-left{width: 124px; height: 124px; border-radius: 124px;}
+
 .top-use-pic{width: 120px; height: 120px; border-radius: 120px; border-width: 2px;border-color: #fff;border-style: solid;}
 .top-use-name{font-size: 36px; color: #fff;margin-bottom: 14px;}
 .top-right-box{flex-direction:row; justify-content:flex-start; align-items:center;}
@@ -261,8 +276,8 @@
 .top-use-isok{width: 24px;height: 16px; margin-right: 10px;}
 
 .head-msg-nb{font-size: 32px; color: #fff;}
-
-.top-use-vip{position: absolute; right: 0;bottom: 10px; width: 28px; height: 28px;}
+.top-use-v{position: absolute; right: 0;bottom: 10px;width: 28px; height: 28px;}
+.top-use-vip{ width: 28px; height: 28px;}
 .head-item{
   padding-top: 30px;
   flex:1;

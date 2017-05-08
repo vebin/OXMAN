@@ -12,8 +12,10 @@
           keep-scroll-position="true">
           <list-centent :DATA="items"></list-centent>
         </cell>
-        <text class="indicator" v-if="showLoading">Loading ...</text>
-        <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
+        <cell>
+          <text class="indicator" v-if="showLoading">Loading ...</text>
+          <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
+        </cell>
       </list>
     </div>
 

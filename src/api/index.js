@@ -1,5 +1,5 @@
 import fetch from './ajax'
-import store from '../store'
+import store from '../store/index.js'
 
 const HTTP_DEV = 'http://192.168.0.247:8087'  // 开发
 const HTTP_PRO = 'https://wxcms-api.360che.com'   // 预发布
@@ -18,11 +18,12 @@ const C_HTTP = 'https://cmt.360che.com'
 const B_HTTP_DEV = 'https://circle-api-yufabu.360che.com/'
 const B_HTTP = 'https://circle-api.360che.com/'
 
-
+/*
 //  帖子圈子域名
 // 预发布：2b.360che.com
 // 正式：bbs.api.360che.com
 // 接口调用地址：http://接口域名/interface/app/index.php，所有接口调用地址均一样，根据传参不同
+*/
 const T_HTTP_DEV = 'http://2b.360che.com'
 const T_HTTP = 'https://bbs-api.360che.com'
 
@@ -36,7 +37,7 @@ const B_URLS = DEBUG ? B_HTTP_DEV : B_HTTP
 
 const T_URLS = DEBUG ? T_HTTP_DEV : T_HTTP
 
-// const UA = store.state.APPSTR      // 获取app密匙
+
 
 class XHR {
 // 获取用户信息
@@ -72,7 +73,6 @@ class XHR {
             body: json
         })
     }
-
     // 牛人标签属性接口
     getNoteName(json) {
         return fetch({
@@ -80,6 +80,7 @@ class XHR {
             body: json
         })
     }
+
     // 牛人个人信息接口
     getManInfo(json){
       json.APPSTR = store.state.APPSTR 
@@ -88,6 +89,14 @@ class XHR {
                   body: json
                })
     }
+    // 牛人个人信息接口
+    getNbInfo(json){
+        return fetch({
+            url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
+            body:json
+        })
+    }
+
     // 牛人主页推荐---文章列表接口
     getNbTindex(json){
       return fetch({
@@ -108,12 +117,6 @@ class XHR {
           url: `${URLS}/api/nr/NBMan/GetNBCircleArticleAsync`,
           body: json
        })
-    }
-    // 测试
-    isCK(json) {
-        return fetch({
-            url: `${URLS}WeiXin/WXJSsignature.aspx`
-        })
     }
 
     // 文章详情
@@ -141,13 +144,7 @@ class XHR {
             type:'POST'
         })
     }
-    // 分类标签接口
-    getCategoryList(json) {
-        return fetch({
-            url: `${URLS}/api/nr/Index/GetNBCategoryAsync`,
-            body:json
-        })
-    }
+
     // 请求已关注列表
     getFollowed(json) {
       json.APPSTR = store.state.APPSTR 
@@ -164,14 +161,6 @@ class XHR {
             body:json
         })
     }
-
-    // 获取标签属性
-    getTagAttributes(json){
-        return fetch({
-            url: `${URLS}/api/nr/Index/GetNBCategoryAsync`,
-            body:json
-        })
-    }
     // 牛人认证接口
     postNbAuthentication(json){
       json.APPSTR = store.state.APPSTR 
@@ -181,6 +170,8 @@ class XHR {
             type:'POST'
         })
     }
+
+
     // 牛人点赞接口
     postUpvoteAsync(json){
       json.APPSTR = store.state.APPSTR 
@@ -190,13 +181,15 @@ class XHR {
             type: 'POST'
         })
     }
-    // 牛人个人信息接口
-    getNbInfo(json){
-        return fetch({
-            url: `${URLS}/api/nr/NBMan/GetNBManInfoAsync`,
-            body:json
-        })
+  // 牛人点赞－点赞
+    postCite (json) {
+      return fetch({
+                url: `${URLS}/api/nr/NBMan/PostUpvoteAsync`,
+                body: json,
+                type:'POST'
+             })
     }
+
     // 修改牛人信息接口
     getEditNBMan(json){
       json.APPSTR = store.state.APPSTR 
@@ -232,14 +225,7 @@ class XHR {
               type:'POST'
            })
     }
-// 牛人点赞－点赞
-  postCite (json) {
-    return fetch({
-              url: `${URLS}/api/nr/NBMan/PostUpvoteAsync`,
-              body: json,
-              type:'POST'
-           })
-  }
+
 // 文章点赞－点赞
   getPcd (json) {
     json.APPSTR = store.state.APPSTR 
@@ -293,9 +279,8 @@ class XHR {
     }
     getBbsNbCircleList(json){
         return fetch({
-            url: `${B_URLS}?c=subForum&m=threadsBySubFid&sub_fid=5&sync=1`,
-            body: json,
-            type:'POST'
+            url: `${B_URLS}?c=subForum&m=threadsBySubFid&sync=1`,
+            body: json
         })
     }
 

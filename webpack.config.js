@@ -7,7 +7,7 @@
 // eslint-plugin-promise
 // eslint-plugin-standard
 // postcss-cssnext
-
+// const cssnext = require('postcss-cssnext')
 var path = require('path')
 var webpack = require('webpack')
 
@@ -45,11 +45,11 @@ function getBaseConfig () {
       //     loader: 'eslint',
       //     exclude: /node_modules/
       //   },
-      //   {
-      //     test: /\.js$/,
-      //     loader: 'eslint',
-      //     exclude: /node_modules/
-      //   }
+        // {
+        //   test: /\.js$/,
+        //   loader: 'eslint',
+        //   exclude: /node_modules/
+        // }
       // ],
       loaders: [
         {

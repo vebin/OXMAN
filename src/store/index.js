@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     blueTxt:'',  // 蓝底白字标题
     selectid: 0,
 
-    tabbar: 1,
+    tabbar: 2,
 
       //认证头
     attestation:1, // 1：认证 2：修改资料

@@ -30,8 +30,8 @@
     },
     data () {
       return {
-        tab1:'https://s.kcimg.cn/app/icon/oxman/qzx-ico.png',
-        tab2:'https://s.kcimg.cn/app/icon/oxman/wz-ico.png',
+        tab1:'https://s.kcimg.cn/app/icon/oxman/qz-ico.png',
+        tab2:'https://s.kcimg.cn/app/icon/oxman/wzx-ico.png',
         tab3:'https://s.kcimg.cn/app/icon/oxman/sz-ico.png',
         pics: [
           [

@@ -7,7 +7,7 @@ export default {
     },
     back (){
         let thaw = weex.requireModule('THAW');
-        if(this.$router && this.$route.path != "/home"){
+        if(this.$router && this.$route.path !== "/home"){
           this.$router.back();
         }else{
           thaw.onGoBack();
