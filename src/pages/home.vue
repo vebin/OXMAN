@@ -37,7 +37,6 @@
   import HotTop from '../components/hot-top.vue'
 
   import XHR from '../api'
-  const THAW = weex.requireModule('THAW')
   const modal = weex.requireModule('modal')
   export default {
     components: { AppHeader, ListCentent, HotTop },
@@ -61,11 +60,7 @@
       //  储存登录字符串
       this.$store.commit('setAPPSTR',this.$getConfig().auth)
       // const me = this
-      // const THAW = weex.requireModule('thaw')
-      // THAW.onGetData('1',function(ret) {
-      //     me.userid = ret.userid
-      //     me.userName = ret.userName
-      // }
+
 
       if(auths.length > 9 && userIds > 0) {
         this.attestation = true
@@ -90,8 +85,6 @@
           if( res.data.status == '1'){
             self.hot = res.data.data
           }
-          // 隐藏正在加载
-          THAW.onHideLoading()
         })
       },
       getIndexAsy () {

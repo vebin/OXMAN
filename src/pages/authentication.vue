@@ -52,7 +52,6 @@
   import WHeader from '../components/w-header.vue'
   import AppHeader from '../components/app-header.vue'
   import SelectOps from '../components/select.vue'
-  import router from '../router'
   const modal = weex.requireModule('modal')
   let globalEvent = weex.requireModule('globalEvent');
   // const picker = weex.requireModule('picker')
@@ -97,13 +96,13 @@
     },
     created () {
       //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$getConfig().auth)
+      this.$store.commit('setAPPSTR',this.$store.state.APPSTR)
 
 //      this.headerType = this.$store.state.attestation;
       this.pick()
 
 //      如果是修改个人资料，请求个人资料数据
-        XHR.getNbInfo({'nbuid':this.$getConfig().userId}).then((ele) => {
+        XHR.getNbInfo({'nbuid':this.$store.state.ubuid}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             let NbInfo = ele.data.data[0];
             this.Data.bu_facelogo = NbInfo.bu_imgsrc;
@@ -122,29 +121,22 @@
           }
         })
       // 登录
-      if(this.$getConfig().userId <= 0){
-        weex.requireModule('THAW').onGoLogin();
+      // if(this.$getConfig().userId <= 0){
+        // weex.requireModule('THAW').onGoLogin();
         // globalEvent.addEventListener('onGoLoginCallBack',function(data){
         //   modal.toast({
         //     message: data,
         //     duration: 100
         //   })
         // })
-      };
+      // };
       
       // 上传图片
-      globalEvent.addEventListener('chooseImageCallBack',(res) => {
-        this.Data.bu_facelogo =  res.imageUpload;
-      });
-
+      // globalEvent.addEventListener('chooseImageCallBack',(res) => {
+      //   this.Data.bu_facelogo =  res.imageUpload;
+      // });
     },
     methods: {
-      alert (text) {
-        modal.toast({
-          message: text,
-          duration: 0.8
-        })
-      },
       selectVal (nb,content) {
         if(nb !== -1){
           this.typeVal = content
@@ -184,7 +176,7 @@
           if (ele.ok && ele.data.status == 1) {
             this.alert('修改成功');
             this.$nextTick(function(){
-              router.go(-1)
+              this.back()
             })
           }else{
             this.alert(ele.data.msg)
@@ -193,20 +185,6 @@
 
       },
       pick () {
-        // var items = new Array("法律援助","Volvo","BMW")
-        // var self = this
-        // picker.pick({
-        //     'items':items,
-        //     'index':self.index
-        // },function (ret) {
-        //     var result = ret.result
-        //     if(result == 'success')
-        //     {
-        //         self.value = items[ret.data]
-        //         self.index = ret.data
-        //     }
-        // })
-
         let self = this
         XHR.getNoteName().then((res) => {
           if( res.data.status == '1'){
@@ -217,7 +195,7 @@
 //      上传图片
       loadHeadPortrait(){
         //   native操作
-        weex.requireModule('THAW').chooseImage();
+        // weex.requireModule('THAW').chooseImage();
 
 
       }

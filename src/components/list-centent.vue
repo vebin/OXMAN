@@ -15,14 +15,14 @@
   import listShare from './list-share.vue'
   import listPic from './list-pic.vue'
   export default {
-    components: {listShare,listPic},
+    components: {listShare, listPic},
     props: {
       types: {
         type: Number,
         default: 1
       },
       DATA: {
-        bu_mainimgjson:[]
+        bu_mainimgjson: []
       }
     },
     methods: {

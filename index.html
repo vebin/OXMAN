@@ -2,18 +2,41 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>卡友圈</title>
+  <title>牛人圈子</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-touch-fullscreen" content="yes">
   <meta name="format-detection" content="telephone=no, email=no">
   <style>body > div { height: 100%;}</style>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <!--  <script src="./assets/phantom-limb.js"></script> -->
-  <script src="./node_modules/vue/dist/vue.js"></script>
-  <script src="./node_modules/weex-vue-render/index.js"></script>
+  <script src="https://cdn.bootcss.com/vue/2.3.2/vue.min.js"></script>
+  <!-- <script src="./node_modules/vue/dist/vue.js"></script> -->
+  <script src="https://s.kcimg.cn/app/oxman/wechat/weex.vue.render.js"></script>
+  <!-- <script src="./node_modules/weex-vue-render/index.js"></script> -->
+  <script>
+      window.routerChange = function(){
+          var CFG = JSON.parse(localStorage.getItem('WX_CONFIGXS')) || {}
+          try{
+              wx.config({
+                  debug: false,
+                  appId: CFG.appId,
+                  timestamp: CFG.timestamp,
+                  nonceStr: CFG.nonceStr,
+                  signature: CFG.signature,
+                  jsApiList: [
+                      'hideOptionMenu',
+                      'uploadImage',
+                      'chooseImage',
+                  ]
+              })
+              wx.ready(function(){ wx.hideOptionMenu()})
+          } catch(err){}
+      }
+  </script>
 </head>
-<body>
+<body onhashchange="routerChange()" onload="routerChange()">
   <div id="root" style=""></div>
   <script src="./dist/index.web.js"></script>
 </body>

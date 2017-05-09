@@ -107,7 +107,6 @@
   import ListCentent from '../components/list-centent.vue'
   import XHR from '../api'
   const modal = weex.requireModule('modal')
-  const THAW = weex.requireModule('THAW')
   export default {
     components: { ListCentent },
     data (){
@@ -126,12 +125,7 @@
     },
     methods: {
       share(){
-        THAW.onShowShare({
-            title: this.DATA.bu_name + "的牛人主页", // 分享标题
-            desc: "", // 分享描述
-            link: '/proc?'+ this.DATA.bu_id, // 分享链接
-            imgUrl: this.DATA.bu_imgsrc // 分享图标
-        });
+
       },
       myMsg(txt){
         if(this.DATA.wactchtype == '1'){

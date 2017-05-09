@@ -109,10 +109,11 @@
             if( res.data.status == '1'){
               self.showLoading = false
               
-              if(res.data.comments.length < 10 ){
+              if(res.data.total_page_no == self.page){
                 self.COMDATA.push(...res.data.comments)
                 self.noLoading = true
               } else {
+                self.page++
                 self.COMDATA.push(...res.data.comments)
               }
               // self.DATA = res.data.cmt_sum

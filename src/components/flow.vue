@@ -41,8 +41,6 @@
 </template>
 
 <script>
-  // const modal = weex.requireModule('modal');
-  // const storage = weex.requireModule('storage');
 
   import router from '../router'
   

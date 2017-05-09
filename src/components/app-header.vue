@@ -22,7 +22,6 @@
   </div>
 </template>
 <script>
-const THAW = weex.requireModule('THAW')
 const modal = weex.requireModule('modal')
 import XHR from '../api'
   export default {
@@ -39,8 +38,8 @@ import XHR from '../api'
       }
     },
     created(){
-      let auths = `${this.$getConfig().auth}`
-      let userIds = `${this.$getConfig().userId}`
+      let auths = `${this.$store.state.APPSTR}`
+      let userIds = `${this.$store.state.ubuid}`
       if(auths.length > 9 && userIds > 0) {
         this.attestation = false
       }
@@ -59,20 +58,9 @@ import XHR from '../api'
           }
         })
       },
-      alert (text) {
-        modal.toast({
-          message: text,
-          duration: 0.8
-        })
-      },
+
       shares(){
-        //   native操作  分享
-          THAW.onShowShare({
-              title: "卡车之家牛人平台", // 分享标题
-              desc: "", // 分享描述
-              link: '', // 分享链接
-              imgUrl: "https://s.kcimg.cn/app/icon/oxman/shll.png" // 分享图标
-          });
+
       }
     }
   }

@@ -1,6 +1,7 @@
 <template>
   <div class="new-box">
-    <div @click="articleInfo(items.bu_articleid)">
+    <!-- <div @click="jump({path:'/pages',query:{id: items.bu_articleid}})"> -->
+    <div>
       <text class="new-tit">{{items.bu_title}}</text>
       <div class="new-pin">
 
@@ -22,7 +23,6 @@
 </template>
 
 <script>
-  import router from '../router'
   import XHR from '../api'
   const modal = weex.requireModule('modal')
   export default {
@@ -30,17 +30,6 @@
       items: Object
     },
     methods: {
-      //弹窗
-      alert (text) {
-        modal.toast({
-          message: text,
-          duration: 0.3
-        })
-      },
-      //进入文章详情
-      articleInfo(articleId){
-        router.push('/pages?id=' + articleId)
-      },
       //发布 || 取消发布
       issueAlert(articleId,state){
         XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1}).then((ele) => {

@@ -112,7 +112,7 @@
       },
       //去登陆
       goLogin(){
-        weex.requireModule('THAW').onGoLogin();
+        
       },
       //请求接口列表
       getFollowed(){

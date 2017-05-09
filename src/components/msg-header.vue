@@ -14,8 +14,6 @@
   </div>
 </template>
 <script>
-  // const modal = weex.requireModule('modal')
-  // const dom = weex.requireModule('dom')
   export default {
     props: {
       titles: {

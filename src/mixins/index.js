@@ -1,3 +1,4 @@
+const modal = weex.requireModule('modal')
 export default {
   methods: {
     jump (to) {
@@ -6,12 +7,13 @@ export default {
       }
     },
     back (){
-        let thaw = weex.requireModule('THAW');
-        if(this.$router && this.$route.path !== "/home"){
-          this.$router.back();
-        }else{
-          thaw.onGoBack();
-        }
+      this.$router.back()
+    },
+    alert (text) {
+      modal.toast({
+        message: text,
+        duration: 2
+      })
     }
   }
 }
