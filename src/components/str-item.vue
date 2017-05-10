@@ -41,9 +41,9 @@
       //单个关注
       singleFollowed(type,id,index){
         // // 判断去登录
-        // if(this.$getConfig().userId <= 0){
-        //   weex.requireModule('THAW').onGoLogin();
-        // }
+        if( this.$store.state.nbuid <= 0 ){
+          truckhomeAccountBinding.show()
+        }
         let nbbsid = [id]
         let json = {}
         json.type = type

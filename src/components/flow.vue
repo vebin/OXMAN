@@ -55,7 +55,7 @@
       }
     },
     created(){
-      if(this.$getConfig().userId !== 0){
+      if(this.$store.state.nbuid !== 0){
 
       }
     },

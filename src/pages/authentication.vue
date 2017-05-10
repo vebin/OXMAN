@@ -8,7 +8,7 @@
       <div class="pop-item" @click="loadHeadPortrait">
         <div class="pop-pic-icopi">
           <div class="pop-pic-box">
-            <image class="pop-pic" :src="Data.bu_facelogo"></image>
+            <image class="pop-pic" :src="bu_facelogo"></image>
           </div>
           <div class="pop-pic-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
@@ -63,10 +63,11 @@
         selectOk: false,
         //1：认证  2：修改资料
         headerType:1,
+        bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
         //提交资料
         Data:{
           //头像
-          bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
+          bu_facelogo:'',
           //姓名
           bu_manname:'',
           //电话
@@ -75,6 +76,7 @@
           bu_manintroduction:'',
           //属性分类
           bu_categoryid:'',
+          type: 2,
         },
 
         typeVal:'',
@@ -100,9 +102,8 @@
 
 //      this.headerType = this.$store.state.attestation;
       this.pick()
-
 //      如果是修改个人资料，请求个人资料数据
-        XHR.getNbInfo({'nbuid':this.$store.state.ubuid}).then((ele) => {
+        XHR.getNbInfo({'nbuid':this.$store.state.nbuid}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             let NbInfo = ele.data.data[0];
             this.Data.bu_facelogo = NbInfo.bu_imgsrc;
@@ -120,21 +121,6 @@
             this.show = 1
           }
         })
-      // 登录
-      // if(this.$getConfig().userId <= 0){
-        // weex.requireModule('THAW').onGoLogin();
-        // globalEvent.addEventListener('onGoLoginCallBack',function(data){
-        //   modal.toast({
-        //     message: data,
-        //     duration: 100
-        //   })
-        // })
-      // };
-      
-      // 上传图片
-      // globalEvent.addEventListener('chooseImageCallBack',(res) => {
-      //   this.Data.bu_facelogo =  res.imageUpload;
-      // });
     },
     methods: {
       selectVal (nb,content) {
@@ -194,10 +180,22 @@
       },
 //      上传图片
       loadHeadPortrait(){
-        //   native操作
-        // weex.requireModule('THAW').chooseImage();
-
-
+        let self = this
+        wx.chooseImage({
+            count: 1,
+            sizeType: ['original', 'compressed'],
+            sourceType: ['album', 'camera'],
+            success: function (res) {
+                self.bu_facelogo = res.localIds[0]
+                wx.uploadImage({
+                    localId: res.localIds[0],
+                    isShowProgressTips: 1,
+                    success: function (ores) {
+                        self.Data.bu_facelogo = ores.serverId
+                    }
+                })
+            }
+        })
       }
     }
   }

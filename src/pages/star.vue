@@ -75,7 +75,7 @@
 //      });
 
       //如果用户未登录
-      if(this.$getConfig().userId == 0){
+      if(this.$store.state.nbuid == 0){
         this.isLogin = false
       }else{
         //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
@@ -112,7 +112,7 @@
       },
       //去登陆
       goLogin(){
-        
+        truckhomeAccountBinding.show()
       },
       //请求接口列表
       getFollowed(){

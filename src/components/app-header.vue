@@ -50,7 +50,7 @@ import XHR from '../api'
     methods: {
       getManInfo () {
         let self = this
-        XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
+        XHR.getManInfo({'nbuid': this.$store.state.nbuid }).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = false
           }else{

@@ -55,10 +55,10 @@
       }
     },
     created () {
-      let auths = `${this.$getConfig().auth}`
-      let userIds = `${this.$getConfig().userId}`
+      let auths = `${this.$store.state.APPSTR}`
+      let userIds = `${this.$store.state.nbuid}`
       //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$getConfig().auth)
+      this.$store.commit('setAPPSTR',this.$store.state.APPSTR)
       // const me = this
 
 
@@ -73,7 +73,7 @@
     methods: {
       getManInfo () {
         let self = this
-        XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
+        XHR.getManInfo({'nbuid': this.$store.state.nbuid }).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = false
           }

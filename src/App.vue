@@ -12,7 +12,7 @@
     },
     created(){
 
-      // this.$store.commit('setAPPSTR',this.$getConfig().auth)
+      // this.$store.commit('setAPPSTR',this.$store.state.APPSTR)
       // this.$store.commit('setNbuid',)
 
     }

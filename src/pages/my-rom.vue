@@ -79,7 +79,7 @@
     created(){
 
       //获取个人信息
-      XHR.getBbsUserInfo({uid:this.$getConfig().userId}).then((ele) => {
+      XHR.getBbsUserInfo({uid:this.$store.state.nbuid}).then((ele) => {
         if(ele.ok){
           //如果创建过圈子
           if(ele.data.data.subForum){
