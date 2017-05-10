@@ -273,8 +273,7 @@ class XHR {
     getBbsUserInfo(json){
         return fetch({
             url: `${B_URLS}?c=user&m=userInfo`,
-            body: json,
-            type:'POST'
+            body: json
         })
     }
     getBbsNbCircleList(json){

@@ -76,6 +76,7 @@
           bu_manintroduction:'',
           //属性分类
           bu_categoryid:'',
+          type:1,
         },
 
         typeVal:'',

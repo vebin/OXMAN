@@ -80,14 +80,13 @@
 
       //获取个人信息
       XHR.getBbsUserInfo({uid:this.$getConfig().userId}).then((ele) => {
-        if(ele.ok){
-          //如果创建过圈子
-          if(ele.data.data.subForum){
-              this.circleId = ele.data.data.subForum.id;
-              //获取圈子列表
-              this.getBbsNbCircleList()
-          }
+
+        if(ele.data.status){
+            this.circleId = ele.data.data.subForum[0].id
+            //获取圈子列表
+            this.getBbsNbCircleList()
         }
+
       })
 
       this.getNbArtList()
