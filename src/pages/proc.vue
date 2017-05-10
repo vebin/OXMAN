@@ -121,8 +121,14 @@
       }
     },
     created () {
+      XHR.asYncg({nbuid:this.$route.query.id}).then( (res) => {
+        if( res.data.status == '1'){
+          
+        }
+      })
       this.initMsg()
       this.loadList()
+
     },
     methods: {
       share(){
