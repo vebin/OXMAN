@@ -297,6 +297,7 @@
               message: res.data.msg,
               duration: 2
             })
+            truckhomeAccountBinding.show()
           }
         })
       },
@@ -310,10 +311,11 @@
               self.DATA.bu_islike = true
               self.DATA.bu_like++
             } else {
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
+              truckhomeAccountBinding.show()
+              // modal.toast({
+              //   message: res.data.msg,
+              //   duration: 2
+              // })
             }
           })
         }

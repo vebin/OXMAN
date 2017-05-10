@@ -26,6 +26,7 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
               url: setting.url,
               type: 'json',
               headers: {'Content-Type':'application/x-www-form-urlencoded'},
+              xhrFields:{'withCredentials': true},
               body: qs.stringify(setting.data)
             }, (response) => {
               if (response.status == 200) {
@@ -51,6 +52,7 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
             stream.fetch({
               method: 'GET',
               url: sData,
+              xhrFields:{'withCredentials': true},
               type: 'json'
             }, (response) => {
               if (response.status == 200) {

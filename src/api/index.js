@@ -243,6 +243,22 @@ class XHR {
               type:'POST'
            })
   }
+// 牛人点击量接口
+  asYncg (json) {
+    return fetch({
+              url: `${URLS}/api/nr/NBMan/GetNBClickCountAsync`,
+              body: json
+           })
+  }
+// 微信JSSKD授权接口
+  wxConfig () { 
+    return fetch({
+              url: `${URLS}/api/nr/nbwx/GetJ`,
+              type:'POST'
+           })
+  }
+
+
 /*---------------C_URLS---评论相关---------------------*/
 // 获取评论信息
   getTopic (json) {

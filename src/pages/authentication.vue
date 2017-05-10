@@ -97,10 +97,7 @@
       }
     },
     created () {
-      //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$store.state.APPSTR)
 
-//      this.headerType = this.$store.state.attestation;
       this.pick()
 //      如果是修改个人资料，请求个人资料数据
         XHR.getNbInfo({'nbuid':this.$store.state.nbuid}).then((ele) => {

@@ -38,8 +38,8 @@ import XHR from '../api'
       }
     },
     created(){
-      let auths = `${this.$store.state.APPSTR}`
-      let userIds = `${this.$store.state.ubuid}`
+      let auths = this.getCookie('AbcfN_auth')
+      let userIds = this.getCookie('AbcfN_userid')
       if(auths.length > 9 && userIds > 0) {
         this.attestation = false
       }

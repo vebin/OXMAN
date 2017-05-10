@@ -122,6 +122,11 @@
     created () {
       this.initMsg()
       this.loadList()
+      XHR.asYncg({nbuid:this.$route.query.id}).then( (res) => {
+        if( res.data.status == '1'){
+          
+        }
+      })
     },
     methods: {
       share(){

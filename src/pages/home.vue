@@ -55,12 +55,20 @@
       }
     },
     created () {
-      let auths = `${this.$store.state.APPSTR}`
-      let userIds = `${this.$store.state.nbuid}`
+
+
+      let auths = this.getCookie('AbcfN_auth')
+      let userIds = this.getCookie('AbcfN_userid')
       //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$store.state.APPSTR)
+      this.$store.commit('setNbuid', this.getCookie('AbcfN_userid') )
       // const me = this
 
+
+      XHR.wxConfig().then( (res) => {
+        if( res.data.status == '1'){
+          localStorage.setItem('WX_CONFIGXS',JSON.stringify(res.data.data))
+        }
+      })
 
       if(auths.length > 9 && userIds > 0) {
         this.attestation = true
