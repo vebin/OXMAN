@@ -1,5 +1,7 @@
 import qs from 'qs'
-const stream = weex.requireModule('stream')
+import JQ from 'jquery'
+
+// const stream = weex.requireModule('stream')
 
 function filter (str) {  // 特殊字符转义
     str += ''
@@ -21,21 +23,25 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
     setting.type = setting.type.toUpperCase()
     return new Promise((resolve, reject) => {
         if (setting.type == 'POST') {
-            stream.fetch({
-              method: 'POST',
+            JQ.ajax({
+              type: 'POST',
               url: setting.url,
-              type: 'json',
+              dataType: 'json',
               headers: {'Content-Type':'application/x-www-form-urlencoded'},
-              xhrFields:{'withCredentials': true},
-              body: qs.stringify(setting.data)
-            }, (response) => {
-              if (response.status == 200) {
-                resolve(response)
+              xhrFields: { withCredentials: true },
+              // beforeSend: function (request) {
+              //     request.setRequestHeader("nb", "nb.360che.com");
+              // },
+              data: qs.stringify(setting.data),
+              success: (response) => {
+                if (response.status == 200) {
+                  resolve(response)
+                }
+                else {
+                  reject(response)
+                }
               }
-              else {
-                reject(response)
-              }
-            }, () => {})
+            })
         } else {
             if(setting.data !== null) {
               for (var attr in setting.data) {
@@ -49,19 +55,23 @@ const fetch = ({ url, body = null, type = 'GET'}) => {
             } else {
                 sData = setting.url + '?' + sData
             }
-            stream.fetch({
-              method: 'GET',
+            JQ.ajax({
+              type: 'GET',
               url: sData,
-              xhrFields:{'withCredentials': true},
-              type: 'json'
-            }, (response) => {
-              if (response.status == 200) {
-                resolve(response)
-              }
-              else {
-                reject(response)
-              }
-            }, () => {})
+              xhrFields: { withCredentials: true },
+              // beforeSend: function (request) {
+              //     request.setRequestHeader("nb", "nb.360che.com");
+              // },
+              dataType: 'json',
+              success: (response) => {
+                if (response.status == 200) {
+                  resolve(response)
+                }
+                else {
+                  reject(response)
+                }
+              } 
+            })
         }
     })
 }

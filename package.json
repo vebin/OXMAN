@@ -21,9 +21,10 @@
     "debug": "weex-devtool"
   },
   "dependencies": {
+    "jquery": "^3.2.1",
+    "qs": "^6.3.1",
     "vue": "^2.1.8",
     "vue-router": "^2.1.1",
-    "qs": "^6.3.1",
     "vuex": "^2.1.1",
     "vuex-router-sync": "^4.0.1",
     "weex-vue-render": "^0.1.4"

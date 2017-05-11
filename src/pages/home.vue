@@ -55,8 +55,6 @@
       }
     },
     created () {
-
-
       let auths = this.getCookie('AbcfN_auth')
       let userIds = this.getCookie('AbcfN_userid')
       //  储存登录字符串
@@ -70,7 +68,7 @@
         }
       })
 
-      if(auths.length > 9 && userIds > 0) {
+      if(auths.length > 9 && userIds.length > 0) {
         this.attestation = true
       }
       this.getManInfo()
