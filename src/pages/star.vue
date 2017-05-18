@@ -2,6 +2,15 @@
   <div class="commont-view">
     <app-header show="2"></app-header>
 
+
+    <!-- <div v-if="followedSuccessShow" class="oneAlert">
+      <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
+      <div class="altClsBox" @click="closeFollowedSuccess">
+        <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
+      </div>
+    </div> -->
+
+
     <div class="star-box">
       <div class="star-lef">
         <text :class="['lefTxt',categorySelected==0?'lefAct':'']" @click="switchList(0)">已关注</text>
@@ -17,15 +26,10 @@
 
         <str-item v-if="isLogin" :followedList="followedList"></str-item>
       </scroller>
+
     </div>
 
-    <div v-if="followedSuccessShow" class="oneAlert">
-      <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
-      <div class="altClsBox" @click="closeFollowedSuccess">
-        <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
-      </div>
-    </div>
-
+    
     <flow v-if="RecommendAttentionShow" :RecommendAttentionList="RecommendAttentionList" @batchFollowed="batchFollowed" @skipBatchFollowed="skipBatchFollowed"></flow>
   </div>
 </template>
@@ -75,7 +79,8 @@
 //      });
 
       //如果用户未登录
-      if(this.$store.state.nbuid == 0){
+      let nbUid = this.getCookie('AbcfN_ajaxuid')
+      if(nbUid == ''){
         this.isLogin = false
       }else{
         //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
@@ -84,23 +89,24 @@
             this.RecommendAttentionShow = true;
             //请求分类标签接口
             XHR.getRecommendAttention().then((res) => {
-              if(res.ok && res.data.status == 1){
-                this.RecommendAttentionList = res.data.data;
+              if(res.status == 1){
+                this.RecommendAttentionList = res.data;
               }
             });
           }else{
             //请求接口列表
-            this.getFollowed();
+            this.getFollowed()
           }
-        });
+        })
 
-        //请求分类标签接口  getCategoryList
-        XHR.getNoteName().then((res) => {
-          if(res.ok && res.data.status == 1){
-            this.categoryList = res.data.data;
-          }
-        });
+        
       }
+      //请求分类标签接口  getCategoryList
+      XHR.getNoteName().then((res) => {
+        if(res.status == 1){
+          this.categoryList = res.data;
+        }
+      });
 
     },
     methods: {
@@ -118,9 +124,9 @@
       getFollowed(){
         //请求已关注列表
         XHR.getFollowed({'currentPage':1}).then((res) => {
-          if(res.ok && res.data.status == 1){
-            this.followedList = res.data.data;
-            if(res.data.msg == "推荐列表"){
+          if(res.status == 1){
+            this.followedList = res.data;
+            if(res.msg == "推荐列表"){
               this.emptyList = true;
             }else{
               this.emptyList = false;
@@ -143,9 +149,9 @@
 
         //请求已关注列表
         XHR[ajaxName](o).then((res) => {
-          if (res.ok && res.data.status == 1) {
-            this.followedList = res.data.data;
-            if(res.data.msg == "推荐列表"){
+          if (res.status == 1) {
+            this.followedList = res.data;
+            if(res.msg == "推荐列表"){
               this.emptyList = true;
             }else{
               this.emptyList = false;
@@ -160,19 +166,19 @@
           watchtype: 1,
           nbbsid: nbbsid
         }).then((ele) => {
-          if (ele.ok && ele.data.status == 1) {
+          if (ele.status == 1) {
             this.RecommendAttentionShow = false;
             //请求关注列表
             this.getFollowed();
             storage.setItem('RecommendAttention',true)
             storage.getItem('followedSuccess', (ele) => {
               if (ele.result !== 'success') {
-                this.followedSuccessShow = true;
+                // this.followedSuccessShow = true;
               }
             })
           } else {
             modal.toast({
-              message: res.data.msg,
+              message: ele.msg,
               duration: 2
             })
           }
@@ -202,13 +208,13 @@
 
   .ritBtn{width:536px;height:80px; border-width: 2px; border-style: solid;border-color: #2B61FF; text-align: center; line-height: 80px; font-size: 32px; color: #2B61FF; border-radius: 4px; margin-top: 140px;}
 
-  .lefTxt{height: 84px; text-align: center; line-height: 84px;font-size: 32px; color: #333; border-bottom-width: 4px; border-bottom-color:#f5f5f5; border-bottom-style: solid;}
+  .lefTxt{height: 84px; text-align: center; line-height: 84px;font-size: 32px; color: #999; border-bottom-width: 2px; border-bottom-color:#eee; border-bottom-style: solid;}
   .lefAct{border-bottom-color:#2B61FF; background-color: #fff; color:#2B61FF;}
 
   .ritWelx{font-size: 28px; color: #999; text-align: center;margin-top: 60px; margin-bottom: 30px;}
   .ritTit{font-size: 36px; color: #333; text-align: center;}
 
-  .oneAlert{position:fixed;left:0;top:0;bottom:0;right:0; background-color: rgba(0,0,0,.6); justify-content: center;
+  .oneAlert{position:fixed;left:0; top:0; bottom:0;right:0; background-color: rgba(0,0,0,.6); justify-content: center;
   align-items:center; flex:1; width: 100%;}
   .alertImg{ width: 534px; height: 612px;}
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}

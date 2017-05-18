@@ -9,7 +9,7 @@
       <image class="btm-ico" :src="DATA.bu_islike ? zans[1] : zans[0]"></image>
       <text :class="DATA.bu_islike ? ['btm-txt blu'] : ['btm-txt']">{{DATA.bu_like}}</text>
     </div>
-    <div class="btm-nav" @click="$emit('hides')">
+    <div class="btm-nav" @click="$emit('hides','msg')">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
       <text class="btm-txt">{{SUM}}</text>
     </div>

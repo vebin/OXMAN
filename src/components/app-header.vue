@@ -38,21 +38,21 @@ import XHR from '../api'
       }
     },
     created(){
-      let auths = this.getCookie('AbcfN_auth')
-      let userIds = this.getCookie('AbcfN_userid')
-      if(auths.length > 9 && userIds.length > 0) {
-        this.attestation = false
-      }
+      // let userIds = `${this.getCookie('AbcfN_ajaxuid')}`
+      // if(userIds > 0) {
+      //   this.attestation = true
+      // }
       // 判断是否注册
-      // this.getManInfo()
+      this.getManInfo()
 
     },
     methods: {
       getManInfo () {
         let self = this
-        XHR.getManInfo({'nbuid': this.$store.state.nbuid }).then( (res) => {
-          if( res.data.status == '1'){
-            self.attestation = false
+        XHR.checkRZ({'nbuid': this.$store.state.nbuid })
+        .then((res) => {
+          if( res.status == '1'){
+            self.attestation = res.data
           }else{
             
           }

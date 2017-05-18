@@ -80,8 +80,8 @@
 
       //获取个人信息
       XHR.getBbsUserInfo({uid:this.$store.state.nbuid}).then((ele) => {
-          if(ele.data.status){
-              this.circleId = ele.data.data.subForum[0].id
+          if(ele.status){
+              this.circleId = ele.data.subForum[0].id
               //获取圈子列表
               this.getBbsNbCircleList()
           }
@@ -99,16 +99,16 @@
         if(!this.noLoading && !this.showLoading){
           self.showLoading = true
           XHR.getBbsNbCircleList(json).then((ele) => {
-            if(ele.ok && ele.data.status == 1){
+            if(ele.status == 1){
               self.showLoading = false
-              if(ele.data.data.nextPageToken == '-1'){
+              if(ele.data.nextPageToken == '-1'){
                 self.noLoading = true
               }
-              self.CircleList.push(...ele.data.data.threadslist)
+              self.CircleList.push(...ele.data.threadslist)
             } else {
               self.showLoading = false
               modal.toast({
-                message: ele.data.msg,
+                message: ele.msg,
                 duration: 2
               })
             }
@@ -125,15 +125,15 @@
         if(!this.aNoLoading && !this.aLoading){
           self.aLoading = true
           XHR.getNbArticleList(json).then((ele) => {
-            if(ele.ok && ele.data.status == 1){
-              if (ele.data.data.length < 20) {
+            if(ele.status == 1){
+              if (ele.data.length < 20) {
                 self.aNoLoading = true
               }
-              this.ArticleList.push(...ele.data.data)
+              this.ArticleList.push(...ele.data)
             } else {
               self.aLoading = false
               modal.toast({
-                message: ele.data.msg,
+                message: ele.msg,
                 duration: 2
               })
             }
@@ -151,11 +151,11 @@
         json.bu_author = obj.author
         json.bu_mainimgjson = obj.images.length == 0 ? '[]' : `["${obj.images[0]}"]`
         XHR.postPushAsyn(json).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
+          if(ele.status == 1){
             self.CircleList[inx].sync = true
           } else {
             modal.toast({
-              message: ele.data.msg,
+              message: ele.msg,
               duration: 2
             })
           }

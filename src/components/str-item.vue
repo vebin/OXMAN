@@ -19,12 +19,13 @@
       </div>
 
     </div>
-    <div v-if="followedSuccessShow" class="oneAlert">
+    <!-- <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
       <div class="altClsBox" @click="closeFollowedSuccess">
         <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       </div>
-    </div>
+    </div> -->
+    
   </div>
 </template>
 <script>
@@ -50,14 +51,14 @@
         json.watchtype = 1
         json.nbbsid = JSON.stringify(nbbsid)
         XHR.postAttention(json).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
+          if(ele.status == 1){
             this.followedList[index].bu_isfollower = !this.followedList[index].bu_isfollower
             //查看是否是关注
             if(type == 1){
               //查看是否已经弹出过弹层，
               storage.getItem('followedSuccess', (ele) => {
                 if (ele.result !== 'success') {
-                  this.followedSuccessShow = true
+                  // this.followedSuccessShow = true
                 }
               })
             }
@@ -73,7 +74,7 @@
   }
 </script>
 <style scoped>
-  .ritItem{flex-direction: row;justify-content: space-between;align-items:center;border-bottom-style: solid;border-bottom-width: 2px; border-bottom-color:#e5e5e5; height: 140px;}
+  .ritItem{flex-direction: row;justify-content: space-between;align-items:center;border-bottom-style: solid;border-bottom-width: 1px; border-bottom-color:#eee; height: 140px;}
   .ritPic{width: 80px;height: 80px; border-radius: 80px;}
   .ritStrBtn{height: 52px;width: 128px;margin-right: 30px; background-color: #2B61FF; color: #fff; flex-direction:row;justify-content: center;align-items:center; border-radius: 10px;border-width: 2px; border-color:#2B61FF; border-style: solid; }
   .ritSico{width: 24px; height: 24px; margin-right: 10px;}
@@ -85,7 +86,7 @@
   .ritCenNmb{font-size: 24px; color: #999;}
   .isok{ border-color: #e5e5e5; background-color: #fff;}
   .isokTxt{ color: #555;}
-  .oneAlert{width:750px; height: 1246px; position: absolute;top: 88px; left: 0; background-color: rgba(0,0,0,.6); justify-content: center;
+  .oneAlert{width:750px; height: inherit; flex:1; position: absolute;top: 86px; left: 0; background-color: rgba(0,0,0,.6); justify-content: center;
     align-items:center;}
   .alertImg{ width: 534px; height: 612px;}
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}

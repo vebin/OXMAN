@@ -3,9 +3,11 @@
       <text class="text">{{DATA.bu_title}}</text>
       
       <div 
-      v-if="DATA.bu_mainimgjson.length > 1 ? true : false" 
+      v-if="DATA.bu_mainimgjson[1] ? true : false" 
       class="pic-wrap">
-        <image v-for="item in DATA.bu_mainimgjson" :src="item" resize="cover" class="pic-wrap-pic" ></image>
+        <div  v-for="item in DATA.bu_mainimgjson" class="pic mt16">
+          <image :src="item" resize="cover" class="pic" ></image>
+        </div>
       </div>
 
       <div class="tim-box">
@@ -30,7 +32,7 @@
 .ymsg-box{
   padding-top: 30px;
   padding-bottom: 30px;
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
   border-bottom-color: #eee;
   border-bottom-style: solid;
 }
@@ -47,10 +49,10 @@
   align-items:center;
 }
 .pic{
-  width: 220px;
-  height: 148px;
-  margin-bottom: 16px;
+  width: 200px;
+  height: 140px;
 }
+.mt16{margin-bottom: 16px;}
 .tim-box{
   height: 30px;
   flex-direction:row;

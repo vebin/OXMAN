@@ -1,11 +1,11 @@
 <template>
   <div class="main-list" @click="goMsg">
       <list-share
-      v-if="DATA.bu_mainimgjson.length === 1 ? true : false"
+      v-if="DATA.bu_mainimgjson.length == 1 ? true : false"
       :DATA="DATA"
       ></list-share>
       <list-pic
-      v-if="DATA.bu_mainimgjson.length === 1 ? false : true"
+      v-if="DATA.bu_mainimgjson.length == 1 ? false : true"
       :DATA="DATA"
       ></list-pic>
   </div>

@@ -53,19 +53,19 @@
             <text class="min-msg-time">{{DATA.dateline | dataTimeFgo}}</text>
           </div>
 
-          <div v-if="!DATA.tid" class="min-msg-btn" @click="singleFollowed(1)">
+          <div v-if="!isflow" class="min-msg-btn" @click="singleFollowed(1)">
             <image class="min-btm-ico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
             <text class="min-btn-name">关注</text>
           </div>
 
-          <div v-if="DATA.tid" class="min-msg-btn min-ok" @click="singleFollowed(2)">
+          <div v-if="isflow" class="min-msg-btn min-ok" @click="singleFollowed(2)">
             <text class="min-btn-name-ok">已关注</text>
           </div>
 
         </div>
 
 
-        <div v-if="!DATA.tid" class="alt-min-box">
+        <div v-if="!isflow" class="alt-min-box">
           <text class="alt-txt">点击右上方关注按钮，立刻关注吧！～</text>
           <div class="alt-san"></div>
         </div>
@@ -115,7 +115,7 @@
         </div>
       </div>
 
-
+      <text class="indicator">～我是有底线滴～</text>
     </scroller>
     <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote"></bot-nav>
 
@@ -152,6 +152,8 @@
         DATA:{},            // 文章详情
 
         topic:{}, // 评论信息接口(getTopic)
+        xxx:'',
+        isflow: false   //  圈子时判断是否关注
       }
     },
     created () {
@@ -161,11 +163,11 @@
     },
     methods: {
       hideForm (tp) {
-        if (tp > -1) {
+        if (tp > -1 && tp !== 'msg') {
           this.cengCom = true
           this.cengIndex = tp
         }
-        if( !tp && this.cengCom){
+        if( this.cengCom && tp == 'msg'){
           this.cengCom = false
         }
         this.showForm = !this.showForm
@@ -183,12 +185,12 @@
         //   json.UA = this.$getConfig().UA
         // }
         XHR.getTopic(json).then((res) => {
-          if( res.data.status == '1'){
-            self.topic = res.data
+          if( res.status == '1'){
+            self.topic = res
             self.getNewsComList()
           } else {
             modal.toast({
-              message: res.data.msg,
+              message: res.msg,
               duration: 2
             })
           }
@@ -200,12 +202,12 @@
         if(this.$route.query.tp == '1'){
           json.id = this.$route.query.id
           XHR.getNewsMsg(json).then((res) => {
-            if( res.data.status == '1'){
-              res.data.data.bu_content = JSON.parse(res.data.data.bu_content)
-              self.DATA = res.data.data
+            if( res.status == '1'){
+              res.data.bu_content = res.data.bu_content
+              self.DATA = res.data
             } else {
               modal.toast({
-                message: res.data.msg,
+                message: res.msg,
                 duration: 2
               })
             }
@@ -213,11 +215,16 @@
         } else {
           json.tid = this.$route.query.id
           XHR.getTmsgInfo(json).then((res) => {
-            if( res.data.status == '0'){
-              self.DATA = res.data.data
+            if( res.status == '0'){
+              self.DATA = res.data
+              XHR.getNbInfo({nbuid:res.data.authorid}).then((udd) =>{
+                if(udd.status == '1'){
+                  self.isflow = udd.data[0].bu_isfollower
+                }
+             })
             } else {
               modal.toast({
-                message: res.data.data,
+                message: '文章读取失败',
                 duration: 2
               })
             }
@@ -227,19 +234,23 @@
       //单个关注
       singleFollowed(type){
         let self = this
-        let nbbsid = [this.DATA.bu_id]
         let json = {}
         json.type = type
         json.watchtype = 3
-        json.nbbsid = JSON.stringify(nbbsid)
+        if(this.$route.query.tp == '1'){
+          json.nbbsid = `[${this.DATA.bu_authorid}]`
+        } else {
+          json.nbbsid = `[${this.DATA.authorid}]`
+        }
         XHR.postAttention(json).then((ele) => {
-          if(ele.data.status == 1){
-            self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+          if(ele.status == 1){
+            if(this.$route.query.tp == '1'){
+              self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+            } else {
+              self.isflow = !self.isflow
+            }
           } else {
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
+            self.alert(ele.msg)
           }
         });
       },
@@ -250,14 +261,14 @@
         json.CurrentPage = this.page
         json.pagesize = this.pageSize
         XHR.getNewsComList(json).then((res) => {
-          if( res.data.status == '1'){
-            self.COMDATA.push(...res.data.comments)
+          if( res.status == '1'){
+            self.COMDATA.push(...res.comments)
             self.$store.commit('setComDATA',self.COMDATA)
-            self.cmtSum = res.data.cmt_sum
-            self.outerCS = res.data.outer_cmt_sum
+            self.cmtSum = res.cmt_sum
+            self.outerCS = res.outer_cmt_sum
           } else {
             modal.toast({
-              message: res.data.msg,
+              message: res.msg,
               duration: 2
             })
           }
@@ -282,22 +293,25 @@
           ACT = 'postComSub'
         }
         XHR.postComSub(json).then((res) => {
-          if( res.data.status == '1'){
-            let resd = res.data.data
+          if( res.status == '1'){
+            let resd = res.data
             resd.viewtime = self.getNowFormatDate()
             if(json.replyid == 0){
               resd.comments = []
-              self.COMDATA.push(resd)
+              self.COMDATA.unshift(resd)
             } else {
-              self.COMDATA[self.cengIndex].comments.push(resd)
+              self.COMDATA[self.cengIndex].comments.unshift(resd)
             }
             self.cmtSum++
           } else {
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
-            truckhomeAccountBinding.show()
+            if(self.getCookie('AbcfN_ajaxuid')){
+              modal.toast({
+                message: res.msg,
+                duration: 2
+              })
+            } else{
+              truckhomeAccountBinding.show()
+            }
           }
         })
       },
@@ -307,15 +321,18 @@
         json.id = this.$route.query.id
         if(!this.DATA.bu_islike){
           XHR.getPcd(json).then((res) => {
-            if( res.data.status == '1'){
+            if( res.status == '1'){
               self.DATA.bu_islike = true
               self.DATA.bu_like++
             } else {
-              truckhomeAccountBinding.show()
-              // modal.toast({
-              //   message: res.data.msg,
-              //   duration: 2
-              // })
+              if(self.getCookie('AbcfN_ajaxuid')){
+                modal.toast({
+                  message: res.msg,
+                  duration: 2
+                })
+              } else{
+                truckhomeAccountBinding.show()
+              }
             }
           })
         }
@@ -366,13 +383,13 @@
 .min-min-txt{font-size: 32px;color: #111; line-height: 48px;}
 .min-min-img{width: 690px; height: 400px;margin-top: 20px;margin-bottom: 20px;}
 
-.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px;}
+.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px;}
 .commit-s{width: 4px;height: 36px; background-color: #2B61FF;margin-right: 26px;}
 .commit-m{font-size: 32px; color: #111;}
 
 .com-item-box{padding-top: 30px; padding-right: 30px; padding-left: 30px;flex-direction:row; justify-content:flex-start;align-items:flex-start;}
 .com-item-pic{width: 64px; height: 64px; border-radius: 64px;}
-.com-item-right{width: 626px; padding-left: 20px;padding-bottom: 30px;border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px;}
+.com-item-right{width: 626px; padding-left: 20px;padding-bottom: 30px;border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px;}
 .com-box-s{height: 44px;flex-direction:row; justify-content:space-between;align-items:center;}
 .com-s-name{font-size: 28px; color: #555;}
 .com-z-box{flex-direction:row; justify-content:space-between;align-items:center;}
@@ -390,4 +407,13 @@
 .com-mi-san{width: 20px; height: 20px; background-color: #F7F7F7; position: absolute; top: -10px; left: 24px;-webkit-transform:rotate(45deg);}
 
 .blu{color: #2A60FE;}
+
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

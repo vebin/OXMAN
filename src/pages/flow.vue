@@ -1,7 +1,7 @@
 <template>
   <div class="commont-view">
 
-    <div class="header">
+    <!-- <div v-if="false" class="header">
       <div class="backs">
         <text class="blu"></text>
       </div>
@@ -13,7 +13,7 @@
       <div class="sub-btn">
         <text class="blu"></text>
       </div>
-    </div>
+    </div> -->
 
     <text class="wel-txt">选择一些您喜欢的牛人</text>
     <text class="wel-msg">我们将努力推荐您更可能感兴趣的内容</text>

@@ -106,21 +106,21 @@
         if(!this.noLoading && !this.showLoading){
           self.showLoading = true
           XHR.getComListMsg(json).then((res) => {
-            if( res.data.status == '1'){
+            if( res.status == '1'){
               self.showLoading = false
               
-              if(res.data.total_page_no == self.page){
-                self.COMDATA.push(...res.data.comments)
+              if(res.total_page_no == self.page){
+                self.COMDATA.push(...res.comments)
                 self.noLoading = true
               } else {
                 self.page++
-                self.COMDATA.push(...res.data.comments)
+                self.COMDATA.push(...res.comments)
               }
-              // self.DATA = res.data.cmt_sum
-              // self.outerCS = res.data.outer_cmt_sum
+              // self.DATA = res.cmt_sum
+              // self.outerCS = res.outer_cmt_sum
             } else {
               modal.toast({
-                message: res.data.msg,
+                message: res.msg,
                 duration: 2
               })
             }
@@ -143,15 +143,15 @@
           ACT = 'postComSub'
         }
         XHR.postComSub(json).then((res) => {
-          if( res.data.status == '1'){
-            let resd = res.data.data
+          if( res.status == '1'){
+            let resd = res.data
             resd.viewtime = self.getNowFormatDate()
             resd.praisecount = 0
             self.COMDATA.unshift(resd)
             self.cmtSum++
           } else {
             modal.toast({
-              message: res.data.msg,
+              message: res.msg,
               duration: 2
             })
           }
@@ -183,7 +183,7 @@
 .page-box{flex:1;}
 
 
-.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px; background-color:#f5f5f5; }
+.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px; background-color:#eee; }
 .commit-s{width: 4px;height: 36px; background-color: #2B61FF;margin-right: 26px;}
 .commit-m{font-size: 32px; color: #111;}
 

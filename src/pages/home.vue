@@ -30,7 +30,6 @@
   </div>
 </template>
 
-
 <script>
   import AppHeader from '../components/app-header.vue'
   import ListCentent from '../components/list-centent.vue'
@@ -55,22 +54,17 @@
       }
     },
     created () {
-      let auths = this.getCookie('AbcfN_auth')
-      let userIds = this.getCookie('AbcfN_userid')
+      // let auths = `${this.getCookie('AbcfN_auth')}`
+      // let userIds = `${this.getCookie('AbcfN_ajaxuid')}`
       //  储存登录字符串
-      this.$store.commit('setNbuid', this.getCookie('AbcfN_userid') )
-      // const me = this
-
+      this.$store.commit('setNbuid', this.getCookie('AbcfN_ajaxuid') )
 
       XHR.wxConfig().then( (res) => {
-        if( res.data.status == '1'){
-          localStorage.setItem('WX_CONFIGXS',JSON.stringify(res.data.data))
+        if( res.status == '1'){
+          localStorage.setItem('WX_CONFIGXS',JSON.stringify(res.data))
         }
       })
 
-      if(auths.length > 9 && userIds.length > 0) {
-        this.attestation = true
-      }
       this.getManInfo()
       this.getEverHot()
       this.getIndexAsy()
@@ -79,17 +73,19 @@
     methods: {
       getManInfo () {
         let self = this
-        XHR.getManInfo({'nbuid': this.$store.state.nbuid }).then( (res) => {
-          if( res.data.status == '1'){
-            self.attestation = false
+        let json = {}
+        json.uid = 0
+        XHR.checkRZ(json).then( (res) => {
+          if( res.status == '1'){
+            self.attestation = res.data
           }
         })
       },
       getEverHot () {
         let self = this
         XHR.getEveryDay().then( (res) => {
-          if( res.data.status == '1'){
-            self.hot = res.data.data
+          if( res.status == '1'){
+            self.hot = res.data
           }
         })
       },
@@ -102,22 +98,22 @@
         if(!this.noLoading && !this.showLoading){
           self.showLoading = true
           XHR.getIndexAsy(json).then((res) => {
-            if( res.data.status == '1'){
+            if( res.status == '1'){
               self.showLoading = false
-              self.page = res.data.data[res.data.data.length -1].bu_pushdatetime || ''
-              if(res.data.data.length == 0){
+              self.page = res.data[res.data.length -1].bu_pushdatetime || ''
+              if(res.data.length == 0){
                 self.noLoading = true
               }
-              if(res.data.data.length < 10 && res.data.data.length !== 0){
-                self.indexDATA.push(...res.data.data)
+              if(res.data.length < 10 && res.data.length !== 0){
+                self.indexDATA.push(...res.data)
                 self.noLoading = true
               } else {
-                self.indexDATA.push(...res.data.data)
+                self.indexDATA.push(...res.data)
               }
             }else{
               self.showLoading = false
               modal.toast({
-                message: res.data.msg,
+                message: res.msg,
                 duration: 2
               })
             }

@@ -2,13 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>牛人圈子</title>
+  <title>卡车之家牛人平台</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-touch-fullscreen" content="yes">
   <meta name="format-detection" content="telephone=no, email=no">
-  <style>body > div { height: 100%;}</style>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <!--  <script src="./assets/phantom-limb.js"></script> -->
   <script src="https://cdn.bootcss.com/vue/2.3.2/vue.min.js"></script>
@@ -36,11 +35,21 @@
               wx.ready(function(){ wx.hideOptionMenu()})
           } catch(err){}
       }
+      setInterval( function (){
+        let dom = document.querySelector('.weex-toast') || 0
+        try{
+          if(dom !== 0){
+            setTimeout(function(){
+                dom.parentNode.removeChild(dom) 
+            },1500)
+          }
+        } catch(err){}
+      },2000)
   </script>
 </head>
 <body onhashchange="routerChange()" onload="routerChange()">
   <div id="root" style=""></div>
   <script src="./dist/index.web.js"></script>
-  <script src="https://s.kcimg.cn/public/m/js/wechat.accout.binding.min.js"></script>
+  <script src="https://s.kcimg.cn/public/m/js/wechat.accout.binding.weex.min.js"></script>
 </body>
 </html>

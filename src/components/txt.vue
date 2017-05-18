@@ -1,7 +1,7 @@
 <template>
   <div class="one-alert">
     <div class="one-box">
-      <textarea class="textarea" placeholder="5-20个字以内" autofocus="true" v-model="txt"></textarea>
+      <textarea class="textarea" placeholder="" autofocus="true" :value="txt" @input="checkForm"></textarea>
     </div>
     <div class="mo-box">
       <text class="mo-le-btn" @click="$emit('hides')">取消</text>
@@ -19,20 +19,14 @@
         txt:''
       }
     },
-    watch:{
-      txt: 'checkForm'
-    },
     methods: {
-      checkForm(curVal,oldVal){
-        if(curVal.length > '20'){
-          this.isok = false
-          modal.toast({
-            message: '文字长度超出...',
-            duration: 2
-          })
-        } else {
+      checkForm(event){
+        if(event.value.length > 1){
           this.isok = true
+        } else {
+          this.isok = false
         }
+        this.txt = event.value
       },
       saveForm(){
         if (this.isok && this.txt !== '') {
@@ -40,7 +34,7 @@
           this.$emit('hides')
         }else{
           modal.toast({
-            message: '不能为空或文字超出',
+            message: '内容不能为空',
             duration: 2
           })
         }
@@ -50,7 +44,7 @@
 </script>
 
 <style scoped>
-.one-alert{width:750px; height: 1246px; position: absolute;top: 88px; left: 0; background-color: rgba(0,0,0,.6);
+.one-alert{width:750px; height: inherit; position: fixed;top: 84px; left: 0; background-color: rgba(0,0,0,.6);
   align-items:flex-start;}
 .one-box{padding-left: 30px;padding-right: 30px;padding-top: 30px; padding-bottom: 30px; border-bottom-color: #eee;border-bottom-width: 2px;border-bottom-style: solid; height: 228px; background-color: #fff;width:750px;}
 .textarea{flex:1;}

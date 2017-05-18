@@ -1,7 +1,7 @@
 <template>
   <div class="commont-view">
 
-    <div class="header">
+    <!-- <div class="header">
       <div class="backs">
         <text class="blu"></text>
       </div>
@@ -13,7 +13,7 @@
       <div class="sub-btn">
         <text class="blu"></text>
       </div>
-    </div>
+    </div> -->
 
     <text class="wel-txt">选择一些您喜欢的牛人</text>
     <text class="wel-msg">我们将努力推荐您更可能感兴趣的内容</text>
@@ -35,7 +35,6 @@
     <div v-if="true" :class="['button',submitDisabled?'':'buts']" @click="batchFollowed">
       <text class="but-txt">关注</text>
     </div>
-
     <text class="jum-txt" @click="skipBatchFollowed">随便看看，点击跳过 》</text>
   </div>
 </template>

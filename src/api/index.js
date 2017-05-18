@@ -250,6 +250,14 @@ class XHR {
               body: json
            })
   }
+// 验证是否认证
+  checkRZ (json) {
+    json.APPSTR = store.state.APPSTR
+    return fetch({
+              url: `${URLS}/api/nr/NBMan/GetCheckRZNRAsync`,
+              body: json
+           })
+  }
 // 微信JSSKD授权接口
   wxConfig () { 
     return fetch({

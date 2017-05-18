@@ -16,7 +16,7 @@
             <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
           </div>
           <div class="top-use-v">
-            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png?cao"></image>
           </div>
         </div>
         <div class="top-use-right">
@@ -61,7 +61,7 @@
           <text class="head-msg-nb">{{DATA.bu_fanscount}}</text><text class="head-msg">粉丝</text>
         </div>
         <div class="msg border">
-          <text class="head-msg-nb">0</text><text class="head-msg">等级</text>
+          <text class="head-msg-nb">{{levels}}</text><text class="head-msg">等级</text>
         </div>
         <div class="msg border">
           <text class="head-msg-nb">{{DATA.bu_clickcount}}</text><text class="head-msg">活跃度</text>
@@ -71,7 +71,7 @@
     </div>
 
 
-    <list class="pro-box" @loadmore="loadList" loadmoreoffset="30">
+    <list v-if="LISTN.length > 0 ? true : false" class="pro-box" @loadmore="loadList" loadmoreoffset="30">
       <cell
           v-for="(items, index) in LISTN"
           append="tree"
@@ -79,12 +79,15 @@
           :index="index"
           keep-scroll-position="true">
           <!-- <text class="pro-times">2017.03.02</text> -->
-          <list-centent :DATA="items"></list-centent>
+          <list-centent :DATA="items" :types="items.bu_authortype ? 1 : 0"></list-centent>
       </cell>
       <text class="indicator" v-if="showLoading">Loading ...</text>
       <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
     </list>
 
+    <div v-if="noLoading && LISTN.length === 0 ? true : false" class="null-box">
+      <image class="null-img" src="https://s.kcimg.cn/app/icon/oxman/null.png"></image>
+    </div>
 
     <div class="pro-fot">
       <!-- <div v-if="false" class="pro-fot-nav">
@@ -93,7 +96,7 @@
       <div v-if="false" class="pro-fot-nav">
         <text class="nav-txt yel">已关注</text>
       </div> -->
-      <div v-if="true" class="pro-fot-nav">
+      <div v-if="true" class="pro-fot-nav brodr">
         <text class="nav-txt" @click="myMsg(1)">牛人原创</text>
       </div>
       <div class="pro-fot-nav">
@@ -116,15 +119,22 @@
         pageN: '',
         LISTN:[],
 
-        DATA: {}
+        DATA: {},
+
+        levels:0,
       }
     },
     created () {
       this.initMsg()
       this.loadList()
       XHR.asYncg({nbuid:this.$route.query.id}).then( (res) => {
-        if( res.data.status == '1'){
+        if( res.status == '1'){
           
+        }
+      })
+      XHR.getBbsUserInfo({uid:this.$route.query.id}).then( (res) => {
+        if( res.status){
+          this.levels = res.data.level
         }
       })
     },
@@ -155,11 +165,11 @@
         // if(this.$route.query.u == '1'){
         // }
         XHR.getManInfo(json).then((res) => {
-          if( res.data.status == '1'){
-            self.DATA = res.data.data[0]
+          if( res.status == '1'){
+            self.DATA = res.data[0]
           } else {
             modal.toast({
-              message: res.data.msg,
+              message: res.msg,
               duration: 2
             })
           }
@@ -176,22 +186,23 @@
         if(!this.noLoading && !this.showLoading){
           self.showLoading = true
           XHR.getNbTindex(json).then((res) => {
-            if( res.data.status == '1'){
+            if( res.status == '1'){
               self.showLoading = false
-              self.pageN = res.data.data[res.data.data.length -1].bu_pushdatetime || ''
-              if(res.data.data.length == 0){
-                self.noLoading = true
-              }
-              if(res.data.data.length < 10 && res.data.data.length !== 0){
-                self.LISTN.push(...res.data.data)
+              if(res.data.length == 0){
                 self.noLoading = true
               } else {
-                self.LISTN.push(...res.data.data)
+                self.pageN = res.data[res.data.length -1].bu_pushdatetime || ''
+              }
+              if(res.data.length < 10 && res.data.length !== 0){
+                self.LISTN.push(...res.data)
+                self.noLoading = true
+              } else {
+                self.LISTN.push(...res.data)
               }
             } else {
               self.showLoading = false
               modal.toast({
-                message: res.data.msg,
+                message: res.msg,
                 duration: 2
               })
             }
@@ -206,11 +217,11 @@
         json.watchtype = 2
         json.nbbsid = JSON.stringify(nbbsid)
         XHR.postAttention(json).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
+          if(ele.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }else{
             modal.toast({
-              message: res.data.msg,
+              message: ele.msg,
               duration: 2
             })
           }
@@ -222,11 +233,11 @@
         json.nbuid = this.DATA.bu_id
         if(!this.DATA.bu_isupvote){
           XHR.postUpvoteAsync(json).then((res) => {
-            if( res.data.status == '1'){
+            if( res.status == '1'){
               self.DATA.bu_isupvote = true
             } else {
               modal.toast({
-                message: res.data.msg,
+                message: res.msg,
                 duration: 2
               })
             }
@@ -305,6 +316,7 @@
   justify-content: center;
   align-items: center;
 }
+.brodr{border-right-width: 1px; border-right-style: solid;border-right-color: #eee;}
 
 .isok{background-color: rgba(0,0,0,.1); border-color: rgba(0,0,0,.1);}
 .nav-txt{color: #666;font-size: 34px; padding-left: 20px;}
@@ -321,4 +333,6 @@
     padding-bottom: 20px;
     text-align: center;
   }
+  .null-box{flex:1; justify-content:center; align-items:center;}
+.null-img{width: 400px; height: 300px;}
 </style>

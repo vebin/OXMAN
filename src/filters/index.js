@@ -17,25 +17,24 @@ export function timeAgo (time) {
 
   const between = Date.now() - Number(time)
   if (between < 3600000) {
-    return pluralize(~~(between / 60000), ' 分钟')
+    return pluralize(~~(between / 60000), '分钟')
   } else if (between < 86400000) {
-    return pluralize(~~(between / 3600000), ' 小时')
+    return pluralize(~~(between / 3600000), '小时')
   } else {
-    return pluralize(~~(between / 86400000), ' 天')
+    return pluralize(~~(between / 86400000), '天')
   }
 }
 
 function pluralize (time, label) {
-  // if (time === 1) {
-  //   return time + label
-  // }
+  if (time < 2 && label == '分钟') {
+    return '刚刚'
+  }
   return time + label + '前'
 }
 
 export function unescape (text) {
-  let res = text || ''
-
-  ;[
+  let rese = text || ''
+  [
     ['<p>', '\n'],
     ['&amp;', '&'],
     ['&amp;', '&'],
@@ -49,10 +48,10 @@ export function unescape (text) {
     ['&nbsp;', ' '],
     ['&quot;', '"']
   ].forEach(pair => {
-    res = res.replace(new RegExp(pair[0], 'ig'), pair[1])
+    rese = rese.replace(new RegExp(pair[0], 'ig'), pair[1])
   })
 
-  return res
+  return rese
 }
 
 

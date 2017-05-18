@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <router-view style="flex:1"></router-view>
+  <div style="height: inherit;">
+    <router-view style="flex:1;height: inherit;"></router-view>
   </div>
 </template>
 

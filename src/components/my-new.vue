@@ -12,7 +12,7 @@
           </div>
           <div class="new-pic-box">
             <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/msg-ico.png"></image>
-            <text class="new-txt">{{items.bu_share}}</text>
+            <text class="new-txt">{{items.bu_commentcount}}</text>
           </div>
           <text class="new-txt">{{items.bu_publishdatetime | dataTimeFgo}}</text>
         </div>
@@ -33,10 +33,10 @@
       //发布 || 取消发布
       issueAlert(articleId,state){
         XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1}).then((ele) => {
-          if (ele.ok && ele.data.status == 1) {
+          if (ele.status == 1) {
             this.items.bu_ispublish = !this.items.bu_ispublish;
-          }else if(ele.data.status == 0){
-            this.alert(ele.data.msg)
+          }else if(ele.status == 0){
+            this.alert(ele.msg)
           }else{
             this.alert('发布失败')
           }
@@ -47,7 +47,7 @@
 </script>
 
 <style scoped>
-.new-box{position:relative; height: 148px; padding-left: 30px; padding-right: 30px; border-bottom-color: #eee; border-bottom-width: 2px; border-bottom-style: solid;justify-content:center;}
+.new-box{position:relative; height: 148px; padding-left: 30px; padding-right: 30px; border-bottom-color: #eee; border-bottom-width: 1px; border-bottom-style: solid;justify-content:center;}
 .new-tit{font-size: 32px; color: #333;}
 .new-pin{padding-top: 10px;flex-direction:row;justify-content:space-between; align-items:center;}
 .new-pic-box{flex-direction:row; align-items:center; padding-right: 20px;}

@@ -11,7 +11,7 @@
             <image class="pop-pic" :src="bu_facelogo"></image>
           </div>
           <div class="pop-pic-v">
-            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
+            <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png?cao"></image>
           </div>
         </div>
         <text class="pop-name">上传头像</text>
@@ -21,7 +21,8 @@
 
     <div class="input-box">
       <text class="input-txt">牛人名称：</text>
-      <input class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="fnames"/>
+      <input v-if="headerType==1" class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="fnames"/>
+      <input v-if="headerType==2" class="input" type="text" :value="Data.bu_manname" disabled="true"/>
     </div>
 
     <div class="input-box">
@@ -101,9 +102,9 @@
       this.pick()
 //      如果是修改个人资料，请求个人资料数据
         XHR.getNbInfo({'nbuid':this.$store.state.nbuid}).then((ele) => {
-          if(ele.ok && ele.data.status == 1){
-            let NbInfo = ele.data.data[0];
-            this.Data.bu_facelogo = NbInfo.bu_imgsrc;
+          if(ele.status == 1){
+            let NbInfo = ele.data[0];
+            this.bu_facelogo = NbInfo.bu_imgsrc;
             this.Data.bu_manname = NbInfo.bu_name;
             this.Data.bu_manphone = NbInfo.bu_manphone;
             this.Data.bu_manintroduction = NbInfo.bu_manintroduction;
@@ -156,13 +157,13 @@
           type = 'getEditNBMan';
         }
         XHR[type](this.Data).then((ele) => {
-          if (ele.ok && ele.data.status == 1) {
+          if (ele.status == 1) {
             this.alert('修改成功');
             this.$nextTick(function(){
               this.back()
             })
           }else{
-            this.alert(ele.data.msg)
+            this.alert(ele.msg)
           }
         })
 
@@ -170,8 +171,8 @@
       pick () {
         let self = this
         XHR.getNoteName().then((res) => {
-          if( res.data.status == '1'){
-            self.select = res.data.data
+          if( res.status == '1'){
+            self.select = res.data
           }
         })
       },
@@ -183,9 +184,10 @@
             sizeType: ['original', 'compressed'],
             sourceType: ['album', 'camera'],
             success: function (res) {
-                self.bu_facelogo = res.localIds[0]
+                let wxurl = res.localIds[0]
+                self.bu_facelogo = wxurl
                 wx.uploadImage({
-                    localId: res.localIds[0],
+                    localId: wxurl,
                     isShowProgressTips: 1,
                     success: function (ores) {
                         self.Data.bu_facelogo = ores.serverId
@@ -232,5 +234,5 @@
   .textarea{height: 124px;}
 
   .post{position: relative;}
-  .input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-90deg); position: absolute;right: 60px; top: 56px;}
+  .input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-180deg); position: absolute;right: 60px; top: 56px;}
 </style>

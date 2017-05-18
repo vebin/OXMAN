@@ -32,7 +32,7 @@
 
 .alertImg{ width: 750px; height: 400px; background-color: #fff; justify-content: center;align-items:center;}
 
-.row{width: 750px; height:80px; border-bottom-width: 2px; border-bottom-color: #f5f5f5;border-bottom-style: solid;justify-content: center;align-items:center;}
+.row{width: 750px; height:80px; border-bottom-width: 1px; border-bottom-color: #eee;border-bottom-style: solid;justify-content: center;align-items:center;}
 .item-title{width: 750px; font-size: 30px; color: #333; text-align: center; line-height: 80px;}
 .bule{color: #2B61FF;}
 </style>
