@@ -8,7 +8,7 @@
       <div class="pop-item" @click="loadHeadPortrait">
         <div class="pop-pic-icopi">
           <div class="pop-pic-box">
-            <image class="pop-pic" :src="bu_facelogo"></image>
+            <image class="pop-pic" resize="cover" :src="bu_facelogo"></image>
           </div>
           <div class="pop-pic-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png?cao"></image>
@@ -158,12 +158,12 @@
         }
         XHR[type](this.Data).then((ele) => {
           if (ele.status == 1) {
-            this.alert('修改成功');
+            this.alerts('修改成功');
             this.$nextTick(function(){
               this.back()
             })
           }else{
-            this.alert(ele.msg)
+            this.alerts(ele.msg)
           }
         })
 

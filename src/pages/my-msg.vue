@@ -1,10 +1,10 @@
 <template>
   <div class="commont-view">
-    <w-header v-if="true" titles="评价详情"></w-header>
+    <w-header v-if="true" titles="评论详情"></w-header>
     <scroller class="page-box" @loadmore="getComListMsg" loadmoreoffset="50">
 
       <div class="com-item-box">
-        <image class="com-item-pic" :src="DATA.headpic"></image>
+        <image class="com-item-pic" resize="contain" :src="DATA.headpic"></image>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{DATA.nikename}}</text>
@@ -32,7 +32,7 @@
 
       <div>
         <div class="com-item-box" v-for="(items, index) in COMDATA">
-          <image class="com-item-pic" :src="items.headpic"></image>
+          <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
           <div class="com-item-right">
             <div class="com-box-s">
               <text class="com-s-name">{{items.nikename}}</text>
@@ -94,7 +94,11 @@
     },
     methods: {
       hideForm (tp) { 
-        this.showForm = !this.showForm
+        if(this.getCookie('AbcfN_ajaxuid')){
+          this.showForm = !this.showForm
+        } else{
+          truckhomeAccountBinding.show()
+        }
       },
       getComListMsg(){
         let self = this
@@ -119,10 +123,7 @@
               // self.DATA = res.cmt_sum
               // self.outerCS = res.outer_cmt_sum
             } else {
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              self.alerts(res.msg)
             }
           })
         }
@@ -150,29 +151,20 @@
             self.COMDATA.unshift(resd)
             self.cmtSum++
           } else {
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
+            self.alerts(res.msg)
           }
         })
       },
       getNowFormatDate() {
-          var date = new Date()
-          var seperator1 = "/"
-          var seperator2 = ":"
-          var month = date.getMonth() + 1
-          var strDate = date.getDate()
-          if (month >= 1 && month <= 9) {
-              month = "0" + month
-          }
-          if (strDate >= 0 && strDate <= 9) {
-              strDate = "0" + strDate
-          }
-          var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                  + " " + date.getHours() + seperator2 + date.getMinutes()
-                  + seperator2 + date.getSeconds()
-          return currentdate
+          let date = new Date()
+          let year = date.getFullYear()
+          let month = date.getMonth() + 1
+          let day = date.getDate()
+          let hours = date.getHours()
+          let minutes = date.getMinutes()
+          let second = date.getSeconds()
+          const zerofill = val => val >= 10 ? val : '0' + val
+          return `${year}/${zerofill(month)}/${zerofill(day)} ${zerofill(hours)}:${zerofill(minutes)}:${zerofill(second)}`
       },
     }
   }
@@ -180,7 +172,7 @@
 
 <style scoped>
 .commont-view{background-color: #f5f5f5;}
-.page-box{flex:1;}
+.page-box{flex:1; -webkit-overflow-scrolling:touch;}
 
 
 .commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px; background-color:#eee; }

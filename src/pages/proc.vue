@@ -6,14 +6,14 @@
           <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
         </div>
         <div class="add-btn" @click="share">
-          <image v-if="false" class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
+          <image  v-if="false" class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
         </div>
       </div>
 
       <div class="top-use-box">
         <div class="top-use-lebox">
           <div class="top-use-left">
-            <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
+            <image class="top-use-pic" resize="contain" :src="DATA.bu_imgsrc"></image>
           </div>
           <div class="top-use-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png?cao"></image>
@@ -138,10 +138,43 @@
         }
       })
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
-      share(){
+        share(){
+          wx.ready(function(){ 
+            // wx.showOptionMenu();
+            
+            wx.onMenuShareTimeline({
+              title: `${this.DATA.bu_name}的主页`,
+              link: `${window.location.href}`,
+              imgUrl: `${this.DATA.bu_imgsrc}`,
+              success: function () { 
+                  // 用户确认分享后执行的回调函数
+              },
+              cancel: function () { 
+                  // 用户取消分享后执行的回调函数
+              }
+            });
 
+            wx.onMenuShareAppMessage({
+                title: `${this.DATA.bu_name}的主页`, // 分享标题
+                desc: '卡友看牛人、牛文，就在牛人平台。', // 分享描述
+                link: `${window.location.href}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: `${this.DATA.bu_imgsrc}`, // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () { 
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () { 
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+          })
       },
+
       myMsg(txt){
         if(this.DATA.wactchtype == '1'){
           if(txt == '1'){
@@ -168,10 +201,7 @@
           if( res.status == '1'){
             self.DATA = res.data[0]
           } else {
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
+            self.alerts(res.msg)
           }
         })
       },
@@ -201,10 +231,7 @@
               }
             } else {
               self.showLoading = false
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              self.alerts(res.msg)
             }
           })
         }
@@ -220,10 +247,11 @@
           if(ele.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }else{
-            modal.toast({
-              message: ele.msg,
-              duration: 2
-            })
+            if(self.getCookie('AbcfN_ajaxuid')){
+              self.alerts(ele.msg)
+            } else{
+              truckhomeAccountBinding.show()
+            }
           }
         });
       },
@@ -236,10 +264,11 @@
             if( res.status == '1'){
               self.DATA.bu_isupvote = true
             } else {
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              if(self.getCookie('AbcfN_ajaxuid')){
+                self.alerts(res.msg)
+              } else{
+                truckhomeAccountBinding.show()
+              }
             }
           })
         }
@@ -301,7 +330,7 @@
   font-size: 24px;
 }
 .pro-times{font-size: 24px; color: #ccc; height: 48px; background-color: #F7F9FA; text-align: center; line-height: 48px;}
-.pro-box{flex:1;}
+.pro-box{flex:1;-webkit-overflow-scrolling:touch;}
 .border{border-left-style: solid; border-left-color: #fff;border-left-width: 2px;}
 .pro-fot{
   height: 98px;

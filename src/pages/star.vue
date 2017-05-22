@@ -110,12 +110,6 @@
 
     },
     methods: {
-      onchange (e) {
-        modal.toast({
-          message: 'oninput',
-          duration: 0.8
-        })
-      },
       //去登陆
       goLogin(){
         truckhomeAccountBinding.show()
@@ -178,8 +172,7 @@
             })
           } else {
             modal.toast({
-              message: ele.msg,
-              duration: 2
+              message: ele.msg
             })
           }
         });

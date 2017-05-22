@@ -7,6 +7,7 @@
 
         <div class="min-btn-box">
           <image class="min-pic"
+            resize="contain"
             :src="DATA.bu_authorimgurl"
             @click="jump({path:'/proc',query:{id: DATA.bu_authorid}})"></image>
 
@@ -33,7 +34,7 @@
         </div>
         <div v-for="(em, index) in DATA.bu_content">
           <text v-if="em.text" class="min-min-txt">{{em.text}}</text>
-          <image v-if="em.img" resize="cover" class="min-min-img" :src="em.img"></image>
+          <image v-if="em.img" resize="contain" class="min-min-img" :src="em.img"></image>
         </div>
       </div>
 
@@ -45,6 +46,7 @@
 
         <div class="min-btn-box">
           <image class="min-pic"
+            resize="contain"
             :src="DATA.avatar"
             @click="jump({path:'/proc',query:{id: DATA.authorid}})"></image>
 
@@ -70,15 +72,10 @@
           <div class="alt-san"></div>
         </div>
         <text class="min-min-txt">{{DATA.message}}</text>
-        <image v-for="(em, index) in DATA.pics" resize="cover" class="min-min-img" :src="em"></image>
+        <image v-for="(em, index) in DATA.pics" resize="contain"class="min-min-img" :src="em"></image>
         <text class="min-min-txt"></text>
 
       </div>
-
-
-
-
-
 
 
 
@@ -89,7 +86,7 @@
       </div>
 
       <div class="com-item-box" v-for="(items, index) in COMDATA">
-        <image class="com-item-pic" :src="items.headpic"></image>
+        <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{items.nikename}}</text>
@@ -117,7 +114,7 @@
 
       <text class="indicator">～我是有底线滴～</text>
     </scroller>
-    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote"></bot-nav>
+    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote" @share="shares"></bot-nav>
 
     <txt-frm v-if="showForm" @hides="hideForm" @save="saveForm"></txt-frm>
   </div>
@@ -161,6 +158,9 @@
       this.getTopic()
 
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
       hideForm (tp) {
         if (tp > -1 && tp !== 'msg') {
@@ -170,7 +170,11 @@
         if( this.cengCom && tp == 'msg'){
           this.cengCom = false
         }
-        this.showForm = !this.showForm
+        if(this.getCookie('AbcfN_ajaxuid')){
+          this.showForm = !this.showForm
+        } else{
+          truckhomeAccountBinding.show()
+        }
       },
       // 获取页面评论信息接口
       getTopic (){
@@ -189,10 +193,7 @@
             self.topic = res
             self.getNewsComList()
           } else {
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
+            self.alerts(res.msg)
           }
         })
       },
@@ -206,10 +207,7 @@
               res.data.bu_content = res.data.bu_content
               self.DATA = res.data
             } else {
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              self.alerts(res.msg)
             }
           })
         } else {
@@ -217,16 +215,14 @@
           XHR.getTmsgInfo(json).then((res) => {
             if( res.status == '0'){
               self.DATA = res.data
+              self.DATA.dateline = self.DATA.dateline*1000
               XHR.getNbInfo({nbuid:res.data.authorid}).then((udd) =>{
                 if(udd.status == '1'){
                   self.isflow = udd.data[0].bu_isfollower
                 }
              })
             } else {
-              modal.toast({
-                message: '文章读取失败',
-                duration: 2
-              })
+              self.alerts('文章读取失败')
             }
           })
         }
@@ -250,7 +246,11 @@
               self.isflow = !self.isflow
             }
           } else {
-            self.alert(ele.msg)
+            if(self.getCookie('AbcfN_ajaxuid')){
+              self.alerts(ele.msg)
+            } else{
+              truckhomeAccountBinding.show()
+            }
           }
         });
       },
@@ -267,10 +267,7 @@
             self.cmtSum = res.cmt_sum
             self.outerCS = res.outer_cmt_sum
           } else {
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
+            self.alerts(res.msg)
           }
         })
       },
@@ -284,6 +281,7 @@
         json.parentid = 0
         json.replyid = 0
         json.touserid = 0
+        json.type = 5
         if(this.cengCom){
           json.parentid = this.COMDATA[this.cengIndex].id
           json.replyid = this.COMDATA[this.cengIndex].id
@@ -291,6 +289,7 @@
         }
         if(this.$route.query.tp == '1'){
           ACT = 'postComSub'
+          json.type = 2
         }
         XHR.postComSub(json).then((res) => {
           if( res.status == '1'){
@@ -305,10 +304,7 @@
             self.cmtSum++
           } else {
             if(self.getCookie('AbcfN_ajaxuid')){
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              self.alerts(res.msg)
             } else{
               truckhomeAccountBinding.show()
             }
@@ -318,18 +314,19 @@
       upVote(){
         let self = this
         let json = {}
+        let ACS = 'cursGet'
         json.id = this.$route.query.id
+        if(this.$route.query.tp == '1'){
+          ACS = 'getPcd'
+        }
         if(!this.DATA.bu_islike){
-          XHR.getPcd(json).then((res) => {
+          XHR[ACS](json).then((res) => {
             if( res.status == '1'){
               self.DATA.bu_islike = true
               self.DATA.bu_like++
             } else {
               if(self.getCookie('AbcfN_ajaxuid')){
-                modal.toast({
-                  message: res.msg,
-                  duration: 2
-                })
+                self.alerts(res.msg)
               } else{
                 truckhomeAccountBinding.show()
               }
@@ -338,21 +335,49 @@
         }
       },
       getNowFormatDate() {
-          var date = new Date()
-          var seperator1 = "/"
-          var seperator2 = ":"
-          var month = date.getMonth() + 1
-          var strDate = date.getDate()
-          if (month >= 1 && month <= 9) {
-              month = "0" + month
-          }
-          if (strDate >= 0 && strDate <= 9) {
-              strDate = "0" + strDate
-          }
-          var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                  + " " + date.getHours() + seperator2 + date.getMinutes()
-                  + seperator2 + date.getSeconds()
-          return currentdate
+          let date = new Date()
+          let year = date.getFullYear()
+          let month = date.getMonth() + 1
+          let day = date.getDate()
+          let hours = date.getHours()
+          let minutes = date.getMinutes()
+          let second = date.getSeconds()
+          const zerofill = val => val >= 10 ? val : '0' + val
+          return `${year}/${zerofill(month)}/${zerofill(day)} ${zerofill(hours)}:${zerofill(minutes)}:${zerofill(second)}`
+      },
+      shares(){
+          wx.ready(function(){ 
+            // wx.showOptionMenu();
+            // wx.hideMenuItems({
+            //     menuList: ['onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']
+            // });
+            wx.onMenuShareTimeline({
+              title: `${this.DATA.subject}`,
+              link: `${window.location.href}`,
+              imgUrl: 'https://nb.360che.com/wx/share.png',
+              success: function () { 
+                  // 用户确认分享后执行的回调函数
+              },
+              cancel: function () { 
+                  // 用户取消分享后执行的回调函数
+              }
+            });
+
+            wx.onMenuShareAppMessage({
+                title: `${this.DATA.subject}`, // 分享标题
+                desc: '卡友看牛人、牛文，就在牛人平台。', // 分享描述
+                link: `${window.location.href}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: 'https://nb.360che.com/wx/share.png', // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () { 
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () { 
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+          })
       },
     }
   }
@@ -360,7 +385,7 @@
 
 <style scoped>
 .commont-view{background-color: #fff;}
-.page-box{flex:1;}
+.page-box{flex:1;-webkit-overflow-scrolling:touch;}
 .main-box{padding-left: 30px;padding-top: 30px;padding-right: 30px;padding-bottom: 30px;border-bottom-style: solid; border-bottom-color: #f5f5f5; border-bottom-width: 20px;}
 .min-title{font-size: 40px; color: #333;}
 

@@ -16,17 +16,17 @@ Vue.use(Router)
 
 
 export default new Router({
+  base: '/',
   routes: [
+    { path: '/', redirect: '/home' },
     { path: '/home',name: 'Home', component: Home },
-
     { path: '/proc',name: 'Proc', component: Proc },
     { path: '/star',name: 'Star', component: Star },
     { path: '/aution',name: 'Aution', component: Aution },
     { path: '/myrom',name: 'MyRom', component: MyRom },
     { path: '/msgs',name: 'Msgs', component: Msgs },
     { path: '/pages',name: 'Pages', component: Pages },
-    { path: '/comment',name: 'Comment', component: Comment },
-    { path: '/', redirect: '/home' }
+    { path: '/comment',name: 'Comment', component: Comment }
   ]
 })
     // { path: '/flow',name: 'Flow', component: Flow },

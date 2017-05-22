@@ -32,13 +32,14 @@
     methods: {
       //发布 || 取消发布
       issueAlert(articleId,state){
+        let self = this
         XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1}).then((ele) => {
           if (ele.status == 1) {
-            this.items.bu_ispublish = !this.items.bu_ispublish;
+            self.items.bu_ispublish = !self.items.bu_ispublish;
           }else if(ele.status == 0){
-            this.alert(ele.msg)
+            self.alerts(ele.msg)
           }else{
-            this.alert('发布失败')
+            self.alerts('发布失败')
           }
         })
       }

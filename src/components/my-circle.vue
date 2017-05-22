@@ -12,7 +12,7 @@
           <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/msg-ico.png"></image>
           <text class="new-txt">{{items.replies}}</text>
         </div>
-        <text class="new-txt">{{items.dateline | dataTimeFgo}}</text>
+        <text class="new-txt">{{items.dateline*1000 | dataTimeFgo}}</text>
       </div>
 
       <text v-if="items.sync" class="new-but">已推送</text>

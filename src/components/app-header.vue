@@ -49,10 +49,10 @@ import XHR from '../api'
     methods: {
       getManInfo () {
         let self = this
-        XHR.checkRZ({'nbuid': this.$store.state.nbuid })
+        XHR.checkNB({'nbuid': this.$store.state.nbuid })
         .then((res) => {
           if( res.status == '1'){
-            self.attestation = res.data
+            self.attestation = false
           }else{
             
           }

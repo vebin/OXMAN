@@ -84,10 +84,7 @@
             }
           } else {
             self.showLoading = false
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
+            self.alerts(res.msg)
           }
         })
       }
@@ -100,7 +97,7 @@
 .commont-view {
     background-color: #FAFBFC;
 }
-.scroller {width: 750px;flex:1; height: inherit; background-color: #FAFBFC;}
+.scroller {width: 750px;flex:1; height: inherit; background-color: #FAFBFC;-webkit-overflow-scrolling:touch;}
 .indicator {
     height: 94px;
     color: #999;

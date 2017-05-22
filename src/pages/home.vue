@@ -112,10 +112,7 @@
               }
             }else{
               self.showLoading = false
-              modal.toast({
-                message: res.msg,
-                duration: 2
-              })
+              self.alerts(res.msg)
             }
           })
         }
@@ -146,7 +143,7 @@
 .flow-pic{width: 34px;height: 34px;}
 
 .blue{color: #1571E5;}
-.scroller {width: 750px; flex:1;  background-color: #FAFBFC;}
+.scroller {width: 750px; flex:1;  background-color: #FAFBFC; -webkit-overflow-scrolling:touch;}
 .row{padding-bottom: 20px;background-color:#FAFBFC;}
 .indicator {
     height: 94px;

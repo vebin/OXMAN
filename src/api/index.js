@@ -258,15 +258,36 @@ class XHR {
               body: json
            })
   }
+// 验证是否是牛人
+  checkNB (json) {
+    json.APPSTR = store.state.APPSTR
+    return fetch({
+              url: `${URLS}/api/nr/NBMan/GetCheckisNRAsync`,
+              body: json
+           })
+  }
 // 微信JSSKD授权接口
-  wxConfig () { 
+  wxConfig () {
     return fetch({
               url: `${URLS}/api/nr/nbwx/GetJ`,
               type:'POST'
            })
   }
-
-
+// 圈子文章点赞接口
+  cursGet (json) {
+    json.APPSTR = store.state.APPSTR
+    return fetch({
+              url: `${URLS}/api/nr/pcedit/GetG`,
+              body: json
+           })
+  }
+// 获取圈子文章点赞数接口
+  cursHget (json) {
+    return fetch({
+              url: `${URLS}/api/nr/pcedit/GetH`,
+              body: json
+           })
+  }
 /*---------------C_URLS---评论相关---------------------*/
 // 获取评论信息
   getTopic (json) {

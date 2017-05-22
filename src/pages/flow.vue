@@ -58,8 +58,7 @@
     methods: {
       onchange (e) {
         modal.toast({
-          message: 'oninput',
-          duration: 0.8
+          message: 'oninput'
         })
       },
       onfocus (e) {

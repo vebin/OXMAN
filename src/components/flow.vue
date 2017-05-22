@@ -23,7 +23,7 @@
 
       <div class="pop-item" v-for="(item,index) in RecommendAttentionList" @click="onchange(item.bu_id,index)">
         <div>
-          <image class="pop-pic" :src="item.bu_imgsrc"></image>
+          <image class="pop-pic" resize="contain" :src="item.bu_imgsrc"></image>
         </div>
         <text class="pop-name">{{item.bu_name}}</text>
         <div :class="['pop-abs',!item.bu_isfollower?'blue':'']">

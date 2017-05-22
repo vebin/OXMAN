@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(ele,index) in followedList" class="ritItem">
-      <image class="ritPic" :src="ele.bu_imgsrc"
+      <image class="ritPic" resize="contain" :src="ele.bu_imgsrc"
         @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
       <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
         <text class="ritCenName">{{ele.bu_name}}</text>

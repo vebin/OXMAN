@@ -21,11 +21,11 @@
     },
     methods: {
       checkForm(event){
-        if(event.value.length > 1){
-          this.isok = true
-        } else {
-          this.isok = false
-        }
+        // if(event.value.length > 1){
+        //   this.isok = true
+        // } else {
+        //   this.isok = false
+        // }
         this.txt = event.value
       },
       saveForm(){
@@ -33,10 +33,7 @@
           this.$emit('save',this.txt)
           this.$emit('hides')
         }else{
-          modal.toast({
-            message: '内容不能为空',
-            duration: 2
-          })
+          this.alerts('内容不能为空')
         }
       }
     }

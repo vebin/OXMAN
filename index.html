@@ -28,28 +28,38 @@
                   signature: CFG.signature,
                   jsApiList: [
                       'hideOptionMenu',
+                      'showOptionMenu',
+                      'hideMenuItems',
                       'uploadImage',
                       'chooseImage',
+                      'onMenuShareTimeline',
+                      'onMenuShareAppMessage',
                   ]
               })
-              wx.ready(function(){ wx.hideOptionMenu()})
+              wx.ready(function(){ 
+                // wx.hideOptionMenu()
+                wx.hideMenuItems({
+                    menuList: ['onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']
+                });
+              })
           } catch(err){}
       }
-      setInterval( function (){
-        let dom = document.querySelector('.weex-toast') || 0
-        try{
-          if(dom !== 0){
-            setTimeout(function(){
-                dom.parentNode.removeChild(dom) 
-            },1500)
-          }
-        } catch(err){}
-      },2000)
+      // setInterval( function (){
+      //   let dom = document.querySelector('.weex-toast') || 0
+      //   try{
+      //     if(dom !== 0){
+      //       setTimeout(function(){
+      //         document.querySelector('.weex-toast').classList.add('hide');
+      //       },2000)
+      //     }
+      //   } catch(err){}
+      // },3000)
   </script>
 </head>
 <body onhashchange="routerChange()" onload="routerChange()">
   <div id="root" style=""></div>
   <script src="./dist/index.web.js"></script>
   <script src="https://s.kcimg.cn/public/m/js/wechat.accout.binding.weex.min.js"></script>
+  <script src="https://js.360che.com/truckhome-1.1.js"></script>
 </body>
 </html>

@@ -107,10 +107,7 @@
               self.CircleList.push(...ele.data.threadslist)
             } else {
               self.showLoading = false
-              modal.toast({
-                message: ele.msg,
-                duration: 2
-              })
+              self.alerts(ele.msg)
             }
           })
         }
@@ -126,16 +123,14 @@
           self.aLoading = true
           XHR.getNbArticleList(json).then((ele) => {
             if(ele.status == 1){
+              self.aLoading = false
               if (ele.data.length < 20) {
                 self.aNoLoading = true
               }
-              this.ArticleList.push(...ele.data)
+              self.ArticleList.push(...ele.data)
             } else {
               self.aLoading = false
-              modal.toast({
-                message: ele.msg,
-                duration: 2
-              })
+              self.alerts(ele.msg)
             }
           })
         }
@@ -154,10 +149,7 @@
           if(ele.status == 1){
             self.CircleList[inx].sync = true
           } else {
-            modal.toast({
-              message: ele.msg,
-              duration: 2
-            })
+           self.alerts(ele.msg)
           }
         })
       }
@@ -169,7 +161,8 @@
 .con-box{
   flex:1;
   padding-bottom:98px;
-  height: 1246px;
+  height: inherit;
+  -webkit-overflow-scrolling:touch;
 }
 .null-box{flex:1; justify-content:center; align-items:center;}
 .null-img{width: 400px; height: 300px;}

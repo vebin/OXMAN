@@ -6,7 +6,7 @@
       v-if="DATA.bu_mainimgjson[1] ? true : false" 
       class="pic-wrap">
         <div  v-for="item in DATA.bu_mainimgjson" class="pic mt16">
-          <image :src="item" resize="cover" class="pic" ></image>
+          <image :src="item" resize="contain" class="pic" ></image>
         </div>
       </div>
 
