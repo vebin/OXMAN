@@ -120,7 +120,15 @@
           }
         })
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
+      shares(){
+          wx.ready(function(){ 
+            wx.hideOptionMenu()
+          })
+      },
       selectVal (nb,content) {
         if(nb !== -1){
           this.typeVal = content

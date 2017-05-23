@@ -181,7 +181,10 @@
         let self = this
         let json = {}
         json.articleid = this.$route.query.id
-        json.siteid = 2
+        json.siteid = 5
+        if(this.$route.query.tp == '1'){
+          json.siteid = 2
+        }
         json.title = this.$store.state.comTitle
         json.url = this.$store.state.comUrl
 
@@ -346,14 +349,14 @@
           return `${year}/${zerofill(month)}/${zerofill(day)} ${zerofill(hours)}:${zerofill(minutes)}:${zerofill(second)}`
       },
       shares(){
-          wx.ready(function(){ 
-            // wx.showOptionMenu();
-            // wx.hideMenuItems({
-            //     menuList: ['onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']
-            // });
+        let self = this
+        setTimeout( function(){
+          let titx = self.DATA.subject
+          wx.ready(function(){
+            wx.showOptionMenu();
             wx.onMenuShareTimeline({
-              title: `${this.DATA.subject}`,
-              link: `${window.location.href}`,
+              title: titx,
+              link: window.location.href,
               imgUrl: 'https://nb.360che.com/wx/share.png',
               success: function () { 
                   // 用户确认分享后执行的回调函数
@@ -364,9 +367,9 @@
             });
 
             wx.onMenuShareAppMessage({
-                title: `${this.DATA.subject}`, // 分享标题
+                title: titx, // 分享标题
                 desc: '卡友看牛人、牛文，就在牛人平台。', // 分享描述
-                link: `${window.location.href}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: 'https://nb.360che.com/wx/share.png', // 分享图标
                 type: '', // 分享类型,music、video或link，不填默认为link
                 dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -378,6 +381,9 @@
                 }
             });
           })
+
+        },2000);
+
       },
     }
   }

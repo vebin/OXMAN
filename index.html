@@ -36,24 +36,9 @@
                       'onMenuShareAppMessage',
                   ]
               })
-              wx.ready(function(){ 
-                // wx.hideOptionMenu()
-                wx.hideMenuItems({
-                    menuList: ['onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone']
-                });
-              })
+              
           } catch(err){}
       }
-      // setInterval( function (){
-      //   let dom = document.querySelector('.weex-toast') || 0
-      //   try{
-      //     if(dom !== 0){
-      //       setTimeout(function(){
-      //         document.querySelector('.weex-toast').classList.add('hide');
-      //       },2000)
-      //     }
-      //   } catch(err){}
-      // },3000)
   </script>
 </head>
 <body onhashchange="routerChange()" onload="routerChange()">

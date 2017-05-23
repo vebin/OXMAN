@@ -90,7 +90,15 @@
       this.getNbArtList()
 
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
+      shares(){
+          wx.ready(function(){ 
+            wx.hideOptionMenu()
+          })
+      },
       //获取圈子列表
       getBbsNbCircleList(){
         let self = this

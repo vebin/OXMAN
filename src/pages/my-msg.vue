@@ -92,7 +92,15 @@
     created (){
       this.getComListMsg()
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
+      shares(){
+          wx.ready(function(){ 
+            wx.hideOptionMenu()
+          })
+      },
       hideForm (tp) { 
         if(this.getCookie('AbcfN_ajaxuid')){
           this.showForm = !this.showForm

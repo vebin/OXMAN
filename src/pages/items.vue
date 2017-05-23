@@ -50,7 +50,15 @@
     created () {
       this.loadList()
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
+      shares(){
+          wx.ready(function(){ 
+            wx.hideOptionMenu()
+          })
+      },
       loadList(){
 
         let json = {}

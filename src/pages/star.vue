@@ -69,6 +69,7 @@
         attestation:false
       }
     },
+
     created(){
 
 //      //判断是否第一次进入关注页面
@@ -109,7 +110,15 @@
       });
 
     },
+    mounted(){
+      this.shares()
+    },
     methods: {
+      shares(){
+          wx.ready(function(){ 
+            wx.hideOptionMenu()
+          })
+      },
       //去登陆
       goLogin(){
         truckhomeAccountBinding.show()
