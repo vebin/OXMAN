@@ -5,16 +5,18 @@
     <div class="top-list">
       <div class="top-cell" v-for="(item, index) in DATA" @click="jump({path:'/proc',query:{id: item.bu_id}})">
         <div class="image">
-          <image class="image" :src="item.bu_imgsrc"></image>
+          <image class="image" resize="contain" :src="item.bu_imgsrc"></image>
         </div>
         <text class="text">{{item.bu_name.length > 4 ? `${item.bu_name.substring(0,4)}...` : item.bu_name}}</text>
       </div>
     </div>
 
     <div class="msg-box">
-      <text class="msg-ico">通知</text> 
+      <div class="msg-ico">
+        <image class="msg-imgs" src="https://s.kcimg.cn/app/icon/oxman/hont-pic.png"></image>
+      </div>
       <a class="msg" href="">
-        <text class="msg">牛人平台开放啦！</text>
+        <text class="msg" @click="jump({path:'/pages',query:{id:58,tp:1}})">牛人平台开放啦！</text>
       </a>
     </div>
   </div>
@@ -41,7 +43,8 @@
   border-bottom-style: solid;
   border-top-color: #e5e5e5;
 }
-.msg-ico{font-size: 28px;color: #F74948; width: 128px; border-right-width: 2px; border-right-color: #e5e5e5; text-align: center;border-right-style: solid;}
+.msg-ico{width: 128px; border-right-width: 2px; border-right-color: #e5e5e5; text-align: center;border-right-style: solid; align-items: center;}
+.msg-imgs{width: 78px;height: 32px;}
 .msg{flex:1; font-size: 24px; color: #666; padding-left: 20px;}
 
 .top-list{

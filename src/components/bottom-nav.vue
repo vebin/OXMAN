@@ -7,13 +7,13 @@
     </div>
     <div class="btm-nav" @click="$emit('cite')">
       <image class="btm-ico" :src="DATA.bu_islike ? zans[1] : zans[0]"></image>
-      <text :class="DATA.bu_islike ? ['btm-txt blu'] : ['btm-txt']">{{DATA.bu_like}}</text>
+      <text :class="DATA.bu_islike ? ['btm-txt blu'] : ['btm-txt']">{{$route.query.tp == '1' ? DATA.bu_like : num}}</text>
     </div>
-    <div class="btm-nav" @click="$emit('hides')">
+    <div class="btm-nav" @click="checkLg">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
       <text class="btm-txt">{{SUM}}</text>
     </div>
-    <div class="btm-nav" @click="shares">
+    <div v-if="false" class="btm-nav" @click="shares">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/shee.png"></image>
       <text class="btm-txt">{{DATA.bu_share}}</text>
     </div>
@@ -21,7 +21,9 @@
 </template>
 
 <script>
-let THAW = weex.requireModule('THAW');
+const THAW = weex.requireModule('THAW')
+const modal = weex.requireModule('modal')
+ import XHR from '../api'
   export default {
     props:{
       DATA: Object,
@@ -35,10 +37,36 @@ let THAW = weex.requireModule('THAW');
         zans: [
           'https://s.kcimg.cn/app/icon/oxman/t-zans.png',
           'https://s.kcimg.cn/app/icon/oxman/t-zanok.png',
-        ]
+        ],
+        num:0
+      }
+    },
+    created () {
+      let self = this
+      let json = {}
+      json.id = this.$route.query.id
+      if(this.$route.query.tp == '0'){
+        XHR.cursHget(json).then((res) => {
+          if( res.status == '1'){
+            self.num = res.data
+          } else {
+            modal.toast({
+              message: res.msg,
+              duration: 2
+            })
+          }
+        })
       }
     },
     methods: {
+      checkLg(){
+        if(this.$getConfig().userId > 0){
+          this.$emit('hides','msg')
+        }else{
+          weex.requireModule('THAW').onGoLogin()
+        }
+      }
+
       shares(){
         //   native操作  分享
           THAW.onShowShare({

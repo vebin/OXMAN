@@ -1,6 +1,6 @@
 <template>
   <div class="ymsg-box">
-      <image resize="cover" class="pic" :src="DATA.bu_mainimgjson[0]"></image> 
+      <image resize="contain" class="pic" :src="DATA.bu_mainimgjson[0]"></image> 
       <div class="text-box">
         <text class="text">{{DATA.bu_title}}</text>
         <div class="tim-box">

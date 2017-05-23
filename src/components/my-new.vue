@@ -11,7 +11,7 @@
           </div>
           <div class="new-pic-box">
             <image class="new-img" src="https://s.kcimg.cn/app/icon/oxman/msg-ico.png"></image>
-            <text class="new-txt">{{items.bu_share}}</text>
+            <text class="new-txt">{{items.bu_commentcount}}</text>
           </div>
           <text class="new-txt">{{items.bu_publishdatetime | dataTimeFgo}}</text>
         </div>

@@ -39,30 +39,30 @@ import XHR from '../api'
       }
     },
     created(){
-      let auths = `${this.$getConfig().auth}`
-      let userIds = `${this.$getConfig().userId}`
-      if(auths.length > 9 && userIds > 0) {
-        this.attestation = false
-      }
+      // let auths = `${this.$getConfig().auth}`
+      // let userIds = `${this.$getConfig().userId}`
+      // if(auths.length > 9 && userIds > 0) {
+      //   this.attestation = false
+      // }
       // 判断是否注册
-      // this.getManInfo()
+      this.getManInfo()
 
     },
     methods: {
       getManInfo () {
         let self = this
-        XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
+        XHR.checkNB({'nbuid': this.$getConfig().userId }).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = false
           }else{
-            
+            self.alert(res.msg)
           }
         })
       },
       alert (text) {
         modal.toast({
           message: text,
-          duration: 0.8
+          duration: 2
         })
       },
       shares(){

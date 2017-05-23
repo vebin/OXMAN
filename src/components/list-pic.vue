@@ -5,7 +5,9 @@
       <div 
       v-if="DATA.bu_mainimgjson.length > 1 ? true : false" 
       class="pic-wrap">
-        <image v-for="item in DATA.bu_mainimgjson" :src="item" resize="cover" class="pic-wrap-pic" ></image>
+        <div  v-for="item in DATA.bu_mainimgjson" class="pic mt16">
+          <image :src="item" resize="contain" class="pic" ></image>
+        </div>
       </div>
 
       <div class="tim-box">
@@ -47,10 +49,10 @@
   align-items:center;
 }
 .pic{
-  width: 220px;
+  width: 200px;
   height: 148px;
-  margin-bottom: 16px;
 }
+.mt16{margin-bottom: 16px;}
 .tim-box{
   height: 30px;
   flex-direction:row;
