@@ -11,7 +11,7 @@
       <text class="tab-txt">圈子</text>
     </div>
 
-    <div class="item" @click="jump({path:'/proc',query:{id: $getConfig().userId,u:'1'}})">
+    <div class="item" @click="jump({path:'/proc',query:{id: $store.state.userId,u:'1'}})">
       <image :src="tab3" class="tab-ico"></image>
       <text class="tab-txt">个人主页</text>
     </div>

@@ -13,7 +13,7 @@
       <div class="top-use-box">
         <div class="top-use-lebox">
           <div class="top-use-left">
-            <image class="top-use-pic" :src="DATA.bu_imgsrc"></image>
+            <image class="top-use-pic" resize="contain" :src="DATA.bu_imgsrc"></image>
           </div>
           <div class="top-use-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
@@ -96,7 +96,7 @@
       <div v-if="false" class="pro-fot-nav">
         <text class="nav-txt yel">已关注</text>
       </div> -->
-      <div v-if="true" class="pro-fot-nav">
+      <div v-if="true" class="pro-fot-nav brodr">
         <text class="nav-txt" @click="myMsg(1)">牛人原创</text>
       </div>
       <div class="pro-fot-nav">
@@ -125,7 +125,7 @@
       }
     },
     created () {
-      
+      weex.requireModule('THAW').onShowLoading()
       this.initMsg()
       this.loadList()
       XHR.asYncg({nbuid:this.$route.query.id}).then( (res) => {
@@ -136,6 +136,14 @@
       XHR.getBbsUserInfo({uid:this.$route.query.id}).then( (res) => {
         if( res.data.status){
           this.levels = res.data.data.level
+        }
+      })
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
         }
       })
     },
@@ -173,7 +181,9 @@
         XHR.getManInfo(json).then((res) => {
           if( res.data.status == '1'){
             self.DATA = res.data.data[0]
+            weex.requireModule('THAW').onHideLoading()
           } else {
+            weex.requireModule('THAW').onHideLoading()
             modal.toast({
               message: res.data.msg,
               duration: 2
@@ -226,6 +236,7 @@
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }else{
+
             modal.toast({
               message: res.data.msg,
               duration: 2
@@ -242,10 +253,15 @@
             if( res.data.status == '1'){
               self.DATA.bu_isupvote = true
             } else {
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
+              if(self.$store.state.userId != 0){
+                modal.toast({
+                  message: res.data.msg,
+                  duration: 2
+                })
+              } else {
+                weex.requireModule('THAW').onGoLogin()
+              }
+              
             }
           })
         }
@@ -322,7 +338,7 @@
   justify-content: center;
   align-items: center;
 }
-
+.brodr{border-right-width: 1px; border-right-style: solid;border-right-color: #eee;}
 .isok{background-color: rgba(0,0,0,.1); border-color: rgba(0,0,0,.1);}
 .nav-txt{color: #666;font-size: 34px; padding-left: 20px;}
 .blu{color: #2062A9;}

@@ -99,14 +99,14 @@
       }
     },
     created () {
-      //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$getConfig().auth)
+      weex.requireModule('THAW').onShowLoading()
+
 
 //      this.headerType = this.$store.state.attestation;
       this.pick()
 
 //      如果是修改个人资料，请求个人资料数据
-        XHR.getNbInfo({'nbuid':this.$getConfig().userId}).then((ele) => {
+        XHR.getNbInfo({'nbuid':this.$store.state.userId}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             let NbInfo = ele.data.data[0];
             this.Data.bu_facelogo = NbInfo.bu_imgsrc;
@@ -119,20 +119,16 @@
 
             this.headerType = 2
             this.show = 3
+            weex.requireModule('THAW').onHideLoading()
           }else{
             this.headerType = 1
             this.show = 1
+            weex.requireModule('THAW').onHideLoading()
           }
         })
       // 登录
-      if(this.$getConfig().userId <= 0){
+      if(this.$store.state.userId == 0){
         weex.requireModule('THAW').onGoLogin();
-        // globalEvent.addEventListener('onGoLoginCallBack',function(data){
-        //   modal.toast({
-        //     message: data,
-        //     duration: 100
-        //   })
-        // })
       };
       
       // 上传图片
@@ -140,7 +136,14 @@
         this.Data.bu_facelogo =  `${res.imageUpload}_240x240.jpg`
         this.bu_facelogo =  `${res.imageUpload}_240x240.jpg`
       });
-
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
     },
     methods: {
       alert (text) {

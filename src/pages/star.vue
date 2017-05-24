@@ -66,7 +66,7 @@
       }
     },
     created(){
-
+      weex.requireModule('THAW').onShowLoading()
 //      //判断是否第一次进入关注页面
 //      storage.getItem('RecommendAttention',(ele) => {
 //        if(ele.result != 'success'){
@@ -75,7 +75,7 @@
 //      });
 
       //如果用户未登录
-      if(this.$getConfig().userId == 0){
+      if(this.$store.state.userId == 0){
         this.isLogin = false
       }else{
         //判断是不是第一次进入 ？ 显示推荐关注列表 ： 不显示
@@ -94,22 +94,27 @@
           }
         });
 
-        //请求分类标签接口  getCategoryList
+      }
+      //请求分类标签接口  getCategoryList
         XHR.getNoteName().then((res) => {
           if(res.ok && res.data.status == 1){
             this.categoryList = res.data.data;
+            weex.requireModule('THAW').onHideLoading()
+          } else {
+            weex.requireModule('THAW').onHideLoading()
           }
-        });
-      }
+        })
 
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
     },
     methods: {
-      onchange (e) {
-        modal.toast({
-          message: 'oninput',
-          duration: 0.8
-        })
-      },
       //去登陆
       goLogin(){
         weex.requireModule('THAW').onGoLogin();
@@ -212,5 +217,5 @@
   align-items:center; flex:1; width: 100%;}
   .alertImg{ width: 534px; height: 612px;}
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}
-  .alertClox{ width: 30px; height:30px; -webkit-transform:rotate(45deg);}
+  .alertClox{ width: 30px; height:30px; transform:rotate(45deg);}
 </style>

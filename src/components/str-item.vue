@@ -37,11 +37,21 @@
         followedSuccessShow:false
       }
     },
+    created (){
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
+    },
     methods: {
       //单个关注
       singleFollowed(type,id,index){
         // // 判断去登录
-        if(this.$getConfig().userId <= 0){
+        if(this.$store.state.userId == 0){
           weex.requireModule('THAW').onGoLogin();
         }
         let nbbsid = [id]

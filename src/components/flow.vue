@@ -57,7 +57,7 @@
       }
     },
     created(){
-      if(this.$getConfig().userId !== 0){
+      if(this.$store.state.userId !== 0){
 
       }
     },

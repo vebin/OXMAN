@@ -4,6 +4,9 @@ export default {
     setAPPSTR (state, txt) {
         state.APPSTR = txt
     },
+    setNbuid (state, txt) {
+        state.userId = txt
+    },
     setBlueTxt (state, txt) {
         state.blueTxt = txt
     },

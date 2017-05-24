@@ -1,7 +1,7 @@
 <template>
   <div class="one-alert">
     <div class="one-box">
-      <textarea class="textarea" placeholder="" autofocus="true" @input="checkForm"></textarea>
+      <textarea class="textarea" placeholder="" autofocus="true" :value="txt" @input="checkForm"></textarea>
     </div>
     <div class="mo-box">
       <text class="mo-le-btn" @click="$emit('hides')">取消</text>
@@ -19,9 +19,6 @@
         txt:''
       }
     },
-    watch:{
-      txt: 'checkForm'
-    },
     methods: {
       checkForm(event){
         // if(curVal.length > '20'){
@@ -36,10 +33,10 @@
         this.txt = event.value
       },
       saveForm(){
-        if (this.isok && this.txt !== '') {
+        if (this.isok && this.txt != '') {
           this.$emit('save',this.txt)
-          this.$emit('hides')
-        }else{
+          // this.$emit('hides')
+        } else {
           modal.toast({
             message: '内容不能为空',
             duration: 2

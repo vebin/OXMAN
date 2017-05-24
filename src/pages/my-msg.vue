@@ -32,7 +32,7 @@
 
       <div>
         <div class="com-item-box" v-for="(items, index) in COMDATA">
-          <image class="com-item-pic" :src="items.headpic"></image>
+          <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
           <div class="com-item-right">
             <div class="com-box-s">
               <text class="com-s-name">{{items.nikename}}</text>
@@ -90,11 +90,20 @@
       DATA () {return this.$store.state.comDATA[this.$route.query.in]}
     },
     created (){
+      weex.requireModule('THAW').onShowLoading()
       this.getComListMsg()
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
     },
     methods: {
       hideForm (tp) { 
-        if(this.$getConfig().userId > 0){
+        if(this.$store.state.userId != 0){
           this.showForm = !this.showForm
         } else {
           weex.requireModule('THAW').onGoLogin()
@@ -122,7 +131,9 @@
               }
               // self.DATA = res.data.cmt_sum
               // self.outerCS = res.data.outer_cmt_sum
+              weex.requireModule('THAW').onHideLoading()
             } else {
+              weex.requireModule('THAW').onHideLoading()
               modal.toast({
                 message: res.data.msg,
                 duration: 2
@@ -135,6 +146,8 @@
         let self = this
         let json = {}
         let ACT
+        self.showForm = false
+        weex.requireModule('THAW').onHideSoftKeyboard()
         json.topicid = this.$route.query.id
         // json.topicid = this.topic.topicid
         json.content = txt
@@ -181,7 +194,7 @@
 .page-box{flex:1;}
 
 
-.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px; background-color:#f5f5f5; }
+.commit-tit{height: 88px;flex-direction:row; justify-content:flex-start;align-items:center; border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px; background-color:#eee; }
 .commit-s{width: 4px;height: 36px; background-color: #2B61FF;margin-right: 26px;}
 .commit-m{font-size: 32px; color: #111;}
 

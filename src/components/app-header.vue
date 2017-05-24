@@ -39,8 +39,7 @@ import XHR from '../api'
       }
     },
     created(){
-      // let auths = `${this.$getConfig().auth}`
-      // let userIds = `${this.$getConfig().userId}`
+      // let userIds = `${this.$store.state.userId}`
       // if(auths.length > 9 && userIds > 0) {
       //   this.attestation = false
       // }
@@ -51,7 +50,7 @@ import XHR from '../api'
     methods: {
       getManInfo () {
         let self = this
-        XHR.checkNB({'nbuid': this.$getConfig().userId }).then( (res) => {
+        XHR.checkNB({'nbuid': this.$store.state.userId }).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = false
           }else{

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import router from '../router'
+  // import router from '../router'
   import XHR from '../api'
   const modal = weex.requireModule('modal')
   export default {
@@ -39,9 +39,9 @@
         })
       },
       //进入文章详情
-      articleInfo(articleId){
-        router.push('/pages?id=' + articleId)
-      },
+      // articleInfo(articleId){
+      //   router.push('/pages?id=' + articleId)
+      // },
       //发布 || 取消发布
       issueAlert(articleId,state){
         let self = this

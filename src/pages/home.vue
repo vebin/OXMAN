@@ -56,10 +56,11 @@
       }
     },
     created () {
-      // let auths = `${this.$getConfig().auth}`
-      // let userIds = `${this.$getConfig().userId}`
+      THAW.onHideLoading()
+      THAW.onShowLoading()
+      // let auths = `${this.$store.state.APPSTR}`
+      // let userIds = `${this.$store.state.userId}`
       //  储存登录字符串
-      this.$store.commit('setAPPSTR',this.$getConfig().auth)
       // const me = this
       // const THAW = weex.requireModule('thaw')
       // THAW.onGetData('1',function(ret) {
@@ -78,12 +79,12 @@
     methods: {
       getManInfo () {
         let self = this
-        // XHR.getManInfo({'uid': this.$getConfig().userId }).then( (res) => {
+        // XHR.getManInfo({'uid': this.$store.state.userId }).then( (res) => {
         //   if( res.data.status == '1'){
         //     self.attestation = false
         //   }
         // })
-        XHR.checkRZ({'uid': this.$getConfig().userId}).then( (res) => {
+        XHR.checkRZ({'uid': this.$store.state.userId}).then( (res) => {
           if( res.data.status == '1'){
             self.attestation = res.data.data
           }

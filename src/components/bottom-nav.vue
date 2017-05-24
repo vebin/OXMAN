@@ -57,12 +57,20 @@ const modal = weex.requireModule('modal')
           }
         })
       }
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
     },
     methods: {
       checkLg(){
-        if(this.$getConfig().userId > 0){
+        if(this.$store.state.userId != 0){
           this.$emit('hides','msg')
-        }else{
+        } else {
           weex.requireModule('THAW').onGoLogin()
         }
       },

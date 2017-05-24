@@ -72,7 +72,7 @@
     text-overflow:ellipsis;
   }
   .active{
-    border-bottom: 3px solid #fff;
+   border-bottom-color: #fff; border-bottom-width: 3px; border-bottom-style: solid;
   }
 
   

@@ -77,9 +77,9 @@
       actTab () {return this.$store.state.tabbar}
     },
     created(){
-
+      weex.requireModule('THAW').onShowLoading()
       //获取个人信息
-      XHR.getBbsUserInfo({uid:this.$getConfig().userId}).then((ele) => {
+      XHR.getBbsUserInfo({uid:this.$store.state.userId}).then((ele) => {
 
         if(ele.data.status){
             this.circleId = ele.data.data.subForum[0].id
@@ -128,11 +128,14 @@
           self.aLoading = true
           XHR.getNbArticleList(json).then((ele) => {
             if(ele.ok && ele.data.status == 1){
+              self.aLoading = false
               if (ele.data.data.length < 20) {
                 self.aNoLoading = true
               }
               this.ArticleList.push(...ele.data.data)
+              weex.requireModule('THAW').onHideLoading()
             } else {
+              weex.requireModule('THAW').onHideLoading()
               self.aLoading = false
               modal.toast({
                 message: ele.data.msg,

@@ -91,7 +91,7 @@
       </div>
 
       <div class="com-item-box" v-for="(items, index) in COMDATA">
-        <image class="com-item-pic" :src="items.headpic"></image>
+        <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{items.nikename}}</text>
@@ -159,13 +159,21 @@
       }
     },
     created () {
+      weex.requireModule('THAW').onShowLoading()
       this.getNewsMsg()
       this.getTopic()
-
+      weex.requireModule('globalEvent')
+      .addEventListener('onGoLoginCallBack',(res) => {
+        if(res.status == '1'){
+            this.$store.commit('setAPPSTR',res.auth)
+            this.$store.commit('setNbuid',res.userId)
+            this.jump('/home')
+        }
+      })
     },
     methods: {
       hideForm (tp) {
-        if (tp > -1 && tp !== 'msg') {
+        if (tp > -1 && tp != 'msg') {
           this.cengCom = true
           this.cengIndex = tp
         }
@@ -173,7 +181,7 @@
           this.cengCom = false
         }
 
-        if(this.this.$getConfig().userId > 0){
+        if(this.$store.state.userId != 0){
           this.showForm = !this.showForm
         } else {
           weex.requireModule('THAW').onGoLogin()
@@ -215,7 +223,9 @@
             if( res.data.status == '1'){
               res.data.data.bu_content = res.data.data.bu_content
               self.DATA = res.data.data
+              weex.requireModule('THAW').onHideLoading()
             } else {
+              weex.requireModule('THAW').onHideLoading()
               modal.toast({
                 message: res.data.msg,
                 duration: 2
@@ -261,7 +271,7 @@
               self.isflow = !self.isflow
             }
           } else {
-            if(self.$getConfig().userId > 0){
+            if(self.$store.state.userId != 0){
                 modal.toast({
                   message: res.data.msg,
                   duration: 2
@@ -297,6 +307,8 @@
         let self = this
         let json = {}
         let ACT
+        self.showForm = false
+        weex.requireModule('THAW').onHideSoftKeyboard()
         json.topicid = this.$route.query.id
         // json.topicid = this.topic.topicid
         json.content = txt
@@ -324,6 +336,7 @@
               self.COMDATA[self.cengIndex].comments.unshift(resd)
             }
             self.cmtSum++
+            
           } else {
             modal.toast({
               message: res.data.msg,
@@ -346,10 +359,15 @@
               self.DATA.bu_islike = true
               self.DATA.bu_like++
             } else {
-              modal.toast({
-                message: res.data.msg,
-                duration: 2
-              })
+              if(self.$store.state.userId != 0){
+                modal.toast({
+                  message: res.data.msg,
+                  duration: 2
+                })
+              } else{
+                weex.requireModule('THAW').onGoLogin()
+              }
+              
             }
           })
         }
@@ -389,7 +407,7 @@
 
 .alt-min-box{background-color: #d0daf9; height: 64px; position: relative; border-radius: 8px;}
 .alt-txt{font-size: 24px; color: #2B61FF; text-align: center; line-height: 64px;}
-.alt-san{width: 20px; height: 20px; background-color: #d0daf9; position: absolute; top: -10px; right: 58px;-webkit-transform:rotate(45deg);}
+.alt-san{width: 20px; height: 20px; background-color: #d0daf9; position: absolute; top: -10px; right: 58px;transform:rotate(45deg);}
 
 .min-min-txt{font-size: 32px;color: #111; line-height: 48px;}
 .min-min-img{width: 690px; height: 400px;margin-top: 20px;margin-bottom: 20px;}
@@ -400,7 +418,7 @@
 
 .com-item-box{padding-top: 30px; padding-right: 30px; padding-left: 30px;flex-direction:row; justify-content:flex-start;align-items:flex-start;}
 .com-item-pic{width: 64px; height: 64px; border-radius: 64px;}
-.com-item-right{width: 626px; padding-left: 20px;padding-bottom: 30px;border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 2px;}
+.com-item-right{width: 626px; padding-left: 20px;padding-bottom: 30px;border-bottom-style: solid;border-bottom-color: #eee;border-bottom-width: 1px;}
 .com-box-s{height: 44px;flex-direction:row; justify-content:space-between;align-items:center;}
 .com-s-name{font-size: 28px; color: #555;}
 .com-z-box{flex-direction:row; justify-content:space-between;align-items:center;}
@@ -415,7 +433,7 @@
 
 .com-mi-box{background-color: #F7F7F7; height: 44px; position: relative; border-radius: 8px; margin-top: 20px;}
 .com-mi-txt{font-size: 24px; color: #2A60FE; text-align: center; line-height: 44px;}
-.com-mi-san{width: 20px; height: 20px; background-color: #F7F7F7; position: absolute; top: -10px; left: 24px;-webkit-transform:rotate(45deg);}
+.com-mi-san{width: 20px; height: 20px; background-color: #F7F7F7; position: absolute; top: -10px; left: 24px;transform:rotate(45deg);}
 
 .blu{color: #2A60FE;}
 .indicator {

@@ -13,6 +13,7 @@ const store = new Vuex.Store({
   mutations,
 
   state: {
+    userId: 0,
     APPSTR:'',
     blueTxt:'',  // 蓝底白字标题
     selectid: 0,

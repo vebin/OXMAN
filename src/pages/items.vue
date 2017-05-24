@@ -49,6 +49,7 @@
       }
     },
     created () {
+      weex.requireModule('THAW').onShowLoading()
       this.loadList()
     },
     methods: {
@@ -83,7 +84,9 @@
               self.page++
               self.DATA.push(...res.data.data)
             }
+            weex.requireModule('THAW').onHideLoading()
           } else {
+            weex.requireModule('THAW').onHideLoading()
             self.showLoading = false
             modal.toast({
               message: res.data.msg,
