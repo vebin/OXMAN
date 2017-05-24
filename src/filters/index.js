@@ -26,9 +26,9 @@ export function timeAgo (time) {
 }
 
 function pluralize (time, label) {
-  // if (time === 1) {
-  //   return time + label
-  // }
+  if (time < 2 && label == '分钟') {
+    return '刚刚'
+  }
   return time + label + '前'
 }
 

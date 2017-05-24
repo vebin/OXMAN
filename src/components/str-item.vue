@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(ele,index) in followedList" class="ritItem">
-      <image class="ritPic" :src="ele.bu_imgsrc"
+      <image class="ritPic" resize="contain" :src="ele.bu_imgsrc"
         @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
       <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
         <text class="ritCenName">{{ele.bu_name}}</text>
@@ -19,12 +19,12 @@
       </div>
 
     </div>
-    <div v-if="followedSuccessShow" class="oneAlert">
+    <!-- <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
       <div class="altClsBox" @click="closeFollowedSuccess">
         <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -41,9 +41,9 @@
       //单个关注
       singleFollowed(type,id,index){
         // // 判断去登录
-        // if(this.$getConfig().userId <= 0){
-        //   weex.requireModule('THAW').onGoLogin();
-        // }
+        if(this.$getConfig().userId <= 0){
+          weex.requireModule('THAW').onGoLogin();
+        }
         let nbbsid = [id]
         let json = {}
         json.type = type
@@ -57,7 +57,7 @@
               //查看是否已经弹出过弹层，
               storage.getItem('followedSuccess', (ele) => {
                 if (ele.result !== 'success') {
-                  this.followedSuccessShow = true
+                  // this.followedSuccessShow = true
                 }
               })
             }
@@ -73,7 +73,7 @@
   }
 </script>
 <style scoped>
-  .ritItem{flex-direction: row;justify-content: space-between;align-items:center;border-bottom-style: solid;border-bottom-width: 2px; border-bottom-color:#e5e5e5; height: 140px;}
+  .ritItem{flex-direction: row;justify-content: space-between;align-items:center;border-bottom-style: solid;border-bottom-width: 1px; border-bottom-color:#eee; height: 140px;}
   .ritPic{width: 80px;height: 80px; border-radius: 80px;}
   .ritStrBtn{height: 52px;width: 128px;margin-right: 30px; background-color: #2B61FF; color: #fff; flex-direction:row;justify-content: center;align-items:center; border-radius: 10px;border-width: 2px; border-color:#2B61FF; border-style: solid; }
   .ritSico{width: 24px; height: 24px; margin-right: 10px;}

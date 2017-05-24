@@ -4,7 +4,7 @@
     <scroller class="page-box" @loadmore="getComListMsg" loadmoreoffset="50">
 
       <div class="com-item-box">
-        <image class="com-item-pic" :src="DATA.headpic"></image>
+        <image class="com-item-pic" resize="contain" :src="DATA.headpic"></image>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{DATA.nikename}}</text>
@@ -94,7 +94,11 @@
     },
     methods: {
       hideForm (tp) { 
-        this.showForm = !this.showForm
+        if(this.$getConfig().userId > 0){
+          this.showForm = !this.showForm
+        } else {
+          weex.requireModule('THAW').onGoLogin()
+        }
       },
       getComListMsg(){
         let self = this
@@ -158,21 +162,15 @@
         })
       },
       getNowFormatDate() {
-          var date = new Date()
-          var seperator1 = "/"
-          var seperator2 = ":"
-          var month = date.getMonth() + 1
-          var strDate = date.getDate()
-          if (month >= 1 && month <= 9) {
-              month = "0" + month
-          }
-          if (strDate >= 0 && strDate <= 9) {
-              strDate = "0" + strDate
-          }
-          var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                  + " " + date.getHours() + seperator2 + date.getMinutes()
-                  + seperator2 + date.getSeconds()
-          return currentdate
+          let date = new Date()
+          let year = date.getFullYear()
+          let month = date.getMonth() + 1
+          let day = date.getDate()
+          let hours = date.getHours()
+          let minutes = date.getMinutes()
+          let second = date.getSeconds()
+          const zerofill = val => val >= 10 ? val : '0' + val
+          return `${year}/${zerofill(month)}/${zerofill(day)} ${zerofill(hours)}:${zerofill(minutes)}:${zerofill(second)}`
       },
     }
   }

@@ -8,7 +8,7 @@
       <div class="pop-item" @click="loadHeadPortrait">
         <div class="pop-pic-icopi">
           <div class="pop-pic-box">
-            <image class="pop-pic" :src="Data.bu_facelogo"></image>
+            <image class="pop-pic" resize="cover" :src="bu_facelogo"></image>
           </div>
           <div class="pop-pic-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
@@ -21,7 +21,8 @@
 
     <div class="input-box">
       <text class="input-txt">牛人名称：</text>
-      <input class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="fnames"/>
+      <input v-if="headerType==1" class="input" type="text" placeholder="2-8个字" :value="Data.bu_manname" @input="fnames"/>
+      <input v-if="headerType==2" class="input" type="text" :value="Data.bu_manname" disabled="true"/>
     </div>
 
     <div class="input-box">
@@ -59,15 +60,16 @@
   import XHR from '../api'
   export default {
     components: { WHeader, AppHeader, SelectOps },
-    data () {
+    data(){
       return {
         selectOk: false,
         //1：认证  2：修改资料
         headerType:1,
+        bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
         //提交资料
         Data:{
           //头像
-          bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
+          bu_facelogo:'',
           //姓名
           bu_manname:'',
           //电话
@@ -134,8 +136,9 @@
       };
       
       // 上传图片
-      globalEvent.addEventListener('chooseImageCallBack',(res) => {
-        this.Data.bu_facelogo =  res.imageUpload;
+      globalEvent.addEventListener('onSelectImageCallBack',(res) => {
+        this.Data.bu_facelogo =  `${res.imageUpload}_240x240.jpg`
+        this.bu_facelogo =  `${res.imageUpload}_240x240.jpg`
       });
 
     },
@@ -218,8 +221,12 @@
 //      上传图片
       loadHeadPortrait(){
         //   native操作
-        weex.requireModule('THAW').chooseImage();
-
+        weex.requireModule('THAW').onSelectImage({
+          'type': 0,
+          'bucket':'imga',
+          'imgPath':'imga/nr/t/',
+          'hostUrl':'https://img9.kcimg.cn/'
+        })
 
       }
     }
@@ -260,5 +267,5 @@
   .textarea{height: 124px;}
 
   .post{position: relative;}
-  .input-picos{width: 30px; height: 30px; -webkit-transform:rotate(-90deg); position: absolute;right: 60px; top: 56px;}
+  .input-picos{width: 30px; height: 30px; transform:rotate(-180deg); position: absolute;right: 60px; top: 56px;}
 </style>

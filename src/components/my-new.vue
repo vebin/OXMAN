@@ -1,6 +1,7 @@
 <template>
   <div class="new-box">
-    <div @click="articleInfo(items.bu_articleid)">
+    <!-- <div @click="articleInfo(items.bu_articleid)"> -->
+    <div>
       <text class="new-tit">{{items.bu_title}}</text>
       <div class="new-pin">
 
@@ -43,13 +44,14 @@
       },
       //发布 || 取消发布
       issueAlert(articleId,state){
+        let self = this
         XHR.getArticleAttention({id: articleId, pu: state ? 0 : 1}).then((ele) => {
           if (ele.ok && ele.data.status == 1) {
-            this.items.bu_ispublish = !this.items.bu_ispublish;
+            self.items.bu_ispublish = !self.items.bu_ispublish;
           }else if(ele.data.status == 0){
-            this.alert(ele.data.msg)
+            self.alert(ele.data.msg)
           }else{
-            this.alert('发布失败')
+            self.alert('发布失败')
           }
         })
       }

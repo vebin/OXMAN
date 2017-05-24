@@ -47,8 +47,8 @@ const modal = weex.requireModule('modal')
       json.id = this.$route.query.id
       if(this.$route.query.tp == '0'){
         XHR.cursHget(json).then((res) => {
-          if( res.status == '1'){
-            self.num = res.data
+          if( res.data.status == '1'){
+            self.num = res.data.data
           } else {
             modal.toast({
               message: res.msg,
@@ -65,7 +65,7 @@ const modal = weex.requireModule('modal')
         }else{
           weex.requireModule('THAW').onGoLogin()
         }
-      }
+      },
 
       shares(){
         //   native操作  分享

@@ -171,7 +171,7 @@
 .con-box{
   flex:1;
   padding-bottom:98px;
-  height: 1246px;
+  height: inherit;
 }
 .null-box{flex:1; justify-content:center; align-items:center;}
 .null-img{width: 400px; height: 300px;}

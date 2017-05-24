@@ -7,6 +7,7 @@
 
         <div class="min-btn-box">
           <image class="min-pic"
+            resize="contain"
             :src="DATA.bu_authorimgurl"
             @click="jump({path:'/proc',query:{id: DATA.bu_authorid}})"></image>
 
@@ -45,6 +46,7 @@
 
         <div class="min-btn-box">
           <image class="min-pic"
+            resize="contain"
             :src="DATA.avatar"
             @click="jump({path:'/proc',query:{id: DATA.authorid}})"></image>
 
@@ -53,24 +55,24 @@
             <text class="min-msg-time">{{DATA.dateline | dataTimeFgo}}</text>
           </div>
 
-          <div v-if="!DATA.tid" class="min-msg-btn" @click="singleFollowed(1)">
+          <div v-if="!isflow" class="min-msg-btn" @click="singleFollowed(1)">
             <image class="min-btm-ico" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
             <text class="min-btn-name">关注</text>
           </div>
 
-          <div v-if="DATA.tid" class="min-msg-btn min-ok" @click="singleFollowed(2)">
+          <div v-if="isflow" class="min-msg-btn min-ok" @click="singleFollowed(2)">
             <text class="min-btn-name-ok">已关注</text>
           </div>
 
         </div>
 
 
-        <div v-if="!DATA.tid" class="alt-min-box">
+        <div v-if="!isflow" class="alt-min-box">
           <text class="alt-txt">点击右上方关注按钮，立刻关注吧！～</text>
           <div class="alt-san"></div>
         </div>
         <text class="min-min-txt">{{DATA.message}}</text>
-        <image v-for="(em, index) in DATA.pics" resize="cover" class="min-min-img" :src="em"></image>
+        <image v-for="(em, index) in DATA.pics" resize="contain" class="min-min-img" :src="em"></image>
         <text class="min-min-txt"></text>
 
       </div>
@@ -115,7 +117,7 @@
         </div>
       </div>
 
-
+      <text class="indicator">～我是有底线滴～</text>
     </scroller>
     <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote"></bot-nav>
 
@@ -152,6 +154,8 @@
         DATA:{},            // 文章详情
 
         topic:{}, // 评论信息接口(getTopic)
+        xxx:'',
+        isflow: false   //  圈子时判断是否关注
       }
     },
     created () {
@@ -161,21 +165,29 @@
     },
     methods: {
       hideForm (tp) {
-        if (tp > -1) {
+        if (tp > -1 && tp !== 'msg') {
           this.cengCom = true
           this.cengIndex = tp
         }
-        if( !tp && this.cengCom){
+        if(this.cengCom && tp == 'msg'){
           this.cengCom = false
         }
-        this.showForm = !this.showForm
+
+        if(this.this.$getConfig().userId > 0){
+          this.showForm = !this.showForm
+        } else {
+          weex.requireModule('THAW').onGoLogin()
+        }
       },
       // 获取页面评论信息接口
       getTopic (){
         let self = this
         let json = {}
         json.articleid = this.$route.query.id
-        json.siteid = 2
+        json.siteid = 5
+        if(this.$route.query.tp == '1'){
+          json.siteid = 2
+        }
         json.title = this.$store.state.comTitle
         json.url = this.$store.state.comUrl
 
@@ -201,7 +213,7 @@
           json.id = this.$route.query.id
           XHR.getNewsMsg(json).then((res) => {
             if( res.data.status == '1'){
-              res.data.data.bu_content = JSON.parse(res.data.data.bu_content)
+              res.data.data.bu_content = res.data.data.bu_content
               self.DATA = res.data.data
             } else {
               modal.toast({
@@ -215,6 +227,12 @@
           XHR.getTmsgInfo(json).then((res) => {
             if( res.data.status == '0'){
               self.DATA = res.data.data
+              self.DATA.dateline = self.DATA.dateline*1000
+              XHR.getNbInfo({nbuid:res.data.authorid}).then((udd) => {
+                if(udd.data.status == '1'){
+                  self.isflow = udd.data.data[0].bu_isfollower
+                }
+              })
             } else {
               modal.toast({
                 message: res.data.data,
@@ -227,19 +245,31 @@
       //单个关注
       singleFollowed(type){
         let self = this
-        let nbbsid = [this.DATA.bu_id]
         let json = {}
         json.type = type
         json.watchtype = 3
-        json.nbbsid = JSON.stringify(nbbsid)
+        if(this.$route.query.tp == '1'){
+          json.nbbsid = `[${this.DATA.bu_authorid}]`
+        } else {
+          json.nbbsid = `[${this.DATA.authorid}]`
+        }
         XHR.postAttention(json).then((ele) => {
           if(ele.data.status == 1){
-            self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+            if(this.$route.query.tp == '1'){
+              self.DATA.bu_isfollower = !self.DATA.bu_isfollower
+            } else {
+              self.isflow = !self.isflow
+            }
           } else {
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
+            if(self.$getConfig().userId > 0){
+                modal.toast({
+                  message: res.data.msg,
+                  duration: 2
+                })
+            } else{
+              weex.requireModule('THAW').onGoLogin()
+            }
+            
           }
         });
       },
@@ -273,6 +303,7 @@
         json.parentid = 0
         json.replyid = 0
         json.touserid = 0
+        json.type = 5
         if(this.cengCom){
           json.parentid = this.COMDATA[this.cengIndex].id
           json.replyid = this.COMDATA[this.cengIndex].id
@@ -280,6 +311,7 @@
         }
         if(this.$route.query.tp == '1'){
           ACT = 'postComSub'
+          json.type = 2
         }
         XHR.postComSub(json).then((res) => {
           if( res.data.status == '1'){
@@ -287,9 +319,9 @@
             resd.viewtime = self.getNowFormatDate()
             if(json.replyid == 0){
               resd.comments = []
-              self.COMDATA.push(resd)
+              self.COMDATA.unshift(resd)
             } else {
-              self.COMDATA[self.cengIndex].comments.push(resd)
+              self.COMDATA[self.cengIndex].comments.unshift(resd)
             }
             self.cmtSum++
           } else {
@@ -303,9 +335,13 @@
       upVote(){
         let self = this
         let json = {}
+        let ACS = 'cursGet'
         json.id = this.$route.query.id
+        if(this.$route.query.tp == '1'){
+          ACS = 'getPcd'
+        }
         if(!this.DATA.bu_islike){
-          XHR.getPcd(json).then((res) => {
+          XHR[ACS](json).then((res) => {
             if( res.data.status == '1'){
               self.DATA.bu_islike = true
               self.DATA.bu_like++
@@ -319,21 +355,15 @@
         }
       },
       getNowFormatDate() {
-          var date = new Date()
-          var seperator1 = "/"
-          var seperator2 = ":"
-          var month = date.getMonth() + 1
-          var strDate = date.getDate()
-          if (month >= 1 && month <= 9) {
-              month = "0" + month
-          }
-          if (strDate >= 0 && strDate <= 9) {
-              strDate = "0" + strDate
-          }
-          var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                  + " " + date.getHours() + seperator2 + date.getMinutes()
-                  + seperator2 + date.getSeconds()
-          return currentdate
+          let date = new Date()
+          let year = date.getFullYear()
+          let month = date.getMonth() + 1
+          let day = date.getDate()
+          let hours = date.getHours()
+          let minutes = date.getMinutes()
+          let second = date.getSeconds()
+          const zerofill = val => val >= 10 ? val : '0' + val
+          return `${year}/${zerofill(month)}/${zerofill(day)} ${zerofill(hours)}:${zerofill(minutes)}:${zerofill(second)}`
       },
     }
   }
@@ -388,4 +418,12 @@
 .com-mi-san{width: 20px; height: 20px; background-color: #F7F7F7; position: absolute; top: -10px; left: 24px;-webkit-transform:rotate(45deg);}
 
 .blu{color: #2A60FE;}
+.indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

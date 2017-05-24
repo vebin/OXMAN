@@ -19,12 +19,12 @@
       </scroller>
     </div>
 
-    <div v-if="followedSuccessShow" class="oneAlert">
+<!--     <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
       <div class="altClsBox" @click="closeFollowedSuccess">
         <image class="alertClox" src="https://s.kcimg.cn/app/icon/oxman/gzg.png"></image>
       </div>
-    </div>
+    </div> -->
 
     <flow v-if="RecommendAttentionShow" :RecommendAttentionList="RecommendAttentionList" @batchFollowed="batchFollowed" @skipBatchFollowed="skipBatchFollowed"></flow>
   </div>
@@ -167,7 +167,7 @@
             storage.setItem('RecommendAttention',true)
             storage.getItem('followedSuccess', (ele) => {
               if (ele.result !== 'success') {
-                this.followedSuccessShow = true;
+                // this.followedSuccessShow = true;
               }
             })
           } else {

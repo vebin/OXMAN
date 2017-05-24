@@ -2,7 +2,7 @@
   <div class="commont-view">
     <msg-header :titles="getTitles"></msg-header>
 
-    <div class="scroller">
+    <div class="scroller" v-if="DATA.length > 0 ? true : false">
       <list class="hot-scroller" @loadmore="loadList" loadmoreoffset="30">
         <cell
           v-for="(items, index) in DATA"
@@ -10,13 +10,18 @@
           :ref="'item'+index"
           :index="index"
           keep-scroll-position="true">
-          <list-centent :DATA="items"></list-centent>
+          <list-centent :DATA="items" :types="items.bu_authortype ? 1 : 0"></list-centent>
         </cell>
         <cell>
           <text class="indicator" v-if="showLoading">Loading ...</text>
           <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
         </cell>
       </list>
+    </div>
+
+    <div v-if="noLoading && DATA.length === 0 ? true : false" class="null-box">
+      <image class="null-img" src="https://s.kcimg.cn/app/icon/oxman/null.png"></image>
+      <text class="null-txt">{{getTitles}}为空</text>
     </div>
 
   </div>
@@ -96,7 +101,7 @@
 .commont-view {
     background-color: #FAFBFC;
 }
-.scroller {width: 750px; height: 1246px; background-color: #FAFBFC;}
+.scroller {width: 750px; flex:1; height: inherit;  background-color: #FAFBFC;}
 .indicator {
     height: 94px;
     color: #999;
@@ -105,4 +110,8 @@
     padding-bottom: 20px;
     text-align: center;
   }
+  
+  .null-box{flex:1; justify-content:center; align-items:center;}
+.null-img{width: 400px; height: 300px;}
+.null-txt{font-size: 28px; color: #999; margin-top: 40px;}
 </style>
