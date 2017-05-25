@@ -10,9 +10,9 @@
           <div class="pop-pic-box">
             <image class="pop-pic" resize="cover" :src="bu_facelogo"></image>
           </div>
-          <div class="pop-pic-v">
+          <!-- <div class="pop-pic-v">
             <image class="top-use-vip" src="https://s.kcimg.cn/app/icon/oxman/dh_qita.png"></image>
-          </div>
+          </div> -->
         </div>
         <text class="pop-name">上传头像</text>
       </div>

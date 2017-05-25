@@ -236,11 +236,14 @@
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower
           }else{
-
-            modal.toast({
-              message: res.data.msg,
-              duration: 2
-            })
+            if(self.$store.state.userId != 0){
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            } else {
+              weex.requireModule('THAW').onGoLogin()
+            }
           }
         });
       },
