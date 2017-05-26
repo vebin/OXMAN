@@ -276,6 +276,7 @@ class XHR {
   }
 // 获取圈子文章点赞数接口
   cursHget (json) {
+    json.APPSTR = store.state.APPSTR
     return fetch({
               url: `${URLS}/api/nr/pcedit/GetH`,
               body: json

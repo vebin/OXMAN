@@ -15,9 +15,9 @@
       <div class="msg-ico">
         <image class="msg-imgs" src="https://s.kcimg.cn/app/icon/oxman/hont-pic.png"></image>
       </div>
-      <div class="msg" @click="jump({path:'/pages',query:{id:58,tp:1}})">
+      <a class="msg" href="http://c.eqxiu.com/s/jfNj6G3c">
         <text class="msg">牛人平台开放啦！</text>
-      </div>
+      </a>
     </div>
   </div>
 </template>
