@@ -22,7 +22,7 @@
     <div class="pop-box">
 
       <div class="pop-item" v-for="(item,index) in RecommendAttentionList" @click="onchange(item.bu_id,index)">
-        <div>
+        <div class="pop-pic">
           <image class="pop-pic" resize="contain" :src="item.bu_imgsrc"></image>
         </div>
         <text class="pop-name">{{item.bu_name}}</text>

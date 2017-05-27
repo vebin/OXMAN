@@ -27,7 +27,7 @@ const store = new Vuex.Store({
     comTitle:'',
     comUrl:'',
 
-    comDATA:{},     //  文章评论列表
+    comDATA:[],     //  文章评论列表
 
 
 

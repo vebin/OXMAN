@@ -109,7 +109,7 @@
         XHR.getNbInfo({'nbuid':this.$store.state.userId}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             let NbInfo = ele.data.data[0];
-            this.Data.bu_facelogo = NbInfo.bu_imgsrc;
+            this.bu_facelogo = NbInfo.bu_imgsrc;
             this.Data.bu_manname = NbInfo.bu_name;
             this.Data.bu_manphone = NbInfo.bu_manphone;
             this.Data.bu_manintroduction = NbInfo.bu_manintroduction;
@@ -256,7 +256,7 @@
   .pop-pic{width: 140px;height: 140px; border-radius: 140px;}
   .pop-name{font-size: 32px; color: #333; margin-top: 20px; text-decoration: underline;}
   .pop-pic-icopi{width: 140px;height: 140px;position: relative;}
-  .pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 2px; border-color: #e5e5e5; border-radius: 140px; }
+  .pop-pic-box{ background-image:url(https://s.kcimg.cn/app/icon/oxman/che.png); width: 140px;height: 140px; background-repeat: no-repeat; background-size: contain; background-position:0; border-style: solid; border-width: 1px; border-color: #e5e5e5; border-radius: 140px; }
   .pop-pic-v{position: absolute; right: 0;bottom: 10px;width: 28px; height: 28px;}
   .top-use-vip{ width: 28px; height: 28px;}
   .blue{ background-color: #2c63ff;}

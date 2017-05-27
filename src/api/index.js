@@ -282,6 +282,15 @@ class XHR {
               body: json
            })
   }
+
+// 根据圈子文章ID获取牛人信息接口
+  nrGeti (json) {
+    json.APPSTR = store.state.APPSTR
+    return fetch({
+              url: `${URLS}/api/nr/pcedit/GetI`,
+              body: json
+           })
+  }
 /*---------------C_URLS---评论相关---------------------*/
 // 获取评论信息
   getTopic (json) {

@@ -4,11 +4,11 @@
 
     <div class="star-box">
       <div class="star-lef">
-        <text :class="['lefTxt',categorySelected==0?'lefAct':'']" @click="switchList(0)">已关注</text>
-        <text v-for="ele in categoryList" :class="['lefTxt',categorySelected == ele.bu_categoryid ? 'lefAct' : '']" @click="switchList(ele.bu_categoryid)">{{ele.bu_categoryname}}</text>
+        <text :class="['lefTxt',categorySelected==0?'lefAct':'']" @click="switchList(0,1)">已关注</text>
+        <text v-for="ele in categoryList" :class="['lefTxt',categorySelected == ele.bu_categoryid ? 'lefAct' : '']" @click="switchList(ele.bu_categoryid,1)">{{ele.bu_categoryname}}</text>
       </div>
 
-      <scroller class="star-rit">
+      <scroller class="star-rit" @loadmore="loadmor" loadmoreoffset="30">
         <text v-if="!isLogin" class="ritBtn" @click="goLogin">您还未登录 马上登录</text>
         <div v-if="emptyList">
           <text class="ritWelx">您还未订阅任何牛人，快去订阅一波</text>
@@ -16,6 +16,8 @@
         </div>
 
         <str-item v-if="isLogin" :followedList="followedList"></str-item>
+        <text class="indicator" v-if="showLoading">Loading ...</text>
+        <text class="indicator" v-if="noLoading">～我是有底线滴～</text>
       </scroller>
     </div>
 
@@ -43,6 +45,8 @@
     components: { AppHeader, StrItem,flow},
     data () {
       return {
+        showLoading: false,
+        noLoading: false,
         text: '',
 
         //用户是否登陆
@@ -62,7 +66,9 @@
 //        关注成功弹层
         followedSuccessShow: false,
         //是否显示我的
-        attestation:false
+        attestation:false,
+
+        page:1,
       }
     },
     created(){
@@ -90,7 +96,7 @@
             });
           }else{
             //请求接口列表
-            this.getFollowed();
+            this.switchList(0,1);
           }
         });
 
@@ -119,44 +125,54 @@
       goLogin(){
         weex.requireModule('THAW').onGoLogin();
       },
-      //请求接口列表
-      getFollowed(){
-        //请求已关注列表
-        XHR.getFollowed({'currentPage':1}).then((res) => {
-          if(res.ok && res.data.status == 1){
-            this.followedList = res.data.data;
-            if(res.data.msg == "推荐列表"){
-              this.emptyList = true;
-            }else{
-              this.emptyList = false;
-            }
-          }
-        });
-      },
-      //点击切换关注列表
-      switchList(id){
-        this.categorySelected = id;
 
+      loadmor(){
+          this.switchList(this.categorySelected,this.page)
+      },
+      switchList(id,pg){
         let ajaxName = 'getFollowed';
         let o = {};
-        o.currentPage = 1;
+        let self = this
+        if(pg == 1){ 
+          this.page = 1
+          self.showLoading = false
+          self.noLoading = false
+          self.followedList = []
+        }
+        this.categorySelected = id;
+        o.currentPage = pg
         if(id !== 0){
           ajaxName = 'getFollowedCategoryList';
           o.categoryid = id;
           this.emptyList = false;
         }
 
-        //请求已关注列表
-        XHR[ajaxName](o).then((res) => {
-          if (res.ok && res.data.status == 1) {
-            this.followedList = res.data.data;
-            if(res.data.msg == "推荐列表"){
-              this.emptyList = true;
-            }else{
-              this.emptyList = false;
-            }
+        if(!this.noLoading && !this.showLoading){
+            self.showLoading = true
+            XHR[ajaxName](o).then((res) => {
+              if (res.ok && res.data.status == 1) {
+                self.showLoading = false
+                if(res.data.data.length == 0 || res.data.data.length < 9){
+                  self.noLoading = true
+                  this.followedList.push(...res.data.data)
+                } else {
+                  self.page++
+                  self.followedList.push(...res.data.data)
+                }
+                if(res.data.msg == "推荐列表"){
+                  self.emptyList = true;
+                }else{
+                  self.emptyList = false;
+                }
+              } else {
+                self.showLoading = false
+                modal.toast({
+                  message: res.data.msg,
+                  duration: 2
+                })
+              }
+            })
           }
-        });
       },
       //九宫格批量关注
       batchFollowed(nbbsid){
@@ -168,7 +184,7 @@
           if (ele.ok && ele.data.status == 1) {
             this.RecommendAttentionShow = false;
             //请求关注列表
-            this.getFollowed();
+            this.switchList(0,1);
             storage.setItem('RecommendAttention',true)
             storage.getItem('followedSuccess', (ele) => {
               if (ele.result !== 'success') {
@@ -186,7 +202,7 @@
       //跳过一键关注
       skipBatchFollowed(){
           //请求关注列表
-          this.getFollowed()
+          this.switchList(0,1);
           storage.setItem('RecommendAttention',true)
           this.RecommendAttentionShow = false;
       },
@@ -218,4 +234,12 @@
   .alertImg{ width: 534px; height: 612px;}
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}
   .alertClox{ width: 30px; height:30px; transform:rotate(45deg);}
+  .indicator {
+    height: 94px;
+    color: #999;
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+  }
 </style>

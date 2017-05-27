@@ -1,8 +1,10 @@
 <template>
   <div>
     <div v-for="(ele,index) in followedList" class="ritItem">
-      <image class="ritPic" resize="contain" :src="ele.bu_imgsrc"
+      <div class="ritPic">
+        <image class="ritPic" resize="contain" :src="ele.bu_imgsrc"
         @click="jump({path:'/proc',query:{id: ele.bu_id}})"></image>
+      </div>
       <div class="ritCenBox" @click="jump({path:'/proc',query:{id: ele.bu_id}})">
         <text class="ritCenName">{{ele.bu_name}}</text>
         <text class="ritCenNmb">{{ele.followercount}}人关注</text>

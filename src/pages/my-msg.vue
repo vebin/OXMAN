@@ -4,7 +4,9 @@
     <scroller class="page-box" @loadmore="getComListMsg" loadmoreoffset="50">
 
       <div class="com-item-box">
+        <div class="com-item-pic">
         <image class="com-item-pic" resize="contain" :src="DATA.headpic"></image>
+        </div>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{DATA.nikename}}</text>
@@ -32,7 +34,9 @@
 
       <div>
         <div class="com-item-box" v-for="(items, index) in COMDATA">
+          <div class="com-item-pic">
           <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
+          </div>
           <div class="com-item-right">
             <div class="com-box-s">
               <text class="com-s-name">{{items.nikename}}</text>
@@ -145,7 +149,7 @@
       saveForm(txt){
         let self = this
         let json = {}
-        let ACT
+        // let ACT
         self.showForm = false
         weex.requireModule('THAW').onHideSoftKeyboard()
         json.topicid = this.$route.query.id
@@ -155,9 +159,10 @@
         json.parentid = this.DATA.id
         json.replyid = this.DATA.id
         json.touserid = this.DATA.userid
-
-        if(this.$route.query.tp == '1'){
-          ACT = 'postComSub'
+        json.type = 5
+        if(this.$route.query.xo == '1'){
+          // ACT = 'postComSub'
+          json.type = 2
         }
         XHR.postComSub(json).then((res) => {
           if( res.data.status == '1'){

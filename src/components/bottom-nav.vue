@@ -6,8 +6,8 @@
       <text class="btm-txt">首页</text>
     </div>
     <div class="btm-nav" @click="$emit('cite')">
-      <image class="btm-ico" :src="DATA.bu_islike ? zans[1] : zans[0]"></image>
-      <text :class="DATA.bu_islike ? ['btm-txt blu'] : ['btm-txt']">{{$route.query.tp == '1' ? DATA.bu_like : num}}</text>
+      <image class="btm-ico" :src="islike ? zans[1] : zans[0]"></image>
+      <text :class="islike ? ['btm-txt blu'] : ['btm-txt']">{{$route.query.tp == '1' ? DATA.bu_like : num}}</text>
     </div>
     <div class="btm-nav" @click="checkLg">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
@@ -30,33 +30,23 @@ const modal = weex.requireModule('modal')
       SUM: {
         type: [Number, String],
         default: 0
-      }
+      },
+      num: {
+        type: [Number, String],
+        default: 0
+      },
+      islike: Boolean,
     },
     data () {
       return {
         zans: [
           'https://s.kcimg.cn/app/icon/oxman/t-zans.png',
           'https://s.kcimg.cn/app/icon/oxman/t-zanok.png',
-        ],
-        num:0
+        ]
       }
     },
     created () {
       let self = this
-      let json = {}
-      json.id = this.$route.query.id
-      if(this.$route.query.tp == '0'){
-        XHR.cursHget(json).then((res) => {
-          if( res.data.status == '1'){
-            self.num = res.data.data
-          } else {
-            modal.toast({
-              message: res.msg,
-              duration: 2
-            })
-          }
-        })
-      }
       weex.requireModule('globalEvent')
       .addEventListener('onGoLoginCallBack',(res) => {
         if(res.status == '1'){
@@ -74,7 +64,7 @@ const modal = weex.requireModule('modal')
           weex.requireModule('THAW').onGoLogin()
         }
       },
-
+      
       shares(){
         //   native操作  分享
           THAW.onShowShare({

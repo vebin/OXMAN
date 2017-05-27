@@ -22,29 +22,30 @@
         <div class="top-use-right">
           <text class="top-use-name">{{DATA.bu_name}}</text>
           <div v-if="DATA.wactchtype == '0'" class="top-right-box">
+            <div class="top-right-boxs">
+              <div v-if="!DATA.bu_isupvote"
+              @click="zanAsy"
+              class="top-zan-box top-mr">
+                <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
+                <text class="top-use-txt">点赞</text>
+              </div>
 
-            <div v-if="!DATA.bu_isupvote"
-            @click="zanAsy"
-            class="top-zan-box top-mr">
-              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
-              <text class="top-use-txt">点赞</text>
+              <div v-if="DATA.bu_isupvote" class="top-zan-box top-mr isok">
+                <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+                <text class="top-use-txt">已点赞</text>
+              </div>
             </div>
+            <div class="top-right-boxs">
+              <div v-if="!DATA.bu_isfollower" @click="singleFollowed(1)" class="top-zan-box">
+                <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/pogz.png"></image>
+                <text class="top-use-txt">关注</text>
+              </div>
 
-            <div v-if="DATA.bu_isupvote" class="top-zan-box top-mr isok">
-              <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
-              <text class="top-use-txt">已点赞</text>
+              <div v-if="DATA.bu_isfollower" @click="singleFollowed(2)" class="top-zan-box isok">
+                <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
+                <text class="top-use-txt">已关注</text>
+              </div>
             </div>
-
-            <div v-if="!DATA.bu_isfollower" @click="singleFollowed(1)" class="top-zan-box">
-              <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/pogz.png"></image>
-              <text class="top-use-txt">关注</text>
-            </div>
-
-            <div v-if="DATA.bu_isfollower" @click="singleFollowed(2)" class="top-zan-box isok">
-              <image class="top-use-isok" src="https://s.kcimg.cn/app/icon/oxman/oky.png"></image>
-              <text class="top-use-txt">已关注</text>
-            </div>
-
           </div>
 
           <div v-if="DATA.wactchtype == '1'" class="top-right-box">
@@ -164,10 +165,11 @@
             this.$store.commit("setBlueTxt", '我的圈子')
           }
         } else {
+          let name = this.DATA.bu_name.length > 5 ? `${this.DATA.bu_name.substring(0,5)}...` : this.DATA.bu_name
           if(txt == '1'){
-            this.$store.commit("setBlueTxt", `${this.DATA.bu_name}的文章`)
+            this.$store.commit("setBlueTxt", `${name}的文章`)
           } else {
-            this.$store.commit("setBlueTxt", `${this.DATA.bu_name}的圈子`)
+            this.$store.commit("setBlueTxt", `${name}的圈子`)
           }
         }
         this.jump({path:'/msgs',query:{id: this.$route.query.id,tp: txt}})
@@ -299,12 +301,13 @@
 }
 .top-use-box{flex-direction:row; justify-content:flex-start; align-items:center;}
 .top-use-lebox{width: 124px; height: 124px; margin-left: 30px; margin-right: 20px; position: relative;}
-.top-use-left{width: 124px; height: 124px; border-radius: 124px;}
-
-.top-use-pic{width: 120px; height: 120px; border-radius: 120px; border-width: 2px;border-color: #fff;border-style: solid;}
+.top-use-left{width: 124px; height: 124px; border-radius: 124px;border-width: 1px;border-color: #fff;border-style: solid;}
+.top-use-right{flex:1; text-align: left;}
+.top-use-pic{width: 124px; height: 124px; border-radius: 124px; }
 .top-use-name{font-size: 36px; color: #fff;margin-bottom: 14px;}
-.top-right-box{flex-direction:row; justify-content:flex-start; align-items:center;}
-.top-zan-box{width: 132px; height: 50px; border-width: 2px; border-radius: 8px; border-color: #fff;border-style: solid; flex-direction:row; justify-content:center; align-items:center;}
+.top-right-box{flex:1; flex-direction:row; align-items:center;}
+.top-right-boxs{flex-direction:row; align-items:center;}
+.top-zan-box{width: 132px; height: 50px; border-width: 2px; border-radius: 8px; border-color: #fff;border-style: solid; flex-direction:row; justify-content:center; align-items:center; margin-right: 20px;}
 .top-use-image{width: 24px; height: 24px; margin-right: 20px;}
 .top-use-txt{font-size: 24px; color: #fff;}
 .top-mr{margin-right: 60px;}

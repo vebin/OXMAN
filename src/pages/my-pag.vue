@@ -2,15 +2,16 @@
   <div class="commont-view">
     <w-header v-if="true" titles="文章详情"></w-header>
     <scroller class="page-box">
-      <div v-if="$route.query.tp == '1'" class="main-box">
+      <div v-if="$route.query.tp == '1' && isnull" class="main-box">
         <text class="min-title">{{DATA.bu_title}}</text>
 
         <div class="min-btn-box">
+          <div class="min-pic">
           <image class="min-pic"
             resize="contain"
             :src="DATA.bu_authorimgurl"
             @click="jump({path:'/proc',query:{id: DATA.bu_authorid}})"></image>
-
+          </div>
           <div class="min-msg">
             <text class="min-msg-name">{{DATA.bu_author}}</text>
             <text class="min-msg-time">{{DATA.bu_publishdatetime | dataTimeFgo}}</text>
@@ -41,17 +42,18 @@
 
 
 
-      <div v-if="$route.query.tp == '0'" class="main-box">
+      <div v-if="$route.query.tp == '0' && isnull" class="main-box">
         <text class="min-title">{{DATA.subject}}</text>
 
         <div class="min-btn-box">
+          <div class="min-pic">
           <image class="min-pic"
             resize="contain"
-            :src="DATA.avatar"
-            @click="jump({path:'/proc',query:{id: DATA.authorid}})"></image>
-
+            :src="userdata.bu_authorimgurl"
+            @click="jump({path:'/proc',query:{id: userdata.bu_authorid}})"></image>
+          </div>
           <div class="min-msg">
-            <text class="min-msg-name">{{DATA.author}}</text>
+            <text class="min-msg-name">{{userdata.bu_author}}</text>
             <text class="min-msg-time">{{DATA.dateline | dataTimeFgo}}</text>
           </div>
 
@@ -72,7 +74,9 @@
           <div class="alt-san"></div>
         </div>
         <text class="min-min-txt">{{DATA.message}}</text>
-        <image v-for="(em, index) in DATA.pics" resize="contain" class="min-min-img" :src="em"></image>
+        <div class="min-min-img" v-for="(em, index) in DATA.pics">
+          <image resize="contain" class="min-min-img" :src="em"></image>
+        </div>
         <text class="min-min-txt"></text>
 
       </div>
@@ -91,7 +95,9 @@
       </div>
 
       <div class="com-item-box" v-for="(items, index) in COMDATA">
+        <div class="com-item-pic">
         <image class="com-item-pic" resize="contain" :src="items.headpic"></image>
+        </div>
         <div class="com-item-right">
           <div class="com-box-s">
             <text class="com-s-name">{{items.nikename}}</text>
@@ -102,7 +108,7 @@
             </div> -->
           </div>
 
-          <text class="com-b-msg" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index}})">{{items.content}}</text>
+          <text class="com-b-msg" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index,xo:$route.query.tp}})">{{items.content}}</text>
 
           <div class="com-r-box">
             <text class="com-r-time">{{items.viewtime}}</text>
@@ -110,7 +116,7 @@
           </div>
 
           <div v-if="items.comments.length > 0" class="com-mi-box">
-            <text class="com-mi-txt" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index}})">共{{items.comments.length}}条回复……</text>
+            <text class="com-mi-txt" @click="jump({path:'/comment',query:{id:$route.query.id,ic:topic.topicid,tp:items.id,in:index,xo:$route.query.tp}})">共{{items.comments.length}}条回复……</text>
             <div class="com-mi-san"></div>
           </div>
 
@@ -119,7 +125,7 @@
 
       <text class="indicator">～我是有底线滴～</text>
     </scroller>
-    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote"></bot-nav>
+    <bot-nav :DATA="DATA" :SUM="cmtSum" @hides="hideForm" @cite="upVote" :num="num" :islike="bu_islike"></bot-nav>
 
     <txt-frm v-if="showForm" @hides="hideForm" @save="saveForm"></txt-frm>
   </div>
@@ -155,7 +161,11 @@
 
         topic:{}, // 评论信息接口(getTopic)
         xxx:'',
-        isflow: false   //  圈子时判断是否关注
+        isflow: false,   //  圈子时判断是否关注
+        num: 0,    // 点赞数
+        bu_islike:false,  //  是否点赞
+        isnull: false, // 是否加载完毕
+        userdata:{}   //  圈子主人信息
       }
     },
     created () {
@@ -223,7 +233,10 @@
             if( res.data.status == '1'){
               res.data.data.bu_content = res.data.data.bu_content
               self.DATA = res.data.data
+              self.num = res.data.data.bu_like
+              self.bu_islike = res.data.data.bu_islike
               weex.requireModule('THAW').onHideLoading()
+              self.isnull = true
             } else {
               weex.requireModule('THAW').onHideLoading()
               modal.toast({
@@ -234,22 +247,45 @@
           })
         } else {
           json.tid = this.$route.query.id
-          XHR.getTmsgInfo(json).then((res) => {
-            if( res.data.status == '0'){
-              self.DATA = res.data.data
-              self.DATA.dateline = self.DATA.dateline*1000
-              XHR.getNbInfo({nbuid:res.data.authorid}).then((udd) => {
-                if(udd.data.status == '1'){
-                  self.isflow = udd.data.data[0].bu_isfollower
-                }
-              })
+          XHR.nrGeti({id:this.$route.query.id}).then((res) => {
+            if(res.data.status == '1'){
+              this.isflow = res.data.data.bu_isfollower
+              this.userdata = res.data.data
             } else {
               modal.toast({
-                message: res.data.data,
+                message: res.data.msg,
                 duration: 2
               })
             }
           })
+
+          XHR.getTmsgInfo(json).then((res) => {
+            if( res.data.status == '0'){
+              self.DATA = res.data.data
+              self.DATA.dateline = self.DATA.dateline*1000
+              weex.requireModule('THAW').onHideLoading()
+              self.isnull = true
+            } else {
+              weex.requireModule('THAW').onHideLoading()
+              modal.toast({
+                message: res.data.msg,
+                duration: 2
+              })
+            }
+          })
+
+          XHR.cursHget({id:this.$route.query.id}).then((res) => {
+            if( res.data.status == '1'){
+              self.num = res.data.data.bu_count
+              self.bu_islike = res.data.data.bu_islike
+            } else {
+              modal.toast({
+                message: res.msg,
+                duration: 2
+              })
+            }
+          })
+
         }
       },
       //单个关注
@@ -261,7 +297,7 @@
         if(this.$route.query.tp == '1'){
           json.nbbsid = `[${this.DATA.bu_authorid}]`
         } else {
-          json.nbbsid = `[${this.DATA.authorid}]`
+          json.nbbsid = `[${this.userdata.bu_authorid}]`
         }
         XHR.postAttention(json).then((ele) => {
           if(ele.data.status == 1){
@@ -348,16 +384,20 @@
       upVote(){
         let self = this
         let json = {}
-        let ACS = 'cursGet'
-        json.id = this.$route.query.id
-        if(this.$route.query.tp == '1'){
-          ACS = 'getPcd'
+        let ACS = 'getPcd'
+        if(this.$route.query.tp == '0'){
+            ACS = 'cursGet'
         }
-        if(!this.DATA.bu_islike){
+        json.id = this.$route.query.id
+        if(!this.bu_islike){
           XHR[ACS](json).then((res) => {
             if( res.data.status == '1'){
-              self.DATA.bu_islike = true
-              self.DATA.bu_like++
+              self.bu_islike = true
+              if(this.$route.query.tp == '0'){
+                self.num = self.num + 1
+              } else {
+                self.DATA.bu_like++
+              }
             } else {
               if(self.$store.state.userId != 0){
                 modal.toast({
